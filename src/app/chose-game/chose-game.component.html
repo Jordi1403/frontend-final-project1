@@ -1,1 +1,7 @@
-<p>chose-game works!</p>,
+
+<h1>chose-game</h1>
+<div class="chose-game">
+ <div *ngFor="let g of allGames" class="game-card">
+ <app-game-card [currentGame]="g"></app-game-card>
+ </div>
+</div>
