@@ -13,5 +13,8 @@ import { HeaderComponent } from './header/header.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+openDialog() {
+throw new Error('Method not implemented.');
+}
   title = 'little-linguist';
 }
