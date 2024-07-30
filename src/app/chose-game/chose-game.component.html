@@ -1,7 +1,22 @@
-
-<h1>chose-game</h1>
-<div class="chose-game">
- <div *ngFor="let g of allGames" class="game-card">
- <app-game-card [currentGame]="g"></app-game-card>
- </div>
+<div>
+  <h1>Choose Game</h1>
+  <div class="chose-game">
+    <div *ngFor="let game of allGames" class="game-card" (click)="selectGame(game)">
+      <app-game-card [currentGame]="game"></app-game-card>
+    </div>
+  </div>
+  <div>
+    <h2>{{ selectedGame?.name }}</h2>
+    <p>{{ selectedGame?.description }}</p>
+  </div>
+  <div>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="openDialog()"
+      [disabled]="!selectedGame"
+    >
+      Choose Game
+    </button>
+  </div>
 </div>

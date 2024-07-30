@@ -1,22 +1,33 @@
 :host {
   display: block;
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
 }
 
 .card-container {
-  width: 100%; /* Ensure the container takes the full width */
-  display: flex; /* Use flexbox for centering */
-  justify-content: center; /* Center the card-view-container horizontally */
+  display: flex; /* Use flexbox for layout */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
   overflow-x: auto; /* Allow horizontal scrolling if necessary */
+  white-space: nowrap; /* Prevent wrapping */
+  width: 100%; /* Full width of viewport */
 }
 
 .card-view-container {
   display: inline-flex; /* Use inline-flex to prevent line breaks */
+  justify-content: center; /* Center cards within container */
+  white-space: nowrap; /* Prevent wrapping of game cards */
 }
 
 .game-card {
   margin: 8px;
-  flex: 0 0 150px; /* Set a fixed width for each game card */
-  box-sizing: border-box; /* Ensure padding and border are included in the width */
+  width: 150px; /* Fixed width for each game card */
+  box-sizing: border-box; /* Include padding and border in width */
   background-color: lightgray; /* Optional: Add background color for visibility */
   display: inline-block; /* Ensure game cards are inline elements */
+  text-align: center; /* Center text inside the game card */
+  vertical-align: top; /* Align game cards to the top */
+  white-space: nowrap; /* Ensure text inside the card stays on one line */
 }

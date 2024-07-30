@@ -1,21 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { GameProfile } from '../../shared/model/GameProfile';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chose-game-dialog',
   standalone: true,
-  imports: [
-    CommonModule,
-  ],
+  imports: [CommonModule],
   templateUrl: './chose-game-dialog.component.html',
-  styleUrl: './chose-game-dialog.component.css',
+  styleUrls: ['./chose-game-dialog.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChoseGameDialogComponent {
-gameProfile: any; 
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public gameProfile: { name: string },
+    private dialogRef: MatDialogRef<ChoseGameDialogComponent>,
+    private router: Router
+  ) {}
 
-  constructor (@Inject(MAT_DIALOG_DATA) public selectedGame : GameProfile) { }
+  closeAndNavigate(): void {
+    this.dialogRef.close(); // Close the dialog
+    this.router.navigate(['/your-route']); // Navigate to the desired route
+  }
 }

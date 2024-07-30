@@ -1,3 +1,7 @@
 <p>Trivia works!</p>,
 <div>category id {{id}}</div>
 <div>category name {{currentCategory?.name}}</div>
+<div *ngIf="currentCategory">
+    <h2>{{ currentCategory.name }}</h2>
+  </div>
+  

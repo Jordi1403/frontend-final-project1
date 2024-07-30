@@ -1,6 +1,10 @@
-:host {
-  display: block;
-}
 .card-container {
-  min-height: 68px;
- }
+  margin: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card-container:hover {
+  transform: scale(1.05);
+}
