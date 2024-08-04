@@ -6,6 +6,9 @@ import { Routes } from '@angular/router';
 import { CategoriesListComponent } from './categories-list/categories-list.component';
 import { CategoryFormComponent } from './category-form/category-form.component';
 import { HelpComponent } from './help/help.component';
+import { GameProfile } from '../shared/model/GameProfile';
+
+
 
 export const routes: Routes = [
     {path: "dashbord", component: CategoriesListComponent},
@@ -16,5 +19,6 @@ export const routes: Routes = [
     {path: "mixed-letters/:id", component: MixedLettersComponent},
     {path: "dashbord", component: DashbordComponent},
     {path: "chose-game", component: ChoseGameComponent},
+    { path: 'game/:gameName', component: GameProfile },
 
 ];

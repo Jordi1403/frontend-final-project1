@@ -1,6 +1,6 @@
-import { categories } from './../../shared/data/categories';
 import { Injectable } from '@angular/core';
 import { Category } from '../../shared/model/category';
+import { categories as defaultCategories } from './../../shared/data/categories';
 
 @Injectable({
   providedIn: 'root'
@@ -9,61 +9,80 @@ export class CategoriesService {
   private readonly CATEGORIES_KEY = 'categories';
   private readonly NEXT_ID_KEY = 'nextId';
 
-  private getCategories() : Map<number, Category>{
-    let categoriesString = localStorage.getItem(this.CATEGORIES_KEY);
+  constructor() {
+    this.initializeCategories();
+  }
 
-    if (!categoriesString) {
-      return new Map<number, Category>();
-    } else {
-      return new Map<number, Category>(JSON.parse(categoriesString));
+  private initializeCategories(): void {
+    const existingCategories = this.getCategories();
+    if (existingCategories.size === 0 && defaultCategories.length > 0) {
+      defaultCategories.forEach(cat => this.add(cat));
     }
   }
 
-  private getNextId() : number {
-    let nextIdString = localStorage.getItem(this.NEXT_ID_KEY); 
-
-    return nextIdString ? parseInt(nextIdString) : 0;
+  
+  private getCategories(): Map<number, Category> {
+    try {
+      const categoriesString = localStorage.getItem(this.CATEGORIES_KEY);
+      return categoriesString ? new Map(JSON.parse(categoriesString)) : new Map();
+    } catch (error) {
+      console.error("Failed to parse categories from localStorage", error);
+      return new Map();
+    }
   }
 
-  private setCategories(list : Map<number, Category>) : void {
-    localStorage.setItem(this.CATEGORIES_KEY, JSON.stringify(Array.from(list)));
+  /**
+   * Gets the next ID for new category additions.
+   */
+  private getNextId(): number {
+    const nextIdString = localStorage.getItem(this.NEXT_ID_KEY);
+    return nextIdString ? parseInt(nextIdString, 10) : 1; 
   }
 
-  private setNextId(id : number) : void {
+  
+  private setCategories(list: Map<number, Category>): void {
+    localStorage.setItem(this.CATEGORIES_KEY, JSON.stringify(Array.from(list.entries())));
+  }
+
+ 
+  private setNextId(id: number): void {
     localStorage.setItem(this.NEXT_ID_KEY, id.toString());
   }
 
-  list() : Category[] {
+ 
+  list(): Category[] {
     return Array.from(this.getCategories().values());
   }
 
-  get(id : number) : Category | undefined {
+  
+  get(id: number): Category | undefined {
     return this.getCategories().get(id);
   }
 
-  delete(id : number) : void {
-    let categoriesMap = this.getCategories();
-    categoriesMap.delete(id);
+  
+  delete(id: number): void {
+    const categoriesMap = this.getCategories();
+    if (categoriesMap.delete(id)) {
+      this.setCategories(categoriesMap);
+    }
+  }
+
+ 
+  update(category: Category): void {
+    const categoriesMap = this.getCategories();
+    category.lastUpdateDate = new Date(); 
+    categoriesMap.set(category.id, category);
     this.setCategories(categoriesMap);
   }
 
-  update(category : Category) : void {
-    let categoriesMap = this.getCategories();
-
-    category.lastUpdateDate = new Date();
+ 
+  add(category: Category): void {
+    const nextId = this.getNextId();
+    category.id = nextId;  
+    category.lastUpdateDate = new Date();  
+    const categoriesMap = this.getCategories();
     categoriesMap.set(category.id, category);
-
     this.setCategories(categoriesMap);
-  }
-
-  add(category : Category) : void {
-    category.id = this.getNextId();
-    category.lastUpdateDate = new Date();
-
-    let categoriesMap = this.getCategories();
-    categoriesMap.set(category.id, category);
-
-    this.setCategories(categoriesMap);
-    this.setNextId(++category.id);
+    this.setNextId(nextId + 1);  
   }
 }

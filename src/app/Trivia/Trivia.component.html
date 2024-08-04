@@ -1,7 +1,11 @@
-<p>Trivia works!</p>,
-<div>category id {{id}}</div>
-<div>category name {{currentCategory?.name}}</div>
-<div *ngIf="currentCategory">
-    <h2>{{ currentCategory.name }}</h2>
+
+<div>
+  <h1>Trivia Component</h1>
+  <div *ngIf="currentCategory">
+    <h2>Category Name: {{ currentCategory.name }}</h2>
+    <p>Last Updated: {{ currentCategory.lastUpdateDate | date: 'medium' }}</p>
   </div>
-  
+  <div *ngIf="!currentCategory">
+    <p>No category found or invalid category ID.</p>
+  </div>
+</div>
