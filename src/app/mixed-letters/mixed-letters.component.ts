@@ -32,84 +32,84 @@ import { MatIconModule } from '@angular/material/icon';
     PointsComponent,],
   })
  
-  export class MixedLettersComponent implements OnInit {
+
+export class MixedLettersComponent implements OnInit {
 resetInput() {
 throw new Error('Method not implemented.');
 }
-    currentCategory?: Category;
-    currentWordIndex = 0;
-    scrambledWord = '';
-    userAnswer = '';
-    score = 0;
-    maxScore = 0;
-    pointsPerWord: number = 0;
- 
- 
-    constructor(
-      private route: ActivatedRoute,
-      private categoriesService: CategoriesService,
-      private router: Router,
-      private dialog: MatDialog
-    ) {}
- 
-    ngOnInit(): void {
-      this.route.paramMap.subscribe((params) => {
-        const categoryId = +params.get('id')!;
-        this.currentCategory = this.categoriesService.get(categoryId);
-        if (this.currentCategory) {
-          // Calculate points per word
-          this.pointsPerWord = Math.floor(this.maxScore / this.currentCategory.words.length);
-          this.nextWord();
-        } else {
-          console.error('Category not found for ID:', categoryId);
-        }
-      });
-    }
- 
-    nextWord(): void {
-      if (this.currentCategory && this.currentWordIndex < this.currentCategory.words.length) {
-        const word = this.currentCategory.words[this.currentWordIndex].origin;  // Origin is in English
-        this.scrambledWord = shuffle(word.split('')).join('');
-        this.userAnswer = '';
-      } else {
-        this.showSummary();
-      }
-    }
- 
-    submitAnswer(): void {
-      const correctAnswer = this.userAnswer.toLowerCase() === this.currentCategory?.words[this.currentWordIndex].origin.toLowerCase();
-     
-      if (correctAnswer) {
-        this.score += this.pointsPerWord;
-        this.dialog.open(SuccessDialogComponent).afterClosed().subscribe(() => {
-          this.currentWordIndex++;
-          this.checkIfFinished();
-        });
-      } else {
-        this.dialog.open(FailureDialogComponent).afterClosed().subscribe(() => {
-          this.currentWordIndex++;
-          this.checkIfFinished();
-        });
-      }
-    }
- 
-    checkIfFinished(): void {
-      if (this.currentWordIndex >= (this.currentCategory?.words.length || 0)) {
-        this.showSummary();
-      } else {
+  currentCategory?: Category;
+  currentWordIndex = 0;
+  scrambledWord = '';
+  userAnswer = '';
+  score = 0;
+  maxScore = 0;
+  pointsPerWord: number = 0;
+
+  constructor(
+    private route: ActivatedRoute,
+    private categoriesService: CategoriesService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      const categoryId = +params.get('id')!;
+      this.currentCategory = this.categoriesService.get(categoryId);
+      if (this.currentCategory) {
+        // Calculate points per word
+        this.pointsPerWord = Math.floor(this.maxScore / this.currentCategory.words.length);
         this.nextWord();
+      } else {
+        console.error('Category not found for ID:', categoryId);
       }
+    });
+  }
+
+  nextWord(): void {
+    if (this.currentCategory && this.currentWordIndex < this.currentCategory.words.length) {
+      const word = this.currentCategory.words[this.currentWordIndex].origin;  // Origin is in English
+      this.scrambledWord = shuffle(word.split('')).join('');
+      this.userAnswer = '';
+    } else {
+      this.showSummary();
     }
- 
-    showSummary(): void {
-      this.router.navigate(['/summary']);
-    }
- 
-    exitGame(): void {
-      this.dialog.open(ExitConfirmationDialogComponent).afterClosed().subscribe((result) => {
-        if (result === 'yes') {
-          this.router.navigate(['/choose-game']);
-        }
+  }
+
+  submitAnswer(): void {
+    const correctAnswer = this.userAnswer.toLowerCase() === this.currentCategory?.words[this.currentWordIndex].origin.toLowerCase();
+    
+    if (correctAnswer) {
+      this.score += this.pointsPerWord;
+      this.dialog.open(SuccessDialogComponent).afterClosed().subscribe(() => {
+        this.currentWordIndex++;
+        this.checkIfFinished();
+      });
+    } else {
+      this.dialog.open(FailureDialogComponent).afterClosed().subscribe(() => {
+        this.currentWordIndex++;
+        this.checkIfFinished();
       });
     }
   }
+
+  checkIfFinished(): void {
+    if (this.currentWordIndex >= (this.currentCategory?.words.length || 0)) {
+      this.showSummary();
+    } else {
+      this.nextWord();
+    }
+  }
+
+  showSummary(): void {
+    this.router.navigate(['/summary']);
+  }
+
+  exitGame(): void {
+    this.dialog.open(ExitConfirmationDialogComponent).afterClosed().subscribe((result) => {
+      if (result === 'yes') {
+        this.router.navigate(['/choose-game']);
+      }
+    });
+  }
+}
