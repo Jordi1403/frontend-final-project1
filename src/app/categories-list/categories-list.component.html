@@ -28,12 +28,17 @@
       <button mat-icon-button (click)="deleteCategory(category.id, category.name)">
         <mat-icon>delete</mat-icon>
       </button>
+      <!-- New action: Play Mixed Letters Game -->
+      <a mat-icon-button [routerLink]="['/mixed-letters', category.id]">
+        <mat-icon>play_arrow</mat-icon>
+      </a>
     </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+
 <div class="add-button-container">
   <button mat-fab color="primary" routerLink="/newcategory">
     <mat-icon>add</mat-icon>

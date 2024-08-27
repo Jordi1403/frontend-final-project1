@@ -1,27 +1,32 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CategoriesService } from '../services/categories.service';
 import { Category } from '../../shared/model/category';
-
+import { DatePipe, CommonModule } from '@angular/common';
+ 
 @Component({
   selector: 'app-sort-words',
-  standalone: true,
-  imports: [
-    CommonModule,
-  ],
   templateUrl: './sort-words.component.html',
-  styleUrl: './sort-words.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./sort-words.component.css'],
+  standalone: true,
+  imports: [CommonModule, DatePipe],  // Ensure DatePipe is available
 })
-export class SortWordsComponent { 
-@Input ()
-id=''
-
-currentCategory? : Category;
-
-constructor(private categoriesService:CategoriesService){}
-
-ngOnInit(): void {
-  this.currentCategory = this.categoriesService.get(parseInt(this.id));
-}
+export class SortWordsComponent implements OnInit {
+  currentCategory?: Category;
+  id?: number;
+ 
+  constructor(
+    private route: ActivatedRoute,
+    private categoriesService: CategoriesService
+  ) {}
+ 
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.id = +params.get('categoryId')!;
+      this.currentCategory = this.categoriesService.get(this.id);
+      if (!this.currentCategory) {
+        console.error('Category not found for ID:', this.id);
+      }
+    });
+  }
 }

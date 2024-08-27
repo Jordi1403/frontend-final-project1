@@ -1,27 +1,113 @@
-import { CategoriesService } from './../services/categories.service';
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CategoriesService } from '../services/categories.service';
 import { Category } from '../../shared/model/category';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { shuffle } from 'lodash';
+import { SuccessDialogComponent } from '../success-dialog/success-dialog.component';
+import { FailureDialogComponent } from '../failure-dialog/failure-dialog.component';
+import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { PointsComponent } from '../points/points.component';
+import { ProgressBarComponent } from '../progress-bar/progress-bar.component'; // If standalone
+import { ProgressBarModule } from '../../shared/model/progress-bar';
 
 @Component({
   selector: 'app-mixed-letters',
+  templateUrl: './mixed-letters.component.html',
+  styleUrls: ['./mixed-letters.component.css'],
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
+    MatDialogModule,
+    MatProgressBarModule,
+    MatButtonModule,
+    MatIconModule,
+    ProgressBarModule,  // Import as standalone component
+    PointsComponent,
+    
   ],
-  templateUrl: './mixed-letters.component.html',
-  styleUrl: './mixed-letters.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MixedLettersComponent implements OnInit{
-    @Input ()
-  id=''
+export class MixedLettersComponent implements OnInit {
+  currentCategory?: Category;
+  currentWordIndex = 0;
+  scrambledWord = '';
+  userAnswer = '';
+  score = 0;
+  maxScore = 0;
 
-  currentCategory? : Category;
+  constructor(
+    private route: ActivatedRoute,
+    private categoriesService: CategoriesService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
 
-  constructor(private categoriesService:CategoriesService){}
-  
   ngOnInit(): void {
-    this.currentCategory = this.categoriesService.get(parseInt(this.id));
+    this.route.paramMap.subscribe(params => {
+      const categoryId = +params.get('id')!;
+      this.currentCategory = this.categoriesService.get(categoryId);
+      if (this.currentCategory) {
+        this.maxScore = Math.floor(100 / this.currentCategory.words.length);
+        this.nextWord();
+      } else {
+        console.error('Category not found for ID:', categoryId);
+      }
+    });
   }
- }
+
+  nextWord(): void {
+    if (this.currentCategory && this.currentWordIndex < this.currentCategory.words.length) {
+      // Display the Hebrew word (origin) and scramble the English word (target)
+      const word = this.currentCategory.words[this.currentWordIndex].target;
+      this.scrambledWord = shuffle(word.split('')).join('');
+      this.userAnswer = '';
+    } else {
+      this.showSummary();
+    }
+  }
+
+  submitAnswer(): void {
+    if (this.userAnswer.toLowerCase() === this.currentCategory?.words[this.currentWordIndex].target.toLowerCase()) {
+      this.score += this.maxScore;
+      this.showSuccessDialog();
+    } else {
+      this.showFailureDialog();
+    }
+  }
+
+  resetInput(): void {
+    this.userAnswer = '';
+  }
+
+  showSuccessDialog(): void {
+    this.dialog.open(SuccessDialogComponent).afterClosed().subscribe(() => {
+      this.currentWordIndex++;
+      this.nextWord();
+    });
+  }
+
+  showFailureDialog(): void {
+    this.dialog.open(FailureDialogComponent).afterClosed().subscribe(() => {
+      this.currentWordIndex++;
+      this.nextWord();
+    });
+  }
+
+  showSummary(): void {
+    this.router.navigate(['/summary', { score: this.score }]);
+  }
+
+  exitGame(): void {
+    this.dialog.open(ExitConfirmationDialogComponent).afterClosed().subscribe(result => {
+      if (result === 'yes') {
+        this.router.navigate(['/choose-game']);
+      }
+    });
+  }
+}

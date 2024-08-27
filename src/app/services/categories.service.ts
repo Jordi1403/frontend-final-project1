@@ -1,3 +1,4 @@
+// src/app/services/categories.service.ts
 import { Injectable } from '@angular/core';
 import { Category } from '../../shared/model/category';
 import { categories as defaultCategories } from './../../shared/data/categories';
@@ -16,11 +17,11 @@ export class CategoriesService {
   private initializeCategories(): void {
     const existingCategories = this.getCategories();
     if (existingCategories.size === 0 && defaultCategories.length > 0) {
+      console.log('Initializing categories with default data.');
       defaultCategories.forEach(cat => this.add(cat));
     }
   }
 
-  
   private getCategories(): Map<number, Category> {
     try {
       const categoriesString = localStorage.getItem(this.CATEGORIES_KEY);
@@ -31,35 +32,30 @@ export class CategoriesService {
     }
   }
 
-  /**
-   * Gets the next ID for new category additions.
-   */
-  private getNextId(): number {
-    const nextIdString = localStorage.getItem(this.NEXT_ID_KEY);
-    return nextIdString ? parseInt(nextIdString, 10) : 1; 
-  }
-
-  
   private setCategories(list: Map<number, Category>): void {
     localStorage.setItem(this.CATEGORIES_KEY, JSON.stringify(Array.from(list.entries())));
   }
 
- 
+  private getNextId(): number {
+    const nextIdString = localStorage.getItem(this.NEXT_ID_KEY);
+    return nextIdString ? parseInt(nextIdString, 10) : 1;  // Should return at least 1
+  }
+  
+
   private setNextId(id: number): void {
     localStorage.setItem(this.NEXT_ID_KEY, id.toString());
   }
 
- 
   list(): Category[] {
     return Array.from(this.getCategories().values());
   }
 
-  
   get(id: number): Category | undefined {
-    return this.getCategories().get(id);
+    const category = this.getCategories().get(id);
+    console.log(`Getting category with ID ${id}:`, category);
+    return category;
   }
 
-  
   delete(id: number): void {
     const categoriesMap = this.getCategories();
     if (categoriesMap.delete(id)) {
@@ -67,22 +63,20 @@ export class CategoriesService {
     }
   }
 
- 
   update(category: Category): void {
     const categoriesMap = this.getCategories();
-    category.lastUpdateDate = new Date(); 
+    category.lastUpdateDate = new Date();
     categoriesMap.set(category.id, category);
     this.setCategories(categoriesMap);
   }
 
- 
   add(category: Category): void {
     const nextId = this.getNextId();
-    category.id = nextId;  
-    category.lastUpdateDate = new Date();  
+    category.id = nextId;  // Ensure nextId is correctly incremented
+    category.lastUpdateDate = new Date();
     const categoriesMap = this.getCategories();
     categoriesMap.set(category.id, category);
     this.setCategories(categoriesMap);
-    this.setNextId(nextId + 1);  
+    this.setNextId(nextId + 1);  // Increment the ID for the next category
   }
 }
