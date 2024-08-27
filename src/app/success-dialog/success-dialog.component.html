@@ -1,1 +1,9 @@
-<p>success-dialog works!</p>,
+<div mat-dialog-content>
+    <h1>Great Job!</h1>
+    <p>Your final score is: {{ data.score }}</p>  <!-- Display the score here -->
+  </div>
+  
+  <div mat-dialog-actions>
+    <button mat-button (click)="closeDialog()">Continue</button>
+  </div>
+  

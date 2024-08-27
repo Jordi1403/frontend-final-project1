@@ -1,1 +1,13 @@
-<p>summary works!</p>,
+<div class="summary-container">
+    <h1>Game Summary</h1>
+   
+    <div class="summary-details">
+      <p>Your final score is:</p>
+      <h2>{{ finalScore }}</h2>
+    </div>
+ 
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="playAgain()">Play Again</button>
+      <button mat-raised-button color="accent" (click)="chooseAnotherGame()">Choose Another Game</button>
+    </div>
+  </div>

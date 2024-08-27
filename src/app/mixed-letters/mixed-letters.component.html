@@ -1,28 +1,29 @@
 <div>
   <h1>Mixed Letters Game</h1>
-  
+ 
   <div *ngIf="currentCategory">
-    <!-- Display the Hebrew word (origin) -->
-    <h2>{{ currentCategory.words[currentWordIndex]?.origin }} ({{ currentCategory.name }})</h2>
-    
+    <!-- Display the Hebrew word (target) -->
+    <h2>{{ currentCategory.words[currentWordIndex]?.target }} ({{ currentCategory.name }})</h2>
+ 
     <div>
       <h3>Unscramble the word:</h3>
-      <!-- Display the scrambled English word (target) -->
+      <!-- Display the scrambled English word (origin) -->
       <p>{{ scrambledWord }}</p>
       <input [(ngModel)]="userAnswer" placeholder="Enter your answer" />
       <button mat-raised-button color="primary" (click)="submitAnswer()">Submit</button>
       <button mat-raised-button color="warn" (click)="resetInput()">Reset</button>
     </div>
-
+ 
     <div>
       <button mat-icon-button (click)="exitGame()">
         <mat-icon>exit_to_app</mat-icon>
       </button>
     </div>
-
-
-
+ 
+   
+ 
   <div *ngIf="!currentCategory">
     <p>No category found or invalid category ID.</p>
   </div>
 </div>
+ 

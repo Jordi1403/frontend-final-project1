@@ -1,3 +1,4 @@
+import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
 import { ChoseGameComponent } from './chose-game/chose-game.component';
 import { DashbordComponent } from './dashbord/dashbord.component';
@@ -9,8 +10,10 @@ import { HelpComponent } from './help/help.component';
 import { SortWordsComponent } from './sort-words/sort-words.component';
 
 import { GameCardComponent } from './game-card/game-card.component';
+import { SummaryComponent } from './summary/summary.component';
 
 export const routes: Routes = [
+    { path: '', redirectTo: 'dashbord', pathMatch: 'full' },
     { path: 'dashbord', component: DashbordComponent },
     { path: 'category/:id', component: CategoryFormComponent },
     { path: 'newcategory', component: CategoryFormComponent },
@@ -20,5 +23,7 @@ export const routes: Routes = [
     { path: 'chose-game', component: ChoseGameComponent },
     { path: 'game/:gameName', component: GameCardComponent},
     { path: 'sort-words/:id', component: SortWordsComponent },
-    { path: 'categories', component: CategoriesListComponent }  // Example usage
+    { path: 'categories', component: CategoriesListComponent },  // Example usage
+    { path:  'categories-list', component : CategoriesListComponent},
+    { path: 'summary', component: SummaryComponent },
 ];

@@ -1,14 +1,18 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+ 
 @Component({
   selector: 'app-failure-dialog',
-  standalone: true,
-  imports: [
-    CommonModule,
-  ],
   templateUrl: './failure-dialog.component.html',
-  styleUrl: './failure-dialog.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatButtonModule],
 })
-export class FailureDialogComponent { }
+export class FailureDialogComponent {
+  constructor(private dialogRef: MatDialogRef<FailureDialogComponent>) {}
+ 
+  closeDialog(): void {
+    this.dialogRef.close();
+  }
+}
+ 

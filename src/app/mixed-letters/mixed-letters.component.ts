@@ -9,13 +9,13 @@ import { FailureDialogComponent } from '../failure-dialog/failure-dialog.compone
 import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PointsComponent } from '../points/points.component';
 import { ProgressBarComponent } from '../progress-bar/progress-bar.component'; // If standalone
 import { ProgressBarModule } from '../../shared/model/progress-bar';
-
+import { MatIconModule } from '@angular/material/icon';
+ 
 @Component({
   selector: 'app-mixed-letters',
   templateUrl: './mixed-letters.component.html',
@@ -29,85 +29,87 @@ import { ProgressBarModule } from '../../shared/model/progress-bar';
     MatButtonModule,
     MatIconModule,
     ProgressBarModule,  // Import as standalone component
-    PointsComponent,
-    
-  ],
-})
-export class MixedLettersComponent implements OnInit {
-  currentCategory?: Category;
-  currentWordIndex = 0;
-  scrambledWord = '';
-  userAnswer = '';
-  score = 0;
-  maxScore = 0;
-
-  constructor(
-    private route: ActivatedRoute,
-    private categoriesService: CategoriesService,
-    private router: Router,
-    private dialog: MatDialog
-  ) {}
-
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const categoryId = +params.get('id')!;
-      this.currentCategory = this.categoriesService.get(categoryId);
-      if (this.currentCategory) {
-        this.maxScore = Math.floor(100 / this.currentCategory.words.length);
-        this.nextWord();
-      } else {
-        console.error('Category not found for ID:', categoryId);
-      }
-    });
-  }
-
-  nextWord(): void {
-    if (this.currentCategory && this.currentWordIndex < this.currentCategory.words.length) {
-      // Display the Hebrew word (origin) and scramble the English word (target)
-      const word = this.currentCategory.words[this.currentWordIndex].target;
-      this.scrambledWord = shuffle(word.split('')).join('');
-      this.userAnswer = '';
-    } else {
-      this.showSummary();
-    }
-  }
-
-  submitAnswer(): void {
-    if (this.userAnswer.toLowerCase() === this.currentCategory?.words[this.currentWordIndex].target.toLowerCase()) {
-      this.score += this.maxScore;
-      this.showSuccessDialog();
-    } else {
-      this.showFailureDialog();
-    }
-  }
-
-  resetInput(): void {
-    this.userAnswer = '';
-  }
-
-  showSuccessDialog(): void {
-    this.dialog.open(SuccessDialogComponent).afterClosed().subscribe(() => {
-      this.currentWordIndex++;
-      this.nextWord();
-    });
-  }
-
-  showFailureDialog(): void {
-    this.dialog.open(FailureDialogComponent).afterClosed().subscribe(() => {
-      this.currentWordIndex++;
-      this.nextWord();
-    });
-  }
-
-  showSummary(): void {
-    this.router.navigate(['/summary', { score: this.score }]);
-  }
-
-  exitGame(): void {
-    this.dialog.open(ExitConfirmationDialogComponent).afterClosed().subscribe(result => {
-      if (result === 'yes') {
-        this.router.navigate(['/choose-game']);
-      }
-    });
-  }
+    PointsComponent,],
+  })
+ 
+  export class MixedLettersComponent implements OnInit {
+resetInput() {
+throw new Error('Method not implemented.');
 }
+    currentCategory?: Category;
+    currentWordIndex = 0;
+    scrambledWord = '';
+    userAnswer = '';
+    score = 0;
+    maxScore = 0;
+    pointsPerWord: number = 0;
+ 
+ 
+    constructor(
+      private route: ActivatedRoute,
+      private categoriesService: CategoriesService,
+      private router: Router,
+      private dialog: MatDialog
+    ) {}
+ 
+    ngOnInit(): void {
+      this.route.paramMap.subscribe((params) => {
+        const categoryId = +params.get('id')!;
+        this.currentCategory = this.categoriesService.get(categoryId);
+        if (this.currentCategory) {
+          // Calculate points per word
+          this.pointsPerWord = Math.floor(this.maxScore / this.currentCategory.words.length);
+          this.nextWord();
+        } else {
+          console.error('Category not found for ID:', categoryId);
+        }
+      });
+    }
+ 
+    nextWord(): void {
+      if (this.currentCategory && this.currentWordIndex < this.currentCategory.words.length) {
+        const word = this.currentCategory.words[this.currentWordIndex].origin;  // Origin is in English
+        this.scrambledWord = shuffle(word.split('')).join('');
+        this.userAnswer = '';
+      } else {
+        this.showSummary();
+      }
+    }
+ 
+    submitAnswer(): void {
+      const correctAnswer = this.userAnswer.toLowerCase() === this.currentCategory?.words[this.currentWordIndex].origin.toLowerCase();
+     
+      if (correctAnswer) {
+        this.score += this.pointsPerWord;
+        this.dialog.open(SuccessDialogComponent).afterClosed().subscribe(() => {
+          this.currentWordIndex++;
+          this.checkIfFinished();
+        });
+      } else {
+        this.dialog.open(FailureDialogComponent).afterClosed().subscribe(() => {
+          this.currentWordIndex++;
+          this.checkIfFinished();
+        });
+      }
+    }
+ 
+    checkIfFinished(): void {
+      if (this.currentWordIndex >= (this.currentCategory?.words.length || 0)) {
+        this.showSummary();
+      } else {
+        this.nextWord();
+      }
+    }
+ 
+    showSummary(): void {
+      this.router.navigate(['/summary']);
+    }
+ 
+    exitGame(): void {
+      this.dialog.open(ExitConfirmationDialogComponent).afterClosed().subscribe((result) => {
+        if (result === 'yes') {
+          this.router.navigate(['/choose-game']);
+        }
+      });
+    }
+  }

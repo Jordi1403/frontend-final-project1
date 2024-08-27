@@ -1,14 +1,24 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-success-dialog',
-  standalone: true,
-  imports: [
-    CommonModule,
-  ],
   templateUrl: './success-dialog.component.html',
-  styleUrl: './success-dialog.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatButtonModule],
 })
-export class SuccessDialogComponent { }
+export class SuccessDialogComponent {
+  constructor(
+    private dialogRef: MatDialogRef<SuccessDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { score: number }  // Inject the score data
+  ) {}
+
+  closeDialog(): void {
+    this.dialogRef.close();
+  }
+}
+ 
+
+
+
