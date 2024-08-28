@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
- 
+
 @Component({
   selector: 'app-chose-game-dialog',
   templateUrl: './chose-game-dialog.component.html',
@@ -27,53 +27,53 @@ import { MatButtonModule } from '@angular/material/button';
 export class ChoseGameDialogComponent implements OnInit {
   categories: Category[] = [];
   selectedCategory?: Category;
- 
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public gameProfile: { name: string },
     private dialogRef: MatDialogRef<ChoseGameDialogComponent>,
     private router: Router,
     private categoriesService: CategoriesService
   ) {}
- 
+
   ngOnInit(): void {
     this.categories = this.categoriesService.list();
   }
- 
+
   onCategorySelect(category: Category): void {
     this.selectedCategory = category;
   }
- 
+
   closeAndNavigate(): void {
     if (!this.selectedCategory || !this.selectedCategory.id) {
       console.error('Invalid or missing category ID:', this.selectedCategory);
       return;
     }
-   
+
     let gameName = this.gameProfile.name.toLowerCase().replace(/\s+/g, '-');
-    console.log('Normalized Game Name:', gameName);
-   
     let gameRoute = '';
-   
+
     switch (gameName) {
       case 'mixed-letters':
-    case 'mixed-words': // Adding mixed-words if this is actually valid
-      gameRoute = `/mixed-letters/${this.selectedCategory.id}`;
-      break;
+      case 'mixed-words': // Handle possible variations
+        gameRoute = `/mixed-letters/${this.selectedCategory.id}`;
+        break;
       case 'trivia':
         gameRoute = `/trivia/${this.selectedCategory.id}`;
         break;
-        case 'sort-words':
-          case 'sort-word':  // Handle this variation if needed
-            gameRoute = `/sort-words/${this.selectedCategory.id}`;
-            break;
-          default:
+      case 'sort-words':
+      case 'sort-word': // Handle possible variations
+        gameRoute = `/sort-words/${this.selectedCategory.id}`;
+        break;
+      default:
         console.error('Unknown game:', gameName);
         return;
     }
-   
-    console.log('Navigating to:', gameRoute);
+
     this.router.navigate([gameRoute]);
-    this.dialogRef.close();
+    this.dialogRef.close(); // Close the dialog after navigation
   }
- 
-    }
+
+  closeDialog(): void {
+    this.dialogRef.close(); // Close the dialog when cancel is clicked
+  }
+}
