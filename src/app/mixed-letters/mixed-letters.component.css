@@ -6,6 +6,7 @@
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 /* Header styling */
@@ -75,12 +76,11 @@
   margin-top: 20px;
 }
 
-/* Exit button */
-.mixed-letters-container button[mat-icon-button] {
-  margin-top: 20px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+/* Exit button container */
+.exit-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
 
 /* For any error or alert messages */

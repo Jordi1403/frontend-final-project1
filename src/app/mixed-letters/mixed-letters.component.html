@@ -1,14 +1,23 @@
 <div class="mixed-letters-container">
+  <!-- Exit button moved to the top left corner -->
+  <div class="exit-button">
+    <button mat-icon-button (click)="exitGame()">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
+  </div>
+
   <h1>Mixed Letters Game</h1>
  
   <div *ngIf="currentCategory">
-    <!-- Display the Hebrew word (target) -->
-    <h2>{{ currentCategory.words[currentWordIndex]?.target }} ({{ currentCategory.name }})</h2>
+    <!-- Display the category name without parentheses -->
+    <h2>{{ currentCategory.name }}</h2>
  
     <div>
       <h3>Unscramble the word:</h3>
       <!-- Display the scrambled English word (origin) -->
       <p>{{ scrambledWord }}</p>
+      <!-- Display the word to translate (target) after the scrambled word -->
+      <p><strong>Translate:</strong> {{ currentCategory.words[currentWordIndex]?.target }}</p>
       <input [(ngModel)]="userAnswer" placeholder="Enter your answer" />
       <button mat-raised-button color="primary" (click)="submitAnswer()">Submit</button>
       <button mat-raised-button color="warn" (click)="resetInput()">Reset</button>
@@ -16,12 +25,6 @@
 
     <!-- Add the Progress Bar -->
     <app-progress-bar [current]="currentWordIndex" [total]="currentCategory.words.length"></app-progress-bar>
- 
-    <div>
-      <button mat-icon-button (click)="exitGame()">
-        <mat-icon>exit_to_app</mat-icon>
-      </button>
-    </div>
   </div>
 
   <div *ngIf="!currentCategory" class="no-category">
