@@ -20,7 +20,7 @@ export class ExitConfirmationDialogComponent {
 
   confirmExit(): void {
     this.dialogRef.close();
-    this.router.navigate(['/chose-game']);  // Redirect to the choose-game page
+    this.router.navigate(['/chose-game']); 
   }
 
   cancel(): void {
