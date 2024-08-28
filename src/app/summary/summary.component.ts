@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon'; // Import MatIconModule
+import { MatIconModule } from '@angular/material/icon';
 import { GameStateService } from '../services/game-state.service';
 
 @Component({
@@ -15,12 +15,13 @@ import { GameStateService } from '../services/game-state.service';
     CommonModule,
     MatTableModule,
     MatButtonModule,
-    MatIconModule,  // Include MatIconModule in the imports
+    MatIconModule,
   ],
 })
 export class SummaryComponent implements OnInit {
   finalScore: number = 0;
   wordsUsed: { origin: string; target: string; correct: boolean; userAnswer: string }[] = [];
+  categoryId: number = 0;
 
   constructor(
     private router: Router,
@@ -28,12 +29,9 @@ export class SummaryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Retrieving the game state from the service
     this.finalScore = this.gameStateService.getScore();
     this.wordsUsed = this.gameStateService.getWordsUsed();
-
-    console.log("Final Score received in Summary:", this.finalScore);
-    console.log("Words received in Summary:", this.wordsUsed);
+    this.categoryId = this.gameStateService.getCategoryId();
 
     if (this.wordsUsed.length === 0) {
       console.error('No words found, possibly a navigation issue.');
@@ -41,10 +39,13 @@ export class SummaryComponent implements OnInit {
   }
 
   playAgain(): void {
-    this.router.navigate(['/mixed-letters']);
+    // Use an array to navigate and pass the parameter as part of the path
+    this.router.navigate(['/mixed-letters', this.categoryId]);
   }
-
+  
   chooseAnotherGame(): void {
-    this.router.navigate(['/choose-game']);
+    this.router.navigate(['/chose-game']);
   }
+  
+  
 }
