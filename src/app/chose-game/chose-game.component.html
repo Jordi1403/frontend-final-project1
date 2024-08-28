@@ -2,7 +2,11 @@
   <h1 mat-typography="display-2">Choose Your Game</h1>
 
   <div class="card-container">
-    <div *ngFor="let game of allGames" class="game-card" (click)="selectGame(game)">
+    <div
+      *ngFor="let game of allGames"
+      class="game-card"
+      (click)="selectGame(game)"
+    >
       <app-game-card [currentGame]="game"></app-game-card>
     </div>
   </div>

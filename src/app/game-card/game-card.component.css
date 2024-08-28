@@ -1,18 +1,159 @@
+/* Container for the entire choose game component */
+.chose-game-container {
+  max-width: 700px; /* Slightly smaller for a more compact look */
+  width: 100%;
+  background-color: #ffffff; /* Clean white background */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Softer shadow for depth */
+  text-align: center; /* Center text within the container */
+  margin: 20px auto; /* Center the container with margin */
+}
+
+/* Header styling */
+h1 {
+  font-size: 2em; /* Larger font size for prominence */
+  color: #3f51b5; /* Primary color for the title */
+  margin-bottom: 20px; /* Space below the header */
+  font-weight: 600; /* Bold font weight */
+}
+
+/* Card container with spacing between cards */
 .card-container {
-  margin: 10px;
-  padding: 20px; /* Increased padding for better spacing */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between cards */
+  margin-bottom: 20px; /* Space below the card container */
+}
+
+/* Style for individual game cards */
+.game-card {
+  width: 200px; /* Fixed width for consistency */
+  height: 220px; /* Fixed height to ensure all cards are the same size */
+  background-color: #f9f9f9; /* Light background for cards */
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-  text-align: center; /* Center text within the card */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column; /* Stack contents vertically */
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center text inside the card */
+  overflow: hidden; /* Hide any overflow */
 }
 
-.card-container:hover {
-  transform: scale(1.05);
+.game-card:hover {
+  transform: scale(1.05); /* Slight zoom effect on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
 }
 
-.centered-description {
-  font-size: 0.9em; /* Smaller font size for elegance */
-  color: #666; /* Subtle color for the description */
-  margin-top: 8px; /* Space between title and description */
-  line-height: 1.4; /* Slightly larger line-height for readability */
+.game-card h3 {
+  font-size: 1.1em; /* Slightly larger font size for titles */
+  color: #3f51b5; /* Primary color for titles */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+}
+
+.game-card p {
+  font-size: 0.9em; /* Adjust font size for better fit */
+  color: #666; /* Darker gray for content text */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+}
+
+/* Style for Mixed Letters container */
+.mixed-letters-container {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+/* Header styling in mixed letters */
+.mixed-letters-container h1 {
+  text-align: center;
+  color: #3f51b5;
+  margin-bottom: 20px;
+  font-size: 2em;
+  font-weight: 600;
+}
+
+.mixed-letters-container h2 {
+  font-size: 1.5em;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.mixed-letters-container h3 {
+  font-size: 1.2em;
+  color: #666666;
+  margin-bottom: 10px;
+}
+
+.mixed-letters-container p {
+  font-size: 1.5em;
+  text-align: center;
+  color: #ff4081;
+  margin-bottom: 20px;
+}
+
+.mixed-letters-container input {
+  display: block;
+  width: calc(100% - 20px);
+  margin: 0 auto 20px auto;
+  padding: 10px;
+  font-size: 1.2em;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+}
+
+.mixed-letters-container button {
+  display: block;
+  width: calc(100% - 20px);
+  margin: 10px auto;
+  padding: 10px;
+  font-size: 1em;
+}
+
+.mixed-letters-container button[color="primary"] {
+  background-color: #3f51b5;
+  color: #ffffff;
+}
+
+.mixed-letters-container button[color="warn"] {
+  background-color: #ff4081;
+  color: #ffffff;
+}
+
+.mixed-letters-container .progress-bar {
+  margin-top: 20px;
+}
+
+/* Exit button container */
+.exit-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+/* For any error or alert messages */
+.mixed-letters-container p.error {
+  color: red;
+  text-align: center;
+}
+
+/* If no category is found */
+.mixed-letters-container .no-category {
+  text-align: center;
+  color: #ff4081;
+  font-size: 1.2em;
+  margin-top: 20px;
 }
