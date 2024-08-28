@@ -15,7 +15,8 @@
     </div>
 
     <!-- Add the Progress Bar -->
-    <app-progress-bar [current]="currentWordIndex + 1" [total]="currentCategory.words.length"></app-progress-bar>
+    <app-progress-bar [current]="currentWordIndex" [total]="currentCategory.words.length"></app-progress-bar>
+
  
     <div>
       <button mat-icon-button (click)="exitGame()">

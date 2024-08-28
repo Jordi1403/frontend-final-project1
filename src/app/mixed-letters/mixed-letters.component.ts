@@ -81,17 +81,18 @@ throw new Error('Method not implemented.');
     
     if (correctAnswer) {
       this.score += this.pointsPerWord;
+      this.currentWordIndex++;  // Increment the index only after a correct answer
       this.dialog.open(SuccessDialogComponent).afterClosed().subscribe(() => {
-        this.currentWordIndex++;
         this.checkIfFinished();
       });
     } else {
       this.dialog.open(FailureDialogComponent).afterClosed().subscribe(() => {
-        this.currentWordIndex++;
+        this.currentWordIndex++;  // Increment the index only after an incorrect answer
         this.checkIfFinished();
       });
     }
   }
+  
 
   checkIfFinished(): void {
     if (this.currentWordIndex >= (this.currentCategory?.words.length || 0)) {
