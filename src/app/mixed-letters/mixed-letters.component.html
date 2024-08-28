@@ -1,4 +1,4 @@
-<div>
+<div class="mixed-letters-container">
   <h1>Mixed Letters Game</h1>
  
   <div *ngIf="currentCategory">
@@ -16,7 +16,6 @@
 
     <!-- Add the Progress Bar -->
     <app-progress-bar [current]="currentWordIndex" [total]="currentCategory.words.length"></app-progress-bar>
-
  
     <div>
       <button mat-icon-button (click)="exitGame()">
@@ -25,7 +24,7 @@
     </div>
   </div>
 
-  <div *ngIf="!currentCategory">
+  <div *ngIf="!currentCategory" class="no-category">
     <p>No category found or invalid category ID.</p>
   </div>
 </div>

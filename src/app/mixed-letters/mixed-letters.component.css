@@ -1,3 +1,98 @@
-:host {
+/* Container for the entire game */
+.mixed-letters-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styling */
+.mixed-letters-container h1 {
+  text-align: center;
+  color: #3f51b5;
+  margin-bottom: 20px;
+}
+
+/* Category and word section */
+.mixed-letters-container h2 {
+  font-size: 1.5em;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Instructions */
+.mixed-letters-container h3 {
+  font-size: 1.2em;
+  color: #666666;
+  margin-bottom: 10px;
+}
+
+/* Scrambled word display */
+.mixed-letters-container p {
+  font-size: 1.5em;
+  text-align: center;
+  color: #ff4081;
+  margin-bottom: 20px;
+}
+
+/* Input field styling */
+.mixed-letters-container input {
   display: block;
+  width: calc(100% - 20px);
+  margin: 0 auto 20px auto;
+  padding: 10px;
+  font-size: 1.2em;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+}
+
+/* Buttons */
+.mixed-letters-container button {
+  display: block;
+  width: calc(100% - 20px);
+  margin: 10px auto;
+  padding: 10px;
+  font-size: 1em;
+}
+
+/* Submit button */
+.mixed-letters-container button[color="primary"] {
+  background-color: #3f51b5;
+  color: #ffffff;
+}
+
+/* Reset button */
+.mixed-letters-container button[color="warn"] {
+  background-color: #ff4081;
+  color: #ffffff;
+}
+
+/* Progress Bar */
+.mixed-letters-container .progress-bar {
+  margin-top: 20px;
+}
+
+/* Exit button */
+.mixed-letters-container button[mat-icon-button] {
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* For any error or alert messages */
+.mixed-letters-container p.error {
+  color: red;
+  text-align: center;
+}
+
+/* If no category is found */
+.mixed-letters-container .no-category {
+  text-align: center;
+  color: #ff4081;
+  font-size: 1.2em;
+  margin-top: 20px;
 }

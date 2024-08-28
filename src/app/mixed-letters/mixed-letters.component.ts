@@ -12,10 +12,19 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PointsComponent } from '../points/points.component';
-import { ProgressBarComponent } from '../progress-bar/progress-bar.component'; // If standalone
-import { ProgressBarModule } from '../../shared/model/progress-bar';
+import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 import { MatIconModule } from '@angular/material/icon';
- 
+import { ProgressBarModule } from '../../shared/model/progress-bar';
+import { GameStateService } from '../services/game-state.service';
+
+// Define a type that includes the user's answer
+interface WordEntry {
+  origin: string;
+  target: string;
+  correct: boolean;
+  userAnswer: string;
+}
+
 @Component({
   selector: 'app-mixed-letters',
   templateUrl: './mixed-letters.component.html',
@@ -28,11 +37,10 @@ import { MatIconModule } from '@angular/material/icon';
     MatProgressBarModule,
     MatButtonModule,
     MatIconModule,
-    ProgressBarModule,  // Import as standalone component
-    PointsComponent,],
-  })
- 
-
+    ProgressBarModule,  // Importing the progress bar component
+    PointsComponent,
+  ],
+})
 export class MixedLettersComponent implements OnInit {
 resetInput() {
 throw new Error('Method not implemented.');
@@ -42,14 +50,17 @@ throw new Error('Method not implemented.');
   scrambledWord = '';
   userAnswer = '';
   score = 0;
-  maxScore = 0;
   pointsPerWord: number = 0;
+
+  // Updated wordsUsed to include userAnswer
+  wordsUsed: WordEntry[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private categoriesService: CategoriesService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private gameStateService: GameStateService
   ) {}
 
   ngOnInit(): void {
@@ -57,8 +68,7 @@ throw new Error('Method not implemented.');
       const categoryId = +params.get('id')!;
       this.currentCategory = this.categoriesService.get(categoryId);
       if (this.currentCategory) {
-        // Calculate points per word
-        this.pointsPerWord = Math.floor(this.maxScore / this.currentCategory.words.length);
+        this.pointsPerWord = Math.floor(100 / this.currentCategory.words.length);
         this.nextWord();
       } else {
         console.error('Category not found for ID:', categoryId);
@@ -68,7 +78,7 @@ throw new Error('Method not implemented.');
 
   nextWord(): void {
     if (this.currentCategory && this.currentWordIndex < this.currentCategory.words.length) {
-      const word = this.currentCategory.words[this.currentWordIndex].origin;  // Origin is in English
+      const word = this.currentCategory.words[this.currentWordIndex].origin;
       this.scrambledWord = shuffle(word.split('')).join('');
       this.userAnswer = '';
     } else {
@@ -79,20 +89,26 @@ throw new Error('Method not implemented.');
   submitAnswer(): void {
     const correctAnswer = this.userAnswer.toLowerCase() === this.currentCategory?.words[this.currentWordIndex].origin.toLowerCase();
     
+    this.wordsUsed.push({
+      origin: this.currentCategory?.words[this.currentWordIndex].origin || '',
+      target: this.currentCategory?.words[this.currentWordIndex].target || '',
+      correct: correctAnswer,
+      userAnswer: this.userAnswer  // Include the user's answer
+    });
+
     if (correctAnswer) {
       this.score += this.pointsPerWord;
-      this.currentWordIndex++;  // Increment the index only after a correct answer
       this.dialog.open(SuccessDialogComponent).afterClosed().subscribe(() => {
+        this.currentWordIndex++;
         this.checkIfFinished();
       });
     } else {
       this.dialog.open(FailureDialogComponent).afterClosed().subscribe(() => {
-        this.currentWordIndex++;  // Increment the index only after an incorrect answer
+        this.currentWordIndex++;
         this.checkIfFinished();
       });
     }
   }
-  
 
   checkIfFinished(): void {
     if (this.currentWordIndex >= (this.currentCategory?.words.length || 0)) {
@@ -103,6 +119,7 @@ throw new Error('Method not implemented.');
   }
 
   showSummary(): void {
+    this.gameStateService.setGameState(this.score, this.wordsUsed);
     this.router.navigate(['/summary']);
   }
 
