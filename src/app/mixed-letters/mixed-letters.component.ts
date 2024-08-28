@@ -42,9 +42,9 @@ interface WordEntry {
   ],
 })
 export class MixedLettersComponent implements OnInit {
-resetInput() {
-throw new Error('Method not implemented.');
-}
+  resetInput() {
+    throw new Error('Method not implemented.');
+  }
   currentCategory?: Category;
   currentWordIndex = 0;
   scrambledWord = '';
@@ -97,8 +97,8 @@ throw new Error('Method not implemented.');
     });
   
     const dialogConfig = {
-      width: '250px',  // Set desired width
-      height: '159px', // Set desired height
+      width: '280px',  // Set desired width
+      height: '200px', // Set desired height
       data: { score: this.score }
     };
   
@@ -126,8 +126,10 @@ throw new Error('Method not implemented.');
   }
 
   showSummary(): void {
-    this.gameStateService.setGameState(this.score, this.wordsUsed);
-    this.router.navigate(['/summary']);
+    if (this.currentCategory) {
+      this.gameStateService.setGameState(this.score, this.wordsUsed, this.currentCategory.id);  // Added categoryId
+      this.router.navigate(['/summary']);
+    }
   }
 
   exitGame(): void {

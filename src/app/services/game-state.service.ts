@@ -5,30 +5,30 @@ import { Injectable } from '@angular/core';
 })
 export class GameStateService {
   private score: number = 0;
-
-  // Updated wordsUsed to include the userAnswer property
+  private categoryId: number = 0; // Stores the current category ID
   private wordsUsed: { origin: string; target: string; correct: boolean; userAnswer: string }[] = [];
 
-  // Updated method to accept and store the userAnswer
-  setGameState(score: number, words: { origin: string; target: string; correct: boolean; userAnswer: string }[]): void {
-    console.log("Setting game state in service: score =", score, "words =", words);
+  setGameState(score: number, words: { origin: string; target: string; correct: boolean; userAnswer: string }[], categoryId: number): void {
     this.score = score;
     this.wordsUsed = words;
+    this.categoryId = categoryId;
   }
 
   getScore(): number {
-    console.log("Getting score from service:", this.score);
     return this.score;
   }
 
-  // Updated method to return the words including userAnswer
+  getCategoryId(): number {
+    return this.categoryId;
+  }
+
   getWordsUsed(): { origin: string; target: string; correct: boolean; userAnswer: string }[] {
-    console.log("Getting words from service:", this.wordsUsed);
     return this.wordsUsed;
   }
 
   clearState(): void {
     this.score = 0;
     this.wordsUsed = [];
+    this.categoryId = 0;
   }
 }
