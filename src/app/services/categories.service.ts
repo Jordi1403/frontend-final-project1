@@ -72,11 +72,11 @@ export class CategoriesService {
 
   add(category: Category): void {
     const nextId = this.getNextId();
-    category.id = nextId;  // Ensure nextId is correctly incremented
+    category.id = nextId;  
     category.lastUpdateDate = new Date();
     const categoriesMap = this.getCategories();
     categoriesMap.set(category.id, category);
     this.setCategories(categoriesMap);
-    this.setNextId(nextId + 1);  // Increment the ID for the next category
+    this.setNextId(nextId + 1);  
   }
 }

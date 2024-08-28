@@ -20,20 +20,21 @@ import { ChoseGameDialogComponent } from './../chose-game-dialog/chose-game-dial
 export class ChoseGameComponent implements OnInit {
   allGames: GameProfile[] = [];
   selectedGame: GameProfile | undefined;
- 
+
   constructor(
     private gameService: GameinfoService,
     private dialogService: MatDialog
   ) {}
- 
+
   ngOnInit(): void {
     this.allGames = this.gameService.list();
   }
- 
+
   selectGame(game: GameProfile): void {
     this.selectedGame = game;
+    this.openDialog();
   }
- 
+
   openDialog(): void {
     if (this.selectedGame) {
       this.dialogService.open(ChoseGameDialogComponent, {
@@ -42,4 +43,3 @@ export class ChoseGameComponent implements OnInit {
     }
   }
 }
- 
