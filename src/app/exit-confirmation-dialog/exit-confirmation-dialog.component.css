@@ -1,3 +1,27 @@
 :host {
   display: block;
 }
+
+.dialog-title {
+  text-align: center;
+  color: #3f51b5; /* Material primary color for the title */
+  font-size: 1.5em;
+  margin-bottom: 20px; /* Space below the title */
+}
+
+.dialog-content {
+  text-align: center;
+  font-size: 1.1em;
+  color: #666; /* Subtle text color for the content */
+  margin-bottom: 20px; /* Space below the content */
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* Space between buttons */
+}
+
+.dialog-actions button {
+  min-width: 100px; /* Ensure buttons are uniformly sized */
+}
