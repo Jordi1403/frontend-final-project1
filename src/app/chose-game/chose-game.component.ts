@@ -28,6 +28,7 @@ export class ChoseGameComponent implements OnInit {
 
   ngOnInit(): void {
     this.allGames = this.gameService.list();
+    console.log(this.allGames);
   }
 
   selectGame(game: GameProfile): void {

@@ -9,6 +9,7 @@ import { HelpComponent } from './help/help.component';
 import { SortWordsComponent } from './sort-words/sort-words.component';
 import { GameCardComponent } from './game-card/game-card.component';
 import { SummaryComponent } from './summary/summary.component';
+import { MatchingWordsComponent } from './matching-words/matching-words.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'dashbord', pathMatch: 'full' },
@@ -24,4 +25,5 @@ export const routes: Routes = [
     { path: 'categories', component: CategoriesListComponent },
     { path: 'categories-list', component: CategoriesListComponent },
     { path: 'summary', component: SummaryComponent },
+    {path: 'matching-words/:id', component: MatchingWordsComponent},
 ];
