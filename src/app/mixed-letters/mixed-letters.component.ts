@@ -93,22 +93,29 @@ throw new Error('Method not implemented.');
       origin: this.currentCategory?.words[this.currentWordIndex].origin || '',
       target: this.currentCategory?.words[this.currentWordIndex].target || '',
       correct: correctAnswer,
-      userAnswer: this.userAnswer  // Include the user's answer
+      userAnswer: this.userAnswer
     });
-
+  
+    const dialogConfig = {
+      width: '250px',  // Set desired width
+      height: '159px', // Set desired height
+      data: { score: this.score }
+    };
+  
     if (correctAnswer) {
       this.score += this.pointsPerWord;
-      this.dialog.open(SuccessDialogComponent).afterClosed().subscribe(() => {
+      this.dialog.open(SuccessDialogComponent, dialogConfig).afterClosed().subscribe(() => {
         this.currentWordIndex++;
         this.checkIfFinished();
       });
     } else {
-      this.dialog.open(FailureDialogComponent).afterClosed().subscribe(() => {
+      this.dialog.open(FailureDialogComponent, dialogConfig).afterClosed().subscribe(() => {
         this.currentWordIndex++;
         this.checkIfFinished();
       });
     }
   }
+  
 
   checkIfFinished(): void {
     if (this.currentWordIndex >= (this.currentCategory?.words.length || 0)) {
