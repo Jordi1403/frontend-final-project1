@@ -10,9 +10,9 @@ export class GameinfoService {
     throw new Error('Method not implemented.');
   }
   private allgames = [
-    new GameProfile(1, 'sort word', 'desc', 'sort-words'),
-    new GameProfile(2, 'mixed words', 'desc', 'mixed-words'),
-    new GameProfile(3, 'trivia', 'desc', 'trivia'),
+    new GameProfile(1, 'sort word', ' arrange jumbled words into the correct order ', 'sort-words'),
+    new GameProfile(2, 'mixed words', '  unscramble letters to form the correct word', 'mixed-words'),
+    new GameProfile(3, 'trivia', ' fun and challenging questions', 'trivia'),
   ];
   list(): GameProfile[] {
     return this.allgames;

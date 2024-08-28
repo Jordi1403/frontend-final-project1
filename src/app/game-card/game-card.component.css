@@ -1,10 +1,18 @@
 .card-container {
   margin: 10px;
-  padding: 10px;
+  padding: 20px; /* Increased padding for better spacing */
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
+  text-align: center; /* Center text within the card */
 }
 
 .card-container:hover {
   transform: scale(1.05);
+}
+
+.centered-description {
+  font-size: 0.9em; /* Smaller font size for elegance */
+  color: #666; /* Subtle color for the description */
+  margin-top: 8px; /* Space between title and description */
+  line-height: 1.4; /* Slightly larger line-height for readability */
 }
