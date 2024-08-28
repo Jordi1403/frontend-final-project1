@@ -6,12 +6,18 @@
     </button>
   </div>
 
+  <!-- Score Display -->
+  <div class="score-display">
+    <mat-icon>paid</mat-icon> <!-- Angular Material money icon -->
+    <span>Score: {{ score }}</span> <!-- Display the score with label -->
+  </div>
+
   <h1>Mixed Letters Game</h1>
- 
+
   <div *ngIf="currentCategory">
     <!-- Display the category name without parentheses -->
     <h2>{{ currentCategory.name }}</h2>
- 
+
     <div>
       <h3>Unscramble the word:</h3>
       <!-- Display the scrambled English word (origin) -->
