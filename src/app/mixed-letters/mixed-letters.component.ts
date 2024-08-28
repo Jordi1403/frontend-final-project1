@@ -42,12 +42,6 @@ interface WordEntry {
   ],
 })
 export class MixedLettersComponent implements OnInit {
-<<<<<<< HEAD
-=======
-  resetInput() {
-    throw new Error('Method not implemented.');
-  }
->>>>>>> f2b2315bdcefeb2b0cd182d0f33254b8add4ffbc
   currentCategory?: Category;
   currentWordIndex = 0;
   scrambledWord = '';
@@ -132,14 +126,11 @@ export class MixedLettersComponent implements OnInit {
       this.gameStateService.setGameState(this.score, this.wordsUsed, this.currentCategory.id);  // Added categoryId
       this.router.navigate(['/summary']);
     }
-<<<<<<< HEAD
   }
 
   resetInput(): void {
     this.userAnswer = '';  // Clear the user's answer
     // Optionally, you can reset other states if needed
-=======
->>>>>>> f2b2315bdcefeb2b0cd182d0f33254b8add4ffbc
   }
 
   exitGame(): void {
