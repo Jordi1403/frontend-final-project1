@@ -1,11 +1,21 @@
-<div>
-  <h1>Trivia Component</h1>
-  <div *ngIf="currentCategory">
-    <h2>Category Name: {{ currentCategory.name }}</h2>
-    <p>Last Updated: {{ currentCategory.lastUpdateDate | date: 'medium' }}</p>
+<div class="trivia-container">
+  <div class="exit-button">
+    <button mat-icon-button (click)="exitGame()">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
   </div>
-  <div *ngIf="!currentCategory">
+  <!-- Display the game name in the headline -->
+  <h1>Trivia Game</h1>
+
+  <!-- Display the category details if the category is found -->
+  <div *ngIf="currentCategory; else noCategory">
+    <h2>{{ currentCategory.name }}</h2>
+    <p>Number of words in this category: {{ currentCategory.words.length }}</p>
+    <p>Last updated: {{ currentCategory.lastUpdateDate | date:'longDate' }}</p>
+  </div>
+
+  <!-- Fallback if no category is found -->
+  <ng-template #noCategory>
     <p>No category found or invalid category ID.</p>
-  </div>
+  </ng-template>
 </div>
- 

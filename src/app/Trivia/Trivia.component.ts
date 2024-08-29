@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../../shared/model/category';
 import { CategoriesService } from '../services/categories.service';  
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
  
 @Component({
   selector: 'app-trivia',
@@ -19,7 +21,9 @@ export class TriviaComponent implements OnInit, OnDestroy {
  
   constructor(
     private categoriesService: CategoriesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog, // Inject MatDialog
+    private router: Router // Inject Router to navigate
   ) {}
  
   ngOnInit(): void {
@@ -39,5 +43,12 @@ export class TriviaComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.routeSub?.unsubscribe();  
   }
+
+  exitGame(): void {
+    this.dialog.open(ExitConfirmationDialogComponent).afterClosed().subscribe(result => {
+      if (result === 'yes') {
+        this.router.navigate(['/choose-game']);
+      }
+    });
+  }
 }
- 
