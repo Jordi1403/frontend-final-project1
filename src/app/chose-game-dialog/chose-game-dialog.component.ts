@@ -54,14 +54,14 @@ export class ChoseGameDialogComponent implements OnInit {
   
     switch (gameName) {
       case 'mixed-letters':
-      case 'mixed-words':
+      case 'mixed-words': 
         gameRoute = `/mixed-letters/${this.selectedCategory.id}`;
         break;
       case 'trivia':
         gameRoute = `/trivia/${this.selectedCategory.id}`;
         break;
       case 'sort-words':
-      case 'sort-word':
+      case 'sort-word': 
         gameRoute = `/sort-words/${this.selectedCategory.id}`;
         break;
       case 'matching-words': // Handle Matching Words game
@@ -73,11 +73,11 @@ export class ChoseGameDialogComponent implements OnInit {
     }
   
     this.router.navigate([gameRoute]);
-    this.dialogRef.close(); // Close the dialog after navigation
+    this.dialogRef.close();
   }
   
 
   closeDialog(): void {
-    this.dialogRef.close(); // Close the dialog when cancel is clicked
+    this.dialogRef.close(); 
   }
 }

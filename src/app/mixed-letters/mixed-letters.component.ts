@@ -11,11 +11,12 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PointsComponent } from '../points/points.component';
+
 import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { ProgressBarModule } from '../../shared/model/progress-bar';
 import { GameStateService } from '../services/game-state.service';
+import { PointsComponent } from '../points/points.component';
 
 // Define a type that includes the user's answer
 interface WordEntry {
