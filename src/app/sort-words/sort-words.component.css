@@ -1,28 +1,71 @@
 .sort-words-container {
+  position: relative;
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #ffffff;
+  background-color: #f5f5f5; /* Light grey background */
   border-radius: 8px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.sort-words-container h1 {
-  margin-bottom: 20px;
-  color: #3f51b5;
+.exit-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
 
-.sort-words-container p {
-  font-size: 1.2em;
+.score-display {
+  position: absolute;
+  top: 10px;
+  right: 10px; /* Move the score display to the right */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff9800; /* Orange color for the score */
+}
+
+.score-display mat-icon {
+  margin-right: 5px;
+}
+
+.score-display span {
+  font-size: 1.2rem;
+}
+
+/* Category name styling */
+.category-name {
+  font-size: 1.5rem;
+  color: #3f51b5; /* Indigo color */
+  margin-bottom: 10px;
+}
+
+/* Current word styling */
+.current-word {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #000; /* Black text color */
   margin-bottom: 20px;
 }
 
-.sort-words-container button {
-  margin: 0 10px;
-  min-width: 100px;
+/* Buttons */
+button[mat-raised-button] {
+  margin: 0 5px;
 }
 
-mat-progress-bar {
-  margin-bottom: 20px;
+/* Yes button color */
+button[mat-raised-button].mat-primary {
+  background-color: #4caf50; /* Green */
+  color: #fff;
+}
+
+/* No button color */
+button[mat-raised-button].mat-warn {
+  background-color: #f44336; /* Red */
+  color: #fff;
+}
+
+/* Progress bar color */
+::ng-deep .mat-progress-bar-fill::after {
+  background-color: #3f51b5; /* Indigo */
 }

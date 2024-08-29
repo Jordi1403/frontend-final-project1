@@ -10,8 +10,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GameStateService } from '../services/game-state.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 import { ProgressBarModule } from '../../shared/model/progress-bar';
+import { MatIconModule } from '@angular/material/icon';
+import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
 
 
 @Component({
@@ -23,6 +24,7 @@ import { ProgressBarModule } from '../../shared/model/progress-bar';
     CommonModule,   
     MatButtonModule,
     MatProgressBarModule,
+    MatIconModule,
     ProgressBarModule, ]
 })
 
@@ -35,7 +37,10 @@ export class SortWordsComponent {
   currentCategoryName: string = '';
   gameInitialized = false;
   correctAnswers = 0;
+  pointsPerWord = 0;
   wordsUsed: { origin: string, target: string, correct: boolean, userAnswer: string }[] = [];
+  score= 0;
+ 
 
   constructor(
     private categoriesService: CategoriesService,
@@ -44,7 +49,6 @@ export class SortWordsComponent {
     private router: Router,
     private gameStateService: GameStateService
   ) {
-    // Initialize the game when the component is created
     this.initializeGame();
   }
 
@@ -68,31 +72,35 @@ export class SortWordsComponent {
       this.randomCategory = allCategories[randomIndex];
     }
 
-    // Get 3 random words from the current category
+    // Get exactly 3 random words from the current category
     const currentCategoryWords = this.getRandomWords(this.currentCategory.words, 3);
     
-    // Get 3 random words from the random category
+    // Get exactly 3 random words from the random category
     const randomCategoryWords = this.getRandomWords(this.randomCategory?.words || [], 3);
 
-    // Combine and shuffle all words
+    // Combine the words to ensure there are exactly 6 words
     this.wordsToSort = shuffle([...currentCategoryWords, ...randomCategoryWords]);
+
+    // Calculate points per word
+    this.pointsPerWord = Math.floor(100 / this.wordsToSort.length);
 
     this.gameInitialized = true;
     this.nextWord();
-  }
+}
 
-  getRandomWords(words: { origin: string, target: string }[], count: number): { origin: string, target: string }[] {
+getRandomWords(words: { origin: string, target: string }[], count: number): { origin: string, target: string }[] {
+    if (words.length < count) {
+        // If the category has fewer than `count` words, just return as many as possible
+        return words;
+    }
     return shuffle(words).slice(0, count);
-  }
+}
 
   nextWord(): void {
     if (this.currentWordIndex < this.wordsToSort.length) {
       this.currentWord = this.wordsToSort[this.currentWordIndex].origin;
     } else {
-      // Save the game state before navigating to the summary
-      this.gameStateService.setGameState(this.correctAnswers, this.wordsUsed, this.currentCategory?.id || 0, 'sort-words');
-this.router.navigate(['/summary']);
-
+      this.endGame();
     }
   }
 
@@ -112,6 +120,7 @@ this.router.navigate(['/summary']);
     });
 
     if (isCorrect) {
+      this.score += this.pointsPerWord; // Correct answer increases the score
       this.correctAnswers++;
       this.dialog.open(SuccessDialogComponent, dialogConfig).afterClosed().subscribe(() => {
         this.currentWordIndex++;
@@ -123,5 +132,21 @@ this.router.navigate(['/summary']);
         this.nextWord();
       });
     }
+  }
+
+  endGame(): void {
+    this.gameStateService.setGameState(this.score, this.wordsUsed, this.currentCategory?.id || 0, 'sort-words');
+    this.router.navigate(['/summary']);
+  }
+
+  exitGame(): void {
+    this.dialog
+      .open(ExitConfirmationDialogComponent)
+      .afterClosed()
+      .subscribe((result) => {
+        if (result === 'yes') {
+          this.router.navigate(['/choose-game']);
+        }
+      });
   }
 }
