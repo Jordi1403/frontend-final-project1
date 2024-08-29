@@ -17,7 +17,7 @@ export const routes: Routes = [
     { path: 'category/:id', component: CategoryFormComponent },
     { path: 'newcategory', component: CategoryFormComponent },
     { path: 'help', component: HelpComponent },
-    { path: 'trivia/:id', component: TriviaComponent },
+    { path: 'trivia/:categoryId',component: TriviaComponent },
     { path: 'mixed-letters/:id', component: MixedLettersComponent },
     { path: 'chose-game', component: ChoseGameComponent },
     { path: 'game/:gameName', component: GameCardComponent },

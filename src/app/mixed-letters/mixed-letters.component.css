@@ -84,12 +84,13 @@
 }
 
 /* Score display in the top right corner with icon */
+/* Score display in the top right corner with icon */
 .score-display {
   position: absolute;
   top: 10px;
   right: 10px;
   font-size: 1em;
-  color: #3f51b5; /* Color for the score text */
+  color: #ff9800; /* Orange color for the score text */
   background-color: #ffffff; /* Background color to ensure text visibility */
   padding: 5px 10px;
   border-radius: 5px;
@@ -101,11 +102,13 @@
 .score-display mat-icon {
   font-size: 1.2em; /* Slightly smaller icon size */
   margin-right: 5px; /* Space between icon and text */
+  color: #ff9800; /* Orange color for the icon */
 }
 
 .score-display span {
   font-weight: bold;
 }
+
 
 /* For any error or alert messages */
 .mixed-letters-container p.error {
