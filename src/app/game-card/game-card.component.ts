@@ -17,3 +17,4 @@ export class GameCardComponent {
   @Input()
 currentGame?: GameProfile;
 }
+

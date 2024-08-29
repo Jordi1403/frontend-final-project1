@@ -27,12 +27,11 @@ h1 {
   align-items: center;
   flex-wrap: wrap;
   margin-bottom: 30px;
-  gap: 20px; /* Adds space between cards */
 }
 
 .game-card {
-  width: 180px; /* Fixed width for consistency */
-  height: 200px; /* Fixed height to ensure all cards are the same size */
+  margin: 12px;
+  width: 180px;
   box-sizing: border-box;
   background-color: #f5f5f5;
   border-radius: 8px;
@@ -40,9 +39,6 @@ h1 {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  display: flex;
-  flex-direction: column; /* Ensure contents stack vertically */
-  justify-content: space-between; /* Distribute space between items */
 }
 
 .game-card:hover {

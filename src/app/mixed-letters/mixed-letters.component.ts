@@ -140,11 +140,13 @@ export class MixedLettersComponent implements OnInit {
       this.gameStateService.setGameState(
         this.score,
         this.wordsUsed,
-        this.currentCategory.id
-      ); // Added categoryId
+        this.currentCategory.id,
+        'mixed-letters' // Add the game type here
+      );
       this.router.navigate(['/summary']);
     }
   }
+  
 
   resetInput(): void {
     this.userAnswer = ''; // Clear the user's answer

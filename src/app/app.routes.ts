@@ -9,6 +9,7 @@ import { HelpComponent } from './help/help.component';
 import { SortWordsComponent } from './sort-words/sort-words.component';
 import { GameCardComponent } from './game-card/game-card.component';
 import { SummaryComponent } from './summary/summary.component';
+import { MatchingWordsComponent } from './matching-words/matching-words.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'dashbord', pathMatch: 'full' },
@@ -20,8 +21,9 @@ export const routes: Routes = [
     { path: 'mixed-letters/:id', component: MixedLettersComponent },
     { path: 'chose-game', component: ChoseGameComponent },
     { path: 'game/:gameName', component: GameCardComponent },
-    { path: 'sort-words/:id', component: SortWordsComponent },
+    { path: 'sort-words/:id', component: SortWordsComponent }, // Corrected route to SortWordComponent
     { path: 'categories', component: CategoriesListComponent },
     { path: 'categories-list', component: CategoriesListComponent },
     { path: 'summary', component: SummaryComponent },
+    { path: 'matching-words/:id', component: MatchingWordsComponent },
 ];

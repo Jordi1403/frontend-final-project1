@@ -22,6 +22,7 @@ export class SummaryComponent implements OnInit {
   finalScore: number = 0;
   wordsUsed: { origin: string; target: string; correct: boolean; userAnswer: string }[] = [];
   categoryId: number = 0;
+  gameType: string = '';
 
   constructor(
     private router: Router,
@@ -32,6 +33,7 @@ export class SummaryComponent implements OnInit {
     this.finalScore = this.gameStateService.getScore();
     this.wordsUsed = this.gameStateService.getWordsUsed();
     this.categoryId = this.gameStateService.getCategoryId();
+    this.gameType = this.gameStateService.getGameType();
 
     if (this.wordsUsed.length === 0) {
       console.error('No words found, possibly a navigation issue.');
@@ -39,13 +41,11 @@ export class SummaryComponent implements OnInit {
   }
 
   playAgain(): void {
-    // Use an array to navigate and pass the parameter as part of the path
-    this.router.navigate(['/mixed-letters', this.categoryId]);
+    // Navigate back to the specific game with the same category
+    this.router.navigate([`/${this.gameType}`, this.categoryId]);
   }
-  
+
   chooseAnotherGame(): void {
     this.router.navigate(['/chose-game']);
   }
-  
-  
 }
