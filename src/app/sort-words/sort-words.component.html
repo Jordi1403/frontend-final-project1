@@ -1,6 +1,8 @@
 <div *ngIf="gameInitialized" class="sort-words-container">
   <h1>Sort Words</h1>
-  
+
+  <!-- Add the progress bar here -->
+  <app-progress-bar [current]="currentWordIndex" [total]="wordsToSort.length"></app-progress-bar>
 
   <div *ngIf="currentWord">
     <p>{{ currentWord }}</p>

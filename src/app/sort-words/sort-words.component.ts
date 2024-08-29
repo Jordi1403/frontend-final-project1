@@ -10,6 +10,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GameStateService } from '../services/game-state.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
+import { ProgressBarModule } from '../../shared/model/progress-bar';
+
 
 @Component({
   selector: 'app-sort-words',
@@ -19,7 +22,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   imports: [
     CommonModule,   
     MatButtonModule,
-    MatProgressBarModule, ]
+    MatProgressBarModule,
+    ProgressBarModule, ]
 })
 
 export class SortWordsComponent {
