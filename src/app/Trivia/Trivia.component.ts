@@ -6,14 +6,22 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
+
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+=======
+
+
  
 @Component({
   selector: 'app-trivia',
   templateUrl: './trivia.component.html',
   styleUrls: ['./trivia.component.css'],
   standalone: true,
-  imports: [CommonModule,MatIconModule],
+
+  imports: [CommonModule, MatIconModule],
+=======
+
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriviaComponent implements OnInit, OnDestroy {
