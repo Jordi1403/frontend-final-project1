@@ -18,18 +18,17 @@
     "module": "ES2022",
     "useDefineForClassFields": false,
     "lib": [
-      "ES2022",
+      "es2017",
       "dom"
     ],
     "typeRoots": [
-      "node_modules/@types",
-      "node_modules/@angular",
-      "node_modules/@angular/common/http",
-      "node_modules/@angular/material"
-    ]  ,
+      "node_modules/@types"
+    ],
     "types": []
-  
   },
+  "include": [
+    "src/**/*.ts"
+  ],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
