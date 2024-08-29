@@ -17,5 +17,5 @@ selectedGame: any;
 openDialog() {
 throw new Error('Method not implemented.');
 }
-  title = 'little-linguist';
+title = 'frontend-final-project1';
 }
