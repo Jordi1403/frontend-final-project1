@@ -1,11 +1,19 @@
-<div>
-    <h1>Sort Words Component</h1>
-    <div *ngIf="currentCategory">
-      <h2>Category Name: {{ currentCategory.name }}</h2>
-      <p>Last Updated: {{ currentCategory.lastUpdateDate | date: 'medium' }}</p>
-    </div>
-    <div *ngIf="!currentCategory">
-      <p>No category found or invalid category ID.</p>
-    </div>
+<div *ngIf="gameInitialized" class="sort-words-container">
+  <h1>Sort Words</h1>
+  
+
+  <div *ngIf="currentWord">
+    <p>{{ currentWord }}</p>
+    <p>Does this word belong to the category: {{ currentCategoryName }}?</p>
+    <button mat-raised-button color="primary" (click)="checkAnswer(true)">Yes</button>
+    <button mat-raised-button color="warn" (click)="checkAnswer(false)">No</button>
   </div>
- 
+
+  <div *ngIf="!currentWord">
+    <p>Game over! You've sorted all the words.</p>
+  </div>
+</div>
+
+<div *ngIf="!gameInitialized">
+  <p>Loading... Please wait.</p>
+</div>

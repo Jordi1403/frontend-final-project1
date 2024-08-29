@@ -21,9 +21,9 @@ export const routes: Routes = [
     { path: 'mixed-letters/:id', component: MixedLettersComponent },
     { path: 'chose-game', component: ChoseGameComponent },
     { path: 'game/:gameName', component: GameCardComponent },
-    { path: 'sort-words/:id', component: SortWordsComponent },
+    { path: 'sort-words/:id', component: SortWordsComponent }, // Corrected route to SortWordComponent
     { path: 'categories', component: CategoriesListComponent },
     { path: 'categories-list', component: CategoriesListComponent },
     { path: 'summary', component: SummaryComponent },
-    {path: 'matching-words/:id', component: MatchingWordsComponent},
+    { path: 'matching-words/:id', component: MatchingWordsComponent },
 ];
