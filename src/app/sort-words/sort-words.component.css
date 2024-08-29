@@ -1,21 +1,71 @@
-.game-container {
+.sort-words-container {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5; /* Light grey background */
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.exit-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.score-display {
+  position: absolute;
+  top: 10px;
+  right: 10px; /* Move the score display to the right */
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 16px;
+  justify-content: center;
+  color: #ff9800; /* Orange color for the score */
 }
 
-mat-card {
-  width: 100%;
-  max-width: 500px;
-  margin-top: 16px;
+.score-display mat-icon {
+  margin-right: 5px;
 }
 
-mat-form-field {
-  width: 100%;
+.score-display span {
+  font-size: 1.2rem;
 }
 
-mat-card-actions {
-  display: flex;
-  justify-content: space-between;
+/* Category name styling */
+.category-name {
+  font-size: 1.5rem;
+  color: #3f51b5; /* Indigo color */
+  margin-bottom: 10px;
+}
+
+/* Current word styling */
+.current-word {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #000; /* Black text color */
+  margin-bottom: 20px;
+}
+
+/* Buttons */
+button[mat-raised-button] {
+  margin: 0 5px;
+}
+
+/* Yes button color */
+button[mat-raised-button].mat-primary {
+  background-color: #4caf50; /* Green */
+  color: #fff;
+}
+
+/* No button color */
+button[mat-raised-button].mat-warn {
+  background-color: #f44336; /* Red */
+  color: #fff;
+}
+
+/* Progress bar color */
+::ng-deep .mat-progress-bar-fill::after {
+  background-color: #3f51b5; /* Indigo */
 }
