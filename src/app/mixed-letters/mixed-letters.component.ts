@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CategoriesService } from '../services/categories.service';
 import { Category } from '../../shared/model/category';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { shuffle } from 'lodash'; // Importing lodash for shuffle function
+import { shuffle as lodashShuffle } from 'lodash';
 import { SuccessDialogComponent } from '../success-dialog/success-dialog.component';
 import { FailureDialogComponent } from '../failure-dialog/failure-dialog.component';
 import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
@@ -74,7 +74,7 @@ export class MixedLettersComponent implements OnInit {
       this.currentCategory = this.categoriesService.get(categoryId);
       if (this.currentCategory) {
         // Shuffle the words in the category
-        this.currentCategory.words = shuffle(this.currentCategory.words);
+        this.currentCategory.words = shuffleArray(this.currentCategory.words);
         this.pointsPerWord = Math.floor(100 / this.currentCategory.words.length);
         this.nextWord();
       } else {
@@ -89,12 +89,23 @@ export class MixedLettersComponent implements OnInit {
       this.currentWordIndex < this.currentCategory.words.length
     ) {
       const word = this.currentCategory.words[this.currentWordIndex].origin;
-      this.scrambledWord = shuffle(word.split('')).join('');
+      let scrambledWord = this.shuffleWord(word);
+      
+      // Ensure the scrambled word is not the same as the original
+      while (scrambledWord === word) {
+        scrambledWord = this.shuffleWord(word);
+      }
+      
+      this.scrambledWord = scrambledWord;
       this.userAnswer = '';
       this.errorMessage = ''; // Clear any previous error messages
     } else {
       this.showSummary();
     }
+  }
+
+  shuffleWord(word: string): string {
+    return lodashShuffle(word.split('')).join('');
   }
 
   submitAnswer(): void {
@@ -163,6 +174,7 @@ export class MixedLettersComponent implements OnInit {
 
   resetInput(): void {
     this.userAnswer = ''; // Clear the user's answer
+    this.errorMessage = ''; // Clear the error message
   }
 
   exitGame(): void {
