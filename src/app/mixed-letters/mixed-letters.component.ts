@@ -59,6 +59,8 @@ export class MixedLettersComponent implements OnInit {
   pointsPerWord: number = 0;
   wordsUsed: WordEntry[] = [];
   errorMessage: string = ''; // To store error messages
+  totalQuestions: number = 0; // To store the total number of questions
+  correctAnswersCount: number = 0; // To count correct answers
 
   constructor(
     private route: ActivatedRoute,
@@ -75,7 +77,8 @@ export class MixedLettersComponent implements OnInit {
       if (this.currentCategory) {
         // Shuffle the words in the category
         this.currentCategory.words = shuffleArray(this.currentCategory.words);
-        this.pointsPerWord = Math.floor(100 / this.currentCategory.words.length);
+        this.totalQuestions = this.currentCategory.words.length;
+        this.pointsPerWord = Math.floor(100 / this.totalQuestions);
         this.nextWord();
       } else {
         console.error('Category not found for ID:', categoryId);
@@ -126,6 +129,10 @@ export class MixedLettersComponent implements OnInit {
       userAnswer: this.userAnswer,
     });
 
+    if (correctAnswer) {
+      this.correctAnswersCount++;
+    }
+
     const dialogConfig = {
       width: '280px', // Set desired width
       height: '200px', // Set desired height
@@ -153,7 +160,7 @@ export class MixedLettersComponent implements OnInit {
   }
 
   checkIfFinished(): void {
-    if (this.currentWordIndex >= (this.currentCategory?.words.length || 0)) {
+    if (this.currentWordIndex >= this.totalQuestions) {
       this.showSummary();
     } else {
       this.nextWord();
@@ -162,6 +169,13 @@ export class MixedLettersComponent implements OnInit {
 
   showSummary(): void {
     if (this.currentCategory) {
+      // Set score to 100 if all answers are correct
+      if (this.correctAnswersCount === this.totalQuestions) {
+        this.score = 100;
+      } else {
+        this.score = Math.floor(this.score); // Ensure the score is rounded down
+      }
+
       this.gameStateService.setGameState(
         this.score,
         this.wordsUsed,

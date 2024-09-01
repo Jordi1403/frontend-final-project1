@@ -14,7 +14,6 @@ import { ProgressBarModule } from '../../shared/model/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
 
-
 @Component({
   selector: 'app-sort-words',
   templateUrl: './sort-words.component.html',
@@ -25,9 +24,9 @@ import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exi
     MatButtonModule,
     MatProgressBarModule,
     MatIconModule,
-    ProgressBarModule, ]
+    ProgressBarModule,
+  ]
 })
-
 export class SortWordsComponent {
   currentCategory?: Category;
   randomCategory?: Category;
@@ -37,10 +36,10 @@ export class SortWordsComponent {
   currentCategoryName: string = '';
   gameInitialized = false;
   correctAnswers = 0;
+  totalQuestions = 0; // Total number of questions
   pointsPerWord = 0;
   wordsUsed: { origin: string, target: string, correct: boolean, userAnswer: string }[] = [];
-  score= 0;
- 
+  score = 0;
 
   constructor(
     private categoriesService: CategoriesService,
@@ -83,18 +82,19 @@ export class SortWordsComponent {
 
     // Calculate points per word
     this.pointsPerWord = Math.floor(100 / this.wordsToSort.length);
+    this.totalQuestions = this.wordsToSort.length; // Set the total number of questions
 
     this.gameInitialized = true;
     this.nextWord();
-}
+  }
 
-getRandomWords(words: { origin: string, target: string }[], count: number): { origin: string, target: string }[] {
+  getRandomWords(words: { origin: string, target: string }[], count: number): { origin: string, target: string }[] {
     if (words.length < count) {
-        // If the category has fewer than `count` words, just return as many as possible
-        return words;
+      // If the category has fewer than `count` words, just return as many as possible
+      return words;
     }
     return shuffle(words).slice(0, count);
-}
+  }
 
   nextWord(): void {
     if (this.currentWordIndex < this.wordsToSort.length) {
@@ -135,6 +135,13 @@ getRandomWords(words: { origin: string, target: string }[], count: number): { or
   }
 
   endGame(): void {
+    // Set score to 100 if all answers are correct
+    if (this.correctAnswers === this.totalQuestions) {
+      this.score = 100;
+    } else {
+      this.score = Math.floor(this.score); // Ensure the score is rounded down
+    }
+
     this.gameStateService.setGameState(this.score, this.wordsUsed, this.currentCategory?.id || 0, 'sort-words');
     this.router.navigate(['/summary']);
   }
