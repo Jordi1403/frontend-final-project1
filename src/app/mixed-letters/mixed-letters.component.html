@@ -24,6 +24,10 @@
       <p>{{ scrambledWord }}</p>
       <!-- Display the word to translate (target) after the scrambled word -->
       <p><strong>Translate:</strong> {{ currentCategory.words[currentWordIndex]?.target }}</p>
+      
+      <!-- Display error message if any -->
+      <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
       <input [(ngModel)]="userAnswer" placeholder="Enter your answer" />
       <button mat-raised-button color="primary" (click)="submitAnswer()">Submit</button>
       <button mat-raised-button color="warn" (click)="resetInput()">Reset</button>

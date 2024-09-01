@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CategoriesService } from '../services/categories.service';
 import { Category } from '../../shared/model/category';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { shuffle } from 'lodash';
+import { shuffle } from 'lodash'; // Importing lodash for shuffle function
 import { SuccessDialogComponent } from '../success-dialog/success-dialog.component';
 import { FailureDialogComponent } from '../failure-dialog/failure-dialog.component';
 import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
@@ -11,7 +11,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { ProgressBarModule } from '../../shared/model/progress-bar';
@@ -24,6 +23,15 @@ interface WordEntry {
   target: string;
   correct: boolean;
   userAnswer: string;
+}
+
+// Simple shuffle function if lodash is not used
+function shuffleArray<T>(array: T[]): T[] {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+  return array;
 }
 
 @Component({
@@ -49,9 +57,8 @@ export class MixedLettersComponent implements OnInit {
   userAnswer = '';
   score = 0;
   pointsPerWord: number = 0;
-
-  // Updated wordsUsed to include userAnswer
   wordsUsed: WordEntry[] = [];
+  errorMessage: string = ''; // To store error messages
 
   constructor(
     private route: ActivatedRoute,
@@ -66,9 +73,9 @@ export class MixedLettersComponent implements OnInit {
       const categoryId = +params.get('id')!;
       this.currentCategory = this.categoriesService.get(categoryId);
       if (this.currentCategory) {
-        this.pointsPerWord = Math.floor(
-          100 / this.currentCategory.words.length
-        );
+        // Shuffle the words in the category
+        this.currentCategory.words = shuffle(this.currentCategory.words);
+        this.pointsPerWord = Math.floor(100 / this.currentCategory.words.length);
         this.nextWord();
       } else {
         console.error('Category not found for ID:', categoryId);
@@ -84,12 +91,19 @@ export class MixedLettersComponent implements OnInit {
       const word = this.currentCategory.words[this.currentWordIndex].origin;
       this.scrambledWord = shuffle(word.split('')).join('');
       this.userAnswer = '';
+      this.errorMessage = ''; // Clear any previous error messages
     } else {
       this.showSummary();
     }
   }
 
   submitAnswer(): void {
+    // Validate user input
+    if (!this.userAnswer.trim()) {
+      this.errorMessage = 'Please enter an answer before submitting.';
+      return;
+    }
+    
     const correctAnswer =
       this.userAnswer.toLowerCase() ===
       this.currentCategory?.words[this.currentWordIndex].origin.toLowerCase();
@@ -141,16 +155,14 @@ export class MixedLettersComponent implements OnInit {
         this.score,
         this.wordsUsed,
         this.currentCategory.id,
-        'mixed-letters' // Add the game type here
+        'mixed-letters' // Pass the game type here
       );
       this.router.navigate(['/summary']);
     }
   }
-  
 
   resetInput(): void {
     this.userAnswer = ''; // Clear the user's answer
-    // Optionally, you can reset other states if needed
   }
 
   exitGame(): void {
