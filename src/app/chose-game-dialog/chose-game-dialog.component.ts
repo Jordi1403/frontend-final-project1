@@ -64,7 +64,7 @@ export class ChoseGameDialogComponent implements OnInit {
       case 'sort-word': 
         gameRoute = `/sort-words/${this.selectedCategory.id}`;
         break;
-      case 'matching-words': // Handle Matching Words game
+      case 'matching-words': 
         gameRoute = `/matching-words/${this.selectedCategory.id}`;
         break;
       default:

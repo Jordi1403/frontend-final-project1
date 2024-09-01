@@ -27,8 +27,8 @@
   position: absolute;
   width: 100%;
   text-align: center;
-  line-height: 25px; /* Match this with the height of the progress bar */
-  color: #000000; /* Set to black for better contrast */
+  line-height: 25px; 
+  color: #000000; 
   font-weight: bold;
   font-size: 14px; /* Adjust font size as needed */
   z-index: 1;

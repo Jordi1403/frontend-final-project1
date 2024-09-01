@@ -12,18 +12,18 @@ import { SummaryComponent } from './summary/summary.component';
 import { MatchingWordsComponent } from './matching-words/matching-words.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'dashbord', pathMatch: 'full' },
-    { path: 'dashbord', component: DashbordComponent },
-    { path: 'category/:id', component: CategoryFormComponent },
-    { path: 'newcategory', component: CategoryFormComponent },
-    { path: 'help', component: HelpComponent },
-    { path: 'trivia/:categoryId',component: TriviaComponent },
-    { path: 'mixed-letters/:id', component: MixedLettersComponent },
-    { path: 'chose-game', component: ChoseGameComponent },
-    { path: 'game/:gameName', component: GameCardComponent },
-    { path: 'sort-words/:id', component: SortWordsComponent }, // Corrected route to SortWordComponent
-    { path: 'categories', component: CategoriesListComponent },
-    { path: 'categories-list', component: CategoriesListComponent },
-    { path: 'summary', component: SummaryComponent },
-    { path: 'matching-words/:id', component: MatchingWordsComponent },
+  { path: '', redirectTo: 'dashbord', pathMatch: 'full' },
+  { path: 'dashbord', component: DashbordComponent },
+  { path: 'category/:id', component: CategoryFormComponent },
+  { path: 'newcategory', component: CategoryFormComponent },
+  { path: 'help', component: HelpComponent },
+  { path: 'trivia/:categoryId', component: TriviaComponent },
+  { path: 'mixed-letters/:id', component: MixedLettersComponent },
+  { path: 'chose-game', component: ChoseGameComponent },
+  { path: 'game/:gameName', component: GameCardComponent },
+  { path: 'sort-words/:id', component: SortWordsComponent },
+  { path: 'categories', component: CategoriesListComponent },
+  { path: 'categories-list', component: CategoriesListComponent },
+  { path: 'summary', component: SummaryComponent },
+  { path: 'matching-words/:id', component: MatchingWordsComponent },
 ];

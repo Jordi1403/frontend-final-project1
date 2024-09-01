@@ -11,13 +11,11 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { ProgressBarModule } from '../../shared/model/progress-bar';
 import { GameStateService } from '../services/game-state.service';
 import { PointsComponent } from '../points/points.component';
 
-// Define a type that includes the user's answer
 interface WordEntry {
   origin: string;
   target: string;
@@ -25,11 +23,10 @@ interface WordEntry {
   userAnswer: string;
 }
 
-// Simple shuffle function if lodash is not used
 function shuffleArray<T>(array: T[]): T[] {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
 }
@@ -46,7 +43,7 @@ function shuffleArray<T>(array: T[]): T[] {
     MatProgressBarModule,
     MatButtonModule,
     MatIconModule,
-    ProgressBarModule, // Importing the progress bar component
+    ProgressBarModule,
     PointsComponent,
   ],
 })
@@ -58,9 +55,9 @@ export class MixedLettersComponent implements OnInit {
   score = 0;
   pointsPerWord: number = 0;
   wordsUsed: WordEntry[] = [];
-  errorMessage: string = ''; // To store error messages
-  totalQuestions: number = 0; // To store the total number of questions
-  correctAnswersCount: number = 0; // To count correct answers
+  errorMessage: string = '';
+  totalQuestions: number = 0;
+  correctAnswersCount: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -75,7 +72,6 @@ export class MixedLettersComponent implements OnInit {
       const categoryId = +params.get('id')!;
       this.currentCategory = this.categoriesService.get(categoryId);
       if (this.currentCategory) {
-        // Shuffle the words in the category
         this.currentCategory.words = shuffleArray(this.currentCategory.words);
         this.totalQuestions = this.currentCategory.words.length;
         this.pointsPerWord = Math.floor(100 / this.totalQuestions);
@@ -93,15 +89,14 @@ export class MixedLettersComponent implements OnInit {
     ) {
       const word = this.currentCategory.words[this.currentWordIndex].origin;
       let scrambledWord = this.shuffleWord(word);
-      
-      // Ensure the scrambled word is not the same as the original
+
       while (scrambledWord === word) {
         scrambledWord = this.shuffleWord(word);
       }
-      
+
       this.scrambledWord = scrambledWord;
       this.userAnswer = '';
-      this.errorMessage = ''; // Clear any previous error messages
+      this.errorMessage = '';
     } else {
       this.showSummary();
     }
@@ -112,12 +107,11 @@ export class MixedLettersComponent implements OnInit {
   }
 
   submitAnswer(): void {
-    // Validate user input
     if (!this.userAnswer.trim()) {
       this.errorMessage = 'Please enter an answer before submitting.';
       return;
     }
-    
+
     const correctAnswer =
       this.userAnswer.toLowerCase() ===
       this.currentCategory?.words[this.currentWordIndex].origin.toLowerCase();
@@ -134,8 +128,8 @@ export class MixedLettersComponent implements OnInit {
     }
 
     const dialogConfig = {
-      width: '280px', // Set desired width
-      height: '200px', // Set desired height
+      width: '280px',
+      height: '200px',
       data: { score: this.score },
     };
 
@@ -169,26 +163,25 @@ export class MixedLettersComponent implements OnInit {
 
   showSummary(): void {
     if (this.currentCategory) {
-      // Set score to 100 if all answers are correct
       if (this.correctAnswersCount === this.totalQuestions) {
         this.score = 100;
       } else {
-        this.score = Math.floor(this.score); // Ensure the score is rounded down
+        this.score = Math.floor(this.score);
       }
 
       this.gameStateService.setGameState(
         this.score,
         this.wordsUsed,
         this.currentCategory.id,
-        'mixed-letters' // Pass the game type here
+        'mixed-letters'
       );
       this.router.navigate(['/summary']);
     }
   }
 
   resetInput(): void {
-    this.userAnswer = ''; // Clear the user's answer
-    this.errorMessage = ''; // Clear the error message
+    this.userAnswer = '';
+    this.errorMessage = '';
   }
 
   exitGame(): void {

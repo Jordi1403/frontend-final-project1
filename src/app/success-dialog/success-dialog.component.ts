@@ -11,14 +11,10 @@ import { MatButtonModule } from '@angular/material/button';
 export class SuccessDialogComponent {
   constructor(
     private dialogRef: MatDialogRef<SuccessDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { score: number }  // Inject the score data
+    @Inject(MAT_DIALOG_DATA) public data: { score: number }
   ) {}
 
   closeDialog(): void {
     this.dialogRef.close();
   }
 }
- 
-
-
-

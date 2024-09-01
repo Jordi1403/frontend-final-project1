@@ -1,10 +1,9 @@
-// src/app/services/categories.service.ts
 import { Injectable } from '@angular/core';
 import { Category } from '../../shared/model/category';
 import { categories as defaultCategories } from './../../shared/data/categories';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoriesService {
   private readonly CATEGORIES_KEY = 'categories';
@@ -18,29 +17,33 @@ export class CategoriesService {
     const existingCategories = this.getCategories();
     if (existingCategories.size === 0 && defaultCategories.length > 0) {
       console.log('Initializing categories with default data.');
-      defaultCategories.forEach(cat => this.add(cat));
+      defaultCategories.forEach((cat) => this.add(cat));
     }
   }
 
   private getCategories(): Map<number, Category> {
     try {
       const categoriesString = localStorage.getItem(this.CATEGORIES_KEY);
-      return categoriesString ? new Map(JSON.parse(categoriesString)) : new Map();
+      return categoriesString
+        ? new Map(JSON.parse(categoriesString))
+        : new Map();
     } catch (error) {
-      console.error("Failed to parse categories from localStorage", error);
+      console.error('Failed to parse categories from localStorage', error);
       return new Map();
     }
   }
 
   private setCategories(list: Map<number, Category>): void {
-    localStorage.setItem(this.CATEGORIES_KEY, JSON.stringify(Array.from(list.entries())));
+    localStorage.setItem(
+      this.CATEGORIES_KEY,
+      JSON.stringify(Array.from(list.entries()))
+    );
   }
 
   private getNextId(): number {
     const nextIdString = localStorage.getItem(this.NEXT_ID_KEY);
-    return nextIdString ? parseInt(nextIdString, 10) : 1;  // Should return at least 1
+    return nextIdString ? parseInt(nextIdString, 10) : 1;
   }
-  
 
   private setNextId(id: number): void {
     localStorage.setItem(this.NEXT_ID_KEY, id.toString());
@@ -72,11 +75,11 @@ export class CategoriesService {
 
   add(category: Category): void {
     const nextId = this.getNextId();
-    category.id = nextId;  
+    category.id = nextId;
     category.lastUpdateDate = new Date();
     const categoriesMap = this.getCategories();
     categoriesMap.set(category.id, category);
     this.setCategories(categoriesMap);
-    this.setNextId(nextId + 1);  
+    this.setNextId(nextId + 1);
   }
 }

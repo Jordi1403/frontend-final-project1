@@ -8,14 +8,20 @@ import { HeaderComponent } from './header/header.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterModule, FooterComponent, HeaderComponent,DashbordComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FooterComponent,
+    HeaderComponent,
+    DashbordComponent,
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
-selectedGame: any;
-openDialog() {
-throw new Error('Method not implemented.');
-}
-title = 'frontend-final-project1';
+  selectedGame: any;
+  openDialog() {
+    throw new Error('Method not implemented.');
+  }
+  title = 'frontend-final-project1';
 }

@@ -9,8 +9,8 @@
 
 .success-dialog-content {
   width: 100%;
-  text-align: center; /* Center the text inside the dialog */
-  font-size: 1.2em;   /* Increase font size for readability */
+  text-align: center; 
+  font-size: 1.2em;   
 }
 
 .centered-button {

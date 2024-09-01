@@ -1,15 +1,30 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GameStateService {
   private score: number = 0;
   private categoryId: number = 0;
-  private gameType: string = ''; // Stores the current game type (e.g., 'sort-words')
-  private wordsUsed: { origin: string; target: string; correct: boolean; userAnswer: string }[] = [];
+  private gameType: string = '';
+  private wordsUsed: {
+    origin: string;
+    target: string;
+    correct: boolean;
+    userAnswer: string;
+  }[] = [];
 
-  setGameState(score: number, words: { origin: string; target: string; correct: boolean; userAnswer: string }[], categoryId: number, gameType: string): void {
+  setGameState(
+    score: number,
+    words: {
+      origin: string;
+      target: string;
+      correct: boolean;
+      userAnswer: string;
+    }[],
+    categoryId: number,
+    gameType: string
+  ): void {
     this.score = score;
     this.wordsUsed = words;
     this.categoryId = categoryId;
@@ -28,7 +43,12 @@ export class GameStateService {
     return this.gameType;
   }
 
-  getWordsUsed(): { origin: string; target: string; correct: boolean; userAnswer: string }[] {
+  getWordsUsed(): {
+    origin: string;
+    target: string;
+    correct: boolean;
+    userAnswer: string;
+  }[] {
     return this.wordsUsed;
   }
 

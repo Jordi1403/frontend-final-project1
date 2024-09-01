@@ -101,9 +101,9 @@
 }
 
 .score-display mat-icon {
-  font-size: 1.2em; /* Slightly smaller icon size */
-  margin-right: 5px; /* Space between icon and text */
-  color: #ff9800; /* Orange color for the icon */
+  font-size: 1.2em; 
+  margin-right: 5px; 
+  color: #ff9800; 
 }
 
 .score-display span {

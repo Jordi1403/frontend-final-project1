@@ -4,16 +4,16 @@
 
 .dialog-title {
   text-align: center;
-  color: #3f51b5; /* Material primary color for the title */
+  color: #3f51b5; 
   font-size: 1.5em;
-  margin-bottom: 20px; /* Space below the title */
+  margin-bottom: 20px; 
 }
 
 .dialog-content {
   text-align: center;
   font-size: 1.1em;
-  color: #666; /* Subtle text color for the content */
-  margin-bottom: 20px; /* Space below the content */
+  color: #666; 
+  margin-bottom: 20px; 
 }
 
 .dialog-actions {

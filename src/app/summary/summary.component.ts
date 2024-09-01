@@ -11,16 +11,16 @@ import { GameStateService } from '../services/game-state.service';
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.css'],
   standalone: true,
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-  ],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule],
 })
 export class SummaryComponent implements OnInit {
   finalScore: number = 0;
-  wordsUsed: { origin: string; target: string; correct: boolean; userAnswer: string }[] = [];
+  wordsUsed: {
+    origin: string;
+    target: string;
+    correct: boolean;
+    userAnswer: string;
+  }[] = [];
   categoryId: number = 0;
   gameType: string = '';
 
@@ -41,7 +41,6 @@ export class SummaryComponent implements OnInit {
   }
 
   playAgain(): void {
-    // Navigate back to the specific game with the same category
     this.router.navigate([`/${this.gameType}`, this.categoryId]);
   }
 

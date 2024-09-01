@@ -1,13 +1,10 @@
 <div class="progress-bar-container">
-  <!-- Current word number on the left -->
   <div class="progress-number progress-left">{{ current }}</div>
-  
-  <!-- Progress bar with percentage in the center -->
+
   <div class="progress">
     <div class="progress-fill" [style.width.%]="progress"></div>
-    <div class="progress-text">{{ progress | number:'1.0-0' }}%</div>
+    <div class="progress-text">{{ progress | number : "1.0-0" }}%</div>
   </div>
-  
-  <!-- Total number of words on the right -->
+
   <div class="progress-number progress-right">{{ total }}</div>
 </div>

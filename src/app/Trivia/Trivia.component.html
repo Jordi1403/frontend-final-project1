@@ -4,17 +4,17 @@
       <mat-icon>exit_to_app</mat-icon>
     </button>
   </div>
-  <!-- Display the game name in the headline -->
+
   <h1>Trivia Game</h1>
 
-  <!-- Display the category details if the category is found -->
   <div *ngIf="currentCategory; else noCategory">
     <h2>{{ currentCategory.name }}</h2>
     <p>Number of words in this category: {{ currentCategory.words.length }}</p>
-    <p>Last updated: {{ currentCategory.lastUpdateDate | date:'longDate' }}</p>
+    <p>
+      Last updated: {{ currentCategory.lastUpdateDate | date : "longDate" }}
+    </p>
   </div>
 
-  <!-- Fallback if no category is found -->
   <ng-template #noCategory>
     <p>No category found or invalid category ID.</p>
   </ng-template>
