@@ -5,7 +5,7 @@ import { GameProfile } from '../../shared/model/GameProfile';
 import { GameinfoService } from '../services/gameinfo.service';
 import { GameCardComponent } from '../game-card/game-card.component';
 import { ChoseGameDialogComponent } from './../chose-game-dialog/chose-game-dialog.component';
- 
+
 @Component({
   selector: 'app-chose-game',
   standalone: true,
@@ -27,7 +27,7 @@ export class ChoseGameComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.allGames = this.gameService.list();
+    this.allGames = this.gameService.list();  // Ensure the service returns the games
     console.log(this.allGames);
   }
 
@@ -39,7 +39,7 @@ export class ChoseGameComponent implements OnInit {
   openDialog(): void {
     if (this.selectedGame) {
       this.dialogService.open(ChoseGameDialogComponent, {
-        data: this.selectedGame,
+        data: this.selectedGame,  // Pass the selected game to the dialog
       });
     }
   }

@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  OnDestroy,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../../shared/model/category';
 import { CategoriesService } from '../services/categories.service';
@@ -32,16 +27,20 @@ export class MatchingWordsComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.routeSub = this.route.paramMap.subscribe((params) => {
-      const id = parseInt(params.get('id')!, 10);
-      if (!isNaN(id)) {
-        this.currentCategory = this.categoriesService.get(id);
-        if (!this.currentCategory) {
-          console.error('Category not found for ID:', id);
+  async ngOnInit(): Promise<void> {
+    this.routeSub = this.route.paramMap.subscribe(async (params) => {
+      const id = params.get('id');
+      if (id) {
+        try {
+          this.currentCategory = await this.categoriesService.get(id);
+          if (!this.currentCategory) {
+            console.error('Category not found for ID:', id);
+          }
+        } catch (error) {
+          console.error('Error fetching category:', error);
         }
       } else {
-        console.error('Invalid category ID:', params.get('id'));
+        console.error('Invalid category ID:', id);
       }
     });
   }
@@ -56,7 +55,7 @@ export class MatchingWordsComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((result) => {
         if (result === 'yes') {
-          this.router.navigate(['/choose-game']);
+          this.router.navigate(['/chose-game']);
         }
       });
   }

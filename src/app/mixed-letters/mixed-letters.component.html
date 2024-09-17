@@ -1,10 +1,12 @@
 <div class="mixed-letters-container">
+  <!-- Exit Button -->
   <div class="exit-button">
     <button mat-icon-button (click)="exitGame()">
       <mat-icon>exit_to_app</mat-icon>
     </button>
   </div>
 
+  <!-- Score Display -->
   <div class="score-display">
     <mat-icon>paid</mat-icon>
     <span>Score: {{ score }}</span>
@@ -12,37 +14,61 @@
 
   <h1>Mixed Letters Game</h1>
 
-  <div *ngIf="currentCategory">
+  <!-- If the category exists -->
+  <div *ngIf="currentCategory; else noCategory">
     <h2>{{ currentCategory.name }}</h2>
 
-    <div>
+    <div class="word-section">
       <h3>Unscramble the word:</h3>
-
-      <p>{{ scrambledWord }}</p>
+      <p class="scrambled-word">{{ scrambledWord }}</p>
 
       <p>
         <strong>Translate:</strong>
         {{ currentCategory.words[currentWordIndex]?.target }}
       </p>
 
+      <!-- Display error message if present -->
       <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
 
-      <input [(ngModel)]="userAnswer" placeholder="Enter your answer" />
-      <button mat-raised-button color="primary" (click)="submitAnswer()">
-        Submit
-      </button>
-      <button mat-raised-button color="warn" (click)="resetInput()">
-        Reset
-      </button>
+      <!-- Input field for the user's answer -->
+      <input 
+        [(ngModel)]="userAnswer" 
+        placeholder="Enter your answer" 
+        class="answer-input"
+      />
+
+      <!-- Submit and Reset Buttons -->
+      <div class="action-buttons">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="submitAnswer()"
+          [disabled]="!userAnswer.trim()"
+        >
+          Submit
+        </button>
+
+        <button 
+          mat-raised-button 
+          color="warn" 
+          (click)="resetInput()"
+        >
+          Reset
+        </button>
+      </div>
     </div>
 
+    <!-- Progress Bar Component -->
     <app-progress-bar
       [current]="currentWordIndex"
       [total]="currentCategory.words.length"
     ></app-progress-bar>
   </div>
 
-  <div *ngIf="!currentCategory" class="no-category">
-    <p>No category found or invalid category ID.</p>
-  </div>
+  <!-- If no category or invalid category ID -->
+  <ng-template #noCategory>
+    <div class="no-category">
+      <p>No category found or invalid category ID.</p>
+    </div>
+  </ng-template>
 </div>

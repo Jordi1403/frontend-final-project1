@@ -1,85 +1,85 @@
 import { Injectable } from '@angular/core';
+import { Firestore, collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, DocumentReference } from '@angular/fire/firestore';
 import { Category } from '../../shared/model/category';
-import { categories as defaultCategories } from './../../shared/data/categories';
+import { categoryConverter } from '../services/category-converter';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoriesService {
-  private readonly CATEGORIES_KEY = 'categories';
-  private readonly NEXT_ID_KEY = 'nextId';
+  private readonly CATEGORIES_COLLECTION = 'categories';
 
-  constructor() {
-    this.initializeCategories();
-  }
+  constructor(private firestore: Firestore) {}
 
-  private initializeCategories(): void {
-    const existingCategories = this.getCategories();
-    if (existingCategories.size === 0 && defaultCategories.length > 0) {
-      console.log('Initializing categories with default data.');
-      defaultCategories.forEach((cat) => this.add(cat));
-    }
-  }
-
-  private getCategories(): Map<number, Category> {
+  // Fetch all categories from Firestore
+  async list(): Promise<Category[]> {
     try {
-      const categoriesString = localStorage.getItem(this.CATEGORIES_KEY);
-      return categoriesString
-        ? new Map(JSON.parse(categoriesString))
-        : new Map();
+      console.log('Fetching categories from Firestore...');
+      const categoriesCollection = collection(this.firestore, this.CATEGORIES_COLLECTION).withConverter(categoryConverter);
+      const categorySnapshot = await getDocs(categoriesCollection);
+      const categories = categorySnapshot.docs.map((doc) => doc.data());
+
+      // Log fetched categories
+      console.log('Fetched categories:', categories);
+      return categories;
     } catch (error) {
-      console.error('Failed to parse categories from localStorage', error);
-      return new Map();
+      console.error('Error fetching categories:', error);
+      return [];
     }
   }
 
-  private setCategories(list: Map<number, Category>): void {
-    localStorage.setItem(
-      this.CATEGORIES_KEY,
-      JSON.stringify(Array.from(list.entries()))
-    );
-  }
-
-  private getNextId(): number {
-    const nextIdString = localStorage.getItem(this.NEXT_ID_KEY);
-    return nextIdString ? parseInt(nextIdString, 10) : 1;
-  }
-
-  private setNextId(id: number): void {
-    localStorage.setItem(this.NEXT_ID_KEY, id.toString());
-  }
-
-  list(): Category[] {
-    return Array.from(this.getCategories().values());
-  }
-
-  get(id: number): Category | undefined {
-    const category = this.getCategories().get(id);
-    console.log(`Getting category with ID ${id}:`, category);
-    return category;
-  }
-
-  delete(id: number): void {
-    const categoriesMap = this.getCategories();
-    if (categoriesMap.delete(id)) {
-      this.setCategories(categoriesMap);
+  // Fetch a category by ID
+  async get(id: string): Promise<Category | undefined> {
+    try {
+      const categoryDoc = doc(this.firestore, this.CATEGORIES_COLLECTION, id).withConverter(categoryConverter);
+      const categorySnapshot = await getDoc(categoryDoc);
+      if (categorySnapshot.exists()) {
+        const category = categorySnapshot.data();
+        console.log('Fetched category by ID:', category);
+        return category;
+      } else {
+        console.error(`Category with ID ${id} not found.`);
+        return undefined;
+      }
+    } catch (error) {
+      console.error(`Error getting category with ID ${id}:`, error);
+      return undefined;
     }
   }
 
-  update(category: Category): void {
-    const categoriesMap = this.getCategories();
-    category.lastUpdateDate = new Date();
-    categoriesMap.set(category.id, category);
-    this.setCategories(categoriesMap);
+  // Add a new category to Firestore
+  async add(category: Category): Promise<DocumentReference<Category>> {
+    try {
+      console.log('Adding category:', category);
+      const categoriesCollection = collection(this.firestore, this.CATEGORIES_COLLECTION).withConverter(categoryConverter);
+      return await addDoc(categoriesCollection, category);
+    } catch (error) {
+      console.error('Error adding category:', error);
+      throw new Error('Failed to add category');
+    }
   }
 
-  add(category: Category): void {
-    const nextId = this.getNextId();
-    category.id = nextId;
-    category.lastUpdateDate = new Date();
-    const categoriesMap = this.getCategories();
-    categoriesMap.set(category.id, category);
-    this.setCategories(categoriesMap);
-    this.setNextId(nextId + 1);
+  // Update an existing category in Firestore
+  async update(category: Category): Promise<void> {
+    try {
+      const categoryDoc = doc(this.firestore, this.CATEGORIES_COLLECTION, category.id).withConverter(categoryConverter);
+      console.log('Updating category:', category);
+      await updateDoc(categoryDoc, category);
+    } catch (error) {
+      console.error('Error updating category:', error);
+      throw new Error('Failed to update category');
+    }
+  }
+
+  // Delete a category from Firestore
+  async delete(id: string): Promise<void> {
+    try {
+      const categoryDoc = doc(this.firestore, this.CATEGORIES_COLLECTION, id).withConverter(categoryConverter);
+      console.log(`Deleting category with ID: ${id}`);
+      await deleteDoc(categoryDoc);
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      throw new Error('Failed to delete category');
+    }
   }
 }

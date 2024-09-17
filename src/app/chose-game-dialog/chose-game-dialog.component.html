@@ -10,13 +10,15 @@
       </mat-select>
     </mat-form-field>
 
+    <!-- Only show category info if selectedCategory exists -->
     <div *ngIf="selectedCategory" class="category-info">
-      <p>Last Updated: {{ selectedCategory.lastUpdateDate | date: 'medium' }}</p>
-      <p>Number of Words: {{ selectedCategory.words.length }}</p>
+      <p>Last Updated: {{ selectedCategory?.lastUpdateDate | date: 'medium' }}</p>
+      <p>Number of Words: {{ selectedCategory?.words?.length || 0 }}</p>
     </div>
   </div>
+
   <div mat-dialog-actions>
     <button mat-raised-button (click)="closeDialog()">Cancel</button>
-    <button mat-raised-button color="primary" (click)="closeAndNavigate()">Go to Game</button>
+    <button mat-raised-button color="primary" [disabled]="!selectedCategory" (click)="closeAndNavigate()">Go to Game</button>
   </div>
 </div>

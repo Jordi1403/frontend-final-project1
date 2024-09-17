@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class GameStateService {
   private score: number = 0;
-  private categoryId: number = 0;
+  private categoryId: string = ''; // Changed to string
   private gameType: string = '';
   private wordsUsed: {
     origin: string;
@@ -22,12 +22,12 @@ export class GameStateService {
       correct: boolean;
       userAnswer: string;
     }[],
-    categoryId: number,
+    categoryId: string, // Changed to string
     gameType: string
   ): void {
     this.score = score;
     this.wordsUsed = words;
-    this.categoryId = categoryId;
+    this.categoryId = categoryId; // Use as string
     this.gameType = gameType;
   }
 
@@ -35,7 +35,7 @@ export class GameStateService {
     return this.score;
   }
 
-  getCategoryId(): number {
+  getCategoryId(): string { // Changed to return string
     return this.categoryId;
   }
 
@@ -55,7 +55,7 @@ export class GameStateService {
   clearState(): void {
     this.score = 0;
     this.wordsUsed = [];
-    this.categoryId = 0;
+    this.categoryId = ''; // Set to empty string
     this.gameType = '';
   }
 }

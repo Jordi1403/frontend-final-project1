@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CategoriesService } from '../services/categories.service';
 import { Category } from '../../shared/model/category';
 import { CommonModule } from '@angular/common';
@@ -27,7 +27,7 @@ import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exi
     ProgressBarModule,
   ],
 })
-export class SortWordsComponent {
+export class SortWordsComponent implements OnInit {
   currentCategory?: Category;
   randomCategory?: Category;
   wordsToSort: { origin: string; target: string }[] = [];
@@ -52,43 +52,40 @@ export class SortWordsComponent {
     private route: ActivatedRoute,
     private router: Router,
     private gameStateService: GameStateService
-  ) {
-    this.initializeGame();
+  ) {}
+
+  async ngOnInit(): Promise<void> {
+    await this.initializeGame();
   }
 
-  initializeGame(): void {
-    const allCategories = this.categoriesService.list();
-    const categoryId = Number(this.route.snapshot.paramMap.get('id'));
-    this.currentCategory = this.categoriesService.get(categoryId);
+  async initializeGame(): Promise<void> {
+    const categoryId = this.route.snapshot.paramMap.get('id');
+    if (!categoryId) {
+      console.error('No category ID provided.');
+      return;
+    }
 
+    this.currentCategory = await this.categoriesService.get(categoryId);
     if (!this.currentCategory) {
       console.error('No category found or invalid category ID.');
       return;
     }
 
+    const allCategories = await this.categoriesService.list();
     this.currentCategoryName = this.currentCategory.name;
 
     let randomIndex = Math.floor(Math.random() * allCategories.length);
     this.randomCategory = allCategories[randomIndex];
+
     while (this.randomCategory?.id === this.currentCategory?.id) {
       randomIndex = Math.floor(Math.random() * allCategories.length);
       this.randomCategory = allCategories[randomIndex];
     }
 
-    const currentCategoryWords = this.getRandomWords(
-      this.currentCategory.words,
-      3
-    );
+    const currentCategoryWords = this.getRandomWords(this.currentCategory.words, 3);
+    const randomCategoryWords = this.getRandomWords(this.randomCategory?.words || [], 3);
 
-    const randomCategoryWords = this.getRandomWords(
-      this.randomCategory?.words || [],
-      3
-    );
-
-    this.wordsToSort = shuffle([
-      ...currentCategoryWords,
-      ...randomCategoryWords,
-    ]);
+    this.wordsToSort = shuffle([...currentCategoryWords, ...randomCategoryWords]);
 
     this.pointsPerWord = Math.floor(100 / this.wordsToSort.length);
     this.totalQuestions = this.wordsToSort.length;
@@ -165,7 +162,7 @@ export class SortWordsComponent {
     this.gameStateService.setGameState(
       this.score,
       this.wordsUsed,
-      this.currentCategory?.id || 0,
+      this.currentCategory?.id || '',
       'sort-words'
     );
     this.router.navigate(['/summary']);

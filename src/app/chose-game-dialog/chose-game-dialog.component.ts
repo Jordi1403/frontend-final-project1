@@ -29,18 +29,29 @@ export class ChoseGameDialogComponent implements OnInit {
   selectedCategory?: Category;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public gameProfile: { name: string },
-    private dialogRef: MatDialogRef<ChoseGameDialogComponent>,
-    private router: Router,
-    private categoriesService: CategoriesService
+    @Inject(MAT_DIALOG_DATA) public gameProfile: { name: string },  // Injecting the selected game
+    private dialogRef: MatDialogRef<ChoseGameDialogComponent>,       // Dialog reference for closing
+    private router: Router,                                          // Router for navigation
+    private categoriesService: CategoriesService                     // CategoriesService to fetch categories
   ) {}
 
-  ngOnInit(): void {
-    this.categories = this.categoriesService.list();
+  async ngOnInit(): Promise<void> {
+    // Fetch the categories asynchronously
+    try {
+      this.categories = await this.categoriesService.list();
+      if (this.categories.length === 0) {
+        console.error('No categories found');
+      } else {
+        console.log('Categories fetched:', this.categories); // Debugging log
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
   }
 
   onCategorySelect(category: Category): void {
     this.selectedCategory = category;
+    console.log('Selected category:', this.selectedCategory);  // Debugging log
   }
 
   closeAndNavigate(): void {
@@ -49,9 +60,10 @@ export class ChoseGameDialogComponent implements OnInit {
       return;
     }
   
-    let gameName = this.gameProfile.name.toLowerCase().replace(/\s+/g, '-');
+    const gameName = this.gameProfile.name.toLowerCase().replace(/\s+/g, '-');
     let gameRoute = '';
   
+    // Mapping the game names to their routes
     switch (gameName) {
       case 'mixed-letters':
       case 'mixed-words': 
@@ -72,12 +84,11 @@ export class ChoseGameDialogComponent implements OnInit {
         return;
     }
   
-    this.router.navigate([gameRoute]);
-    this.dialogRef.close();
+    this.router.navigate([gameRoute]);  // Navigate to the game route
+    this.dialogRef.close();  // Close the dialog
   }
-  
 
   closeDialog(): void {
-    this.dialogRef.close(); 
+    this.dialogRef.close();  // Close the dialog without navigating
   }
 }

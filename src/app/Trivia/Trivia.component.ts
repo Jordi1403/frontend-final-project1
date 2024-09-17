@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  OnDestroy,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../../shared/model/category';
 import { CategoriesService } from '../services/categories.service';
@@ -32,11 +27,11 @@ export class TriviaComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.routeSub = this.route.paramMap.subscribe((params) => {
-      const id = parseInt(params.get('categoryId')!, 10);
-      if (!isNaN(id)) {
-        this.currentCategory = this.categoriesService.get(id);
+  async ngOnInit(): Promise<void> {
+    this.routeSub = this.route.paramMap.subscribe(async (params) => {
+      const id = params.get('categoryId');
+      if (id) {
+        this.currentCategory = await this.categoriesService.get(id);
         if (!this.currentCategory) {
           console.error('Category not found for ID:', id);
         }

@@ -1,22 +1,21 @@
 <div class="matching-words-container">
-    <div class="exit-button">
-      <button mat-icon-button (click)="exitGame()">
-        <mat-icon>exit_to_app</mat-icon>
-      </button>
-    </div>
-  
-    <h1>Matching Words Game</h1>
-  
-    <div *ngIf="currentCategory; else noCategory">
-      <h2>{{ currentCategory.name }}</h2>
-      <p>Number of words in this category: {{ currentCategory.words.length }}</p>
-      <p>
-        Last updated: {{ currentCategory.lastUpdateDate | date : "longDate" }}
-      </p>
-    </div>
-  
-    <ng-template #noCategory>
-      <p>No category found or invalid category ID.</p>
-    </ng-template>
+  <div class="exit-button">
+    <button mat-icon-button (click)="exitGame()">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
   </div>
-  
+
+  <h1>Matching Words Game</h1>
+
+  <div *ngIf="currentCategory; else noCategory">
+    <h2>{{ currentCategory.name }}</h2>
+    <p>Number of words in this category: {{ currentCategory.words.length }}</p>
+    <p>
+      Last updated: {{ currentCategory.lastUpdateDate | date : "longDate" }}
+    </p>
+  </div>
+
+  <ng-template #noCategory>
+    <p>No category found or invalid category ID.</p>
+  </ng-template>
+</div>

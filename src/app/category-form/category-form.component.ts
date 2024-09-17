@@ -25,50 +25,53 @@ import { TranslatedWord } from '../../shared/model/translated-word';
     MatTableModule
   ],
   templateUrl: './category-form.component.html',
-  styleUrl: './category-form.component.css',
+  styleUrls: ['./category-form.component.css'],
 })
 export class CategoryFormComponent implements OnInit { 
-  currentCategory = new Category(0,"", Language.English, Language.Hebrew);
-  displayedColumns: string[] = ["Origin", "Target", "Actions"];
+  currentCategory = new Category('', '', Language.English, Language.Hebrew);
+  displayedColumns: string[] = ['Origin', 'Target', 'Actions'];
 
-  @Input()
-  id? : string;
+  @Input() id?: string;
 
-  @ViewChild('wordsGroup') wordsGroup? : NgModelGroup;
+  @ViewChild('wordsGroup') wordsGroup?: NgModelGroup;
 
-  constructor(private categoriesService : CategoriesService,
-    private router : Router){}
+  constructor(
+    private categoriesService: CategoriesService,
+    private router: Router
+  ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if (this.id) {
-      let categoryData = this.categoriesService.get(parseInt(this.id)); 
-
+      const categoryData = await this.categoriesService.get(this.id);
       if (categoryData) {
         this.currentCategory = categoryData;
       }
     }
   }
 
-  addWord() {
-    this.currentCategory.words = 
-      [...this.currentCategory.words, 
-        new TranslatedWord("", "")];
- }
-
-  deleteWord(index : number) {
-    let extendedWordsList = Array.from(this.currentCategory.words);
-    extendedWordsList.splice(index, 1)
-    this.currentCategory.words = extendedWordsList;
-    this.wordsGroup!.control.markAsDirty();
+  addWord(): void {
+    this.currentCategory.words.push(new TranslatedWord('', ''));
   }
 
-  saveCategory() {
-    if (this.id) {
-      this.categoriesService.update(this.currentCategory);
-    } else {
-      this.categoriesService.add(this.currentCategory);
+  deleteWord(index: number): void {
+    this.currentCategory.words.splice(index, 1);
+    if (this.wordsGroup) {
+      this.wordsGroup.control.markAsDirty();
     }
+  }
 
-    this.router.navigate(['']);
+  async saveCategory(): Promise<void> {
+    console.log('Saving Category:', this.currentCategory);
+    try {
+      if (this.id) {
+        await this.categoriesService.update(this.currentCategory);
+      } else {
+        console.log('Category Data:', this.currentCategory);
+        await this.categoriesService.add(this.currentCategory);
+      }
+      this.router.navigate(['']);
+    } catch (error) {
+      console.error('Error saving category:', error);
+    }
   }
 }
