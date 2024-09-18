@@ -1,4 +1,4 @@
-/* Card Container for Game Card */
+
 .card-container {
   margin: 10px;
   padding: 20px;
@@ -16,29 +16,29 @@
 }
 
 .card-container mat-card-title {
-  color: #3f51b5; /* Primary color for card titles */
+  color: #3f51b5; 
   font-size: 1.5em;
   margin-bottom: 10px;
 }
 
 .card-container mat-card-content {
-  color: #666666; /* Dark gray for card content */
+  color: #666666; 
   font-size: 1em;
   margin-bottom: 10px;
 }
 
-/* Style for Choose Game Dialog */
+
 mat-dialog-title {
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 16px;
-  color: #3f51b5; /* Primary color for dialog titles */
+  color: #3f51b5; 
 }
 
 mat-dialog-content {
   font-size: 1rem;
   margin-bottom: 24px;
-  color: #333333; /* Darker gray for dialog content */
+  color: #333333; 
 }
 
 mat-form-field {
