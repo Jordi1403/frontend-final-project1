@@ -50,6 +50,7 @@ export class CategoryFormComponent implements OnInit {
   }
 
   addWord(): void {
+    // Add a new word pair (empty by default) to the list
     this.currentCategory.words.push(new TranslatedWord('', ''));
   }
 
@@ -66,10 +67,10 @@ export class CategoryFormComponent implements OnInit {
       if (this.id) {
         await this.categoriesService.update(this.currentCategory);
       } else {
-        console.log('Category Data:', this.currentCategory);
         await this.categoriesService.add(this.currentCategory);
       }
-      this.router.navigate(['']);
+      // Redirect the user to the /categories route after saving the category
+      this.router.navigate(['/categories']);
     } catch (error) {
       console.error('Error saving category:', error);
     }
