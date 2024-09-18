@@ -1,4 +1,4 @@
-<div class="sort-words-container">
+<div class="sort-words-container" *ngIf="!errorMessage">
   <div class="exit-button">
     <button mat-icon-button (click)="exitGame()">
       <mat-icon>exit_to_app</mat-icon>
@@ -12,8 +12,8 @@
 
   <h1>Sort Words Game</h1>
 
-  <div *ngIf="currentCategory">
-    <h2 class="category-name">{{ currentCategory.name }}</h2>
+  <div *ngIf="gameInitialized">
+    <h2 class="category-name">{{ currentCategoryName }}</h2>
 
     <div *ngIf="currentWord">
       <p class="current-word">{{ currentWord }}</p>
@@ -36,11 +36,11 @@
     ></app-progress-bar>
   </div>
 
-  <div *ngIf="!currentCategory">
-    <p>No category found or invalid category ID.</p>
+  <div *ngIf="!gameInitialized">
+    <p>Loading... Please wait.</p>
   </div>
 </div>
 
-<div *ngIf="!gameInitialized">
-  <p>Loading... Please wait.</p>
+<div *ngIf="errorMessage">
+  <p>{{ errorMessage }}</p>
 </div>

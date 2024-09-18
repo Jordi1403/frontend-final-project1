@@ -16,7 +16,8 @@
   <!-- ID Column -->
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef> ID </th>
-    <td mat-cell *matCellDef="let category"> {{ category.id }} </td>
+    <!-- Use index to show ascending numbers -->
+    <td mat-cell *matCellDef="let category; let i = index"> {{ i + 1 }} </td>
   </ng-container>
 
   <!-- Name Column -->

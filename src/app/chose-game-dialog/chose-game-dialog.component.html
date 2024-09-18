@@ -12,8 +12,8 @@
 
     <!-- Only show category info if selectedCategory exists -->
     <div *ngIf="selectedCategory" class="category-info">
-      <p>Last Updated: {{ selectedCategory?.lastUpdateDate | date: 'medium' }}</p>
-      <p>Number of Words: {{ selectedCategory?.words?.length || 0 }}</p>
+      <p>Last Updated: {{ selectedCategory.lastUpdateDate | date: 'medium' }}</p>
+      <p>Number of Words: {{ selectedCategory.words.length || 0 }}</p>
     </div>
   </div>
 
