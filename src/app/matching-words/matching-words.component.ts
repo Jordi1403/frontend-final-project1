@@ -128,23 +128,25 @@ export class MatchingWordsComponent implements OnInit, OnDestroy {
   }
 
   endGame(): void {
-    if (this.score === this.totalQuestions * this.pointsPerWord) {
-      this.score = 100;
-    } else {
-      this.score = Math.floor(this.score);
-    }
-
+    // ... חישוב הניקוד וכו'
+  
+    // יצירת GameResult עם ה-`gameId` הנכון
     const gameResult = new GameResult(
       this.currentCategory?.id || '',
-      'matching-words',
+      'matching-words', // ה-`url` של המשחק
       new Date(),
       this.score
     );
-
+  
+    // שמירת התוצאה
     this.gameService.addGameResult(gameResult)
-      .then(() => console.log('Game result saved'))
-      .catch(error => console.error('Failed to save game result', error));
-
+      .then(() => {
+        console.log('Game result saved successfully.');
+      })
+      .catch(error => {
+        console.error('Failed to save game result:', error);
+      });
+      
     this.gameStateService.setGameState(this.score, [], this.currentCategory?.id || '', 'matching-words');
     this.router.navigate(['/summary']);
   }

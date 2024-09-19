@@ -170,15 +170,15 @@ export class SortWordsComponent implements OnInit {
     } else {
       this.score = Math.floor(this.score);
     }
-
-    // Create a new GameResult object
+  
+    // Create a new GameResult object with the correct gameId
     const gameResult = new GameResult(
       this.currentCategory?.id || '',
-      'some-game-id', // Replace with actual game ID if available
+      'sort-words', // Use the actual game ID
       new Date(),
       this.score
     );
-
+  
     // Save the game result using GameService
     this.gameService.addGameResult(gameResult)
       .then(() => {
@@ -187,7 +187,7 @@ export class SortWordsComponent implements OnInit {
       .catch(error => {
         console.error('Failed to save game result:', error);
       });
-
+  
     this.gameStateService.setGameState(
       this.score,
       this.wordsUsed,
@@ -196,7 +196,6 @@ export class SortWordsComponent implements OnInit {
     );
     this.router.navigate(['/summary']);
   }
-
   exitGame(): void {
     this.dialog
       .open(ExitConfirmationDialogComponent)
