@@ -30,7 +30,7 @@ import { GameResult } from '../../shared/model/game-result';
   ],
 })
 export class SortWordsComponent implements OnInit {
-  errorMessage: string | null = null;  // הוסף את השדה הזה כדי למנוע את השגיאה
+  errorMessage: string | null = null;
   currentCategory?: Category;
   wordsToSort: { origin: string; target: string; fromCurrentCategory: boolean }[] = [];
   currentWordIndex = 0;
@@ -38,7 +38,7 @@ export class SortWordsComponent implements OnInit {
   currentCategoryName: string = '';
   gameInitialized = false;
   correctAnswers = 0;
-  totalQuestions = 6;  // 6 rounds of guessing
+  totalQuestions = 6; // 6 rounds of guessing
   pointsPerWord = 0;
   wordsUsed: {
     origin: string;
@@ -47,10 +47,11 @@ export class SortWordsComponent implements OnInit {
     userAnswer: string;
   }[] = [];
   score = 0;
+  loading = true; // Added to track loading state
 
   constructor(
     private categoriesService: CategoriesService,
-    private gameService: GameService,  // Inject GameService
+    private gameService: GameService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router,
@@ -62,6 +63,7 @@ export class SortWordsComponent implements OnInit {
       await this.initializeGame();
     } catch (error) {
       this.errorMessage = 'Failed to initialize the game. Please try again.';
+      this.loading = false; // Ensure loading is stopped in case of an error
     }
   }
 
@@ -69,6 +71,7 @@ export class SortWordsComponent implements OnInit {
     const categoryId = this.route.snapshot.paramMap.get('id');
     if (!categoryId) {
       this.errorMessage = 'No category ID provided.';
+      this.loading = false; // Hide progress bar if no category ID is provided
       return;
     }
 
@@ -76,6 +79,7 @@ export class SortWordsComponent implements OnInit {
     this.currentCategory = await this.categoriesService.get(categoryId);
     if (!this.currentCategory) {
       this.errorMessage = 'No category found or invalid category ID.';
+      this.loading = false; // Hide progress bar if the category is invalid
       return;
     }
 
@@ -101,6 +105,7 @@ export class SortWordsComponent implements OnInit {
 
     this.pointsPerWord = Math.floor(100 / this.totalQuestions);
     this.gameInitialized = true;
+    this.loading = false; // Hide progress bar once the game is initialized
     this.nextWord();
   }
 

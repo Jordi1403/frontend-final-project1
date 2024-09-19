@@ -1,10 +1,12 @@
 <div class="sort-words-container" *ngIf="!errorMessage">
+  <!-- Exit Button -->
   <div class="exit-button">
     <button mat-icon-button (click)="exitGame()">
       <mat-icon>exit_to_app</mat-icon>
     </button>
   </div>
 
+  <!-- Score Display -->
   <div class="score-display">
     <mat-icon>paid</mat-icon>
     <span>Score: {{ score }}</span>
@@ -12,12 +14,16 @@
 
   <h1>Sort Words Game</h1>
 
+  <!-- Game Initialized -->
   <div *ngIf="gameInitialized">
     <h2 class="category-name">{{ currentCategoryName }}</h2>
 
+    <!-- Display the current word -->
     <div *ngIf="currentWord">
       <p class="current-word">{{ currentWord }}</p>
       <p>Does this word belong to the category: {{ currentCategoryName }}?</p>
+
+      <!-- Buttons for Yes/No -->
       <button mat-raised-button color="primary" (click)="checkAnswer(true)">
         Yes
       </button>
@@ -26,21 +32,26 @@
       </button>
     </div>
 
+    <!-- Game Over Message -->
     <div *ngIf="!currentWord">
       <p>Game over! You've sorted all the words.</p>
     </div>
 
+    <!-- Progress Bar showing how many words are sorted -->
     <app-progress-bar
       [current]="currentWordIndex"
       [total]="wordsToSort.length"
     ></app-progress-bar>
   </div>
 
+  <!-- Display loading message before game initializes -->
   <div *ngIf="!gameInitialized">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     <p>Loading... Please wait.</p>
   </div>
 </div>
 
+<!-- Error Message Handling -->
 <div *ngIf="errorMessage">
   <p>{{ errorMessage }}</p>
 </div>
