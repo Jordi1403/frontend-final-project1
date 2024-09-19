@@ -14,6 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { GameService } from '../services/game.service'; // ייבוא של GameService
+import { GameResult } from '../../shared/model/game-result'; // ייבוא של GameResult
 
 interface WordEntry {
   origin: string;
@@ -59,7 +61,8 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
     private categoriesService: CategoriesService,
     private router: Router,
     private dialog: MatDialog,
-    private gameStateService: GameStateService
+    private gameStateService: GameStateService,
+    private gameService: GameService // הוספת GameService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -184,7 +187,25 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
   showSummary(): void {
     if (this.currentCategory) {
       this.score = this.correctAnswersCount === this.totalQuestions ? 100 : Math.floor(this.score);
-      this.gameStateService.setGameState(this.score, this.wordsUsed, this.currentCategory.id, 'mixed-letters');
+
+      // הוספת יצירת ושמירת GameResult
+      const gameResult = new GameResult(
+        this.currentCategory.id,
+        'mixed-words', // ה-`url` של המשחק ב-GameinfoService
+        new Date(),
+        this.score
+      );
+
+      this.gameService.addGameResult(gameResult)
+        .then(() => {
+          console.log('Game result saved successfully.');
+        })
+        .catch(error => {
+          console.error('Failed to save game result:', error);
+        });
+
+      // עדכון מצב המשחק
+      this.gameStateService.setGameState(this.score, this.wordsUsed, this.currentCategory.id, 'mixed-words');
       this.router.navigate(['/summary']);
     }
   }

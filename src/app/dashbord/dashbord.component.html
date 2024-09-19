@@ -1,32 +1,30 @@
-<div class="dashboard-container">
+<!-- התגים מתחת לסרגל העליון -->
+<div class="badge-container" *ngIf="badges.length > 0">
+    <div class="badge-item" *ngFor="let badge of badges">
+      <img src="assets/badge.png" alt="Badge" class="badge-image" />
+    </div>
+  </div>
+  
+  <div class="dashboard-container">
+    <!-- כרטיסיות קיימות -->
     <div class="card">
       <h3>Total Points</h3>
       <p>{{ totalPoints }}</p>
     </div>
   
     <div class="card">
-      <h3>Total Games Played</h3>
+      <h3>Total Games</h3>
       <p>{{ totalGames }}</p>
     </div>
   
     <div class="card">
-      <h3>Highest Avg Score Game</h3>
+      <h3>Highest Average Score Game</h3>
       <p>{{ highestAvgScoreGame }}</p>
     </div>
   
     <div class="card">
-      <h3>Lowest Avg Score Game</h3>
+      <h3>Lowest Average Score Game</h3>
       <p>{{ lowestAvgScoreGame }}</p>
-    </div>
-  
-    <div class="card">
-      <h3>Learned Categories</h3>
-      <p>{{ learnedCategoriesCount }}</p>
-    </div>
-  
-    <div class="card">
-      <h3>Unlearned Categories</h3>
-      <p>{{ unlearnedCategoriesCount }}</p>
     </div>
   
     <div class="card">
@@ -40,8 +38,53 @@
     </div>
   
     <div class="card">
-      <h3>Categories Learned (%)</h3>
+      <h3>Learned Categories</h3>
+      <p>{{ learnedCategoriesCount }}</p>
+    </div>
+  
+    <div class="card">
+      <h3>Unlearned Categories</h3>
+      <p>{{ unlearnedCategoriesCount }}</p>
+    </div>
+  
+    <div class="card">
+      <h3>Learned Categories Percentage</h3>
       <p>{{ learnedCategoriesPercentage }}%</p>
+    </div>
+  
+    <!-- אתגר חודשי עם איסוף פריטים -->
+    <div class="monthly-challenge-collectibles">
+      <h3>Monthly Challenge</h3>
+      <div class="collectibles">
+        <div
+          class="collectible"
+          *ngFor="let item of challengeSteps; let i = index"
+        >
+          <mat-icon
+            *ngIf="i < gamesThisMonth"
+            class="collected"
+            >star</mat-icon
+          >
+          <mat-icon
+            *ngIf="i >= gamesThisMonth"
+            class="not-collected"
+            >star_border</mat-icon
+          >
+        </div>
+      </div>
+      <p *ngIf="!monthlyChallengeCompleted">
+        Collect {{ gamesToCompleteChallenge }} more stars to complete the challenge!
+      </p>
+      <p *ngIf="monthlyChallengeCompleted">
+        <mat-icon class="celebrate-icon">emoji_events</mat-icon>
+        Congratulations! You've completed the monthly challenge!
+      </p>
+    </div>
+  
+    <!-- כרטיסייה לימים רצופים -->
+    <div class="card full-width">
+      <h3>Consecutive Game Days</h3>
+      <p>You have played for {{ consecutiveDays }} consecutive day(s)!</p>
     </div>
   </div>
   

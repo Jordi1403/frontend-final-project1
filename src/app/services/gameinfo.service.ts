@@ -10,7 +10,7 @@ export class GameinfoService {
       1,
       'sort word',
       'players must fits words into category or not.',
-      'sort-words'
+      'sort-words' 
     ),
     new GameProfile(
       2,
