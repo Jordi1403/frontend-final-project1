@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoriesService } from '../services/categories.service';
 import { Category } from '../../shared/model/category';
@@ -15,24 +15,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProgressBarModule } from '../../shared/model/progress-bar';
 import { PointsComponent } from '../points/points.component';
+import { Subscription } from 'rxjs'; // Added for proper subscription management
 
 interface WordEntry {
   origin: string;
   target: string;
   correct: boolean;
   userAnswer: string;
-}
-
-function shuffleArray<T>(array: T[] | undefined): T[] {
-  if (!array || array.length === 0) {
-    console.error('The array provided to shuffleArray is either undefined or empty.');
-    return [];
-  }
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
-  }
-  return array;
 }
 
 @Component({
@@ -51,7 +40,7 @@ function shuffleArray<T>(array: T[] | undefined): T[] {
     PointsComponent,
   ],
 })
-export class MixedLettersComponent implements OnInit {
+export class MixedLettersComponent implements OnInit, OnDestroy {
   currentCategory: Category | undefined;
   currentWordIndex = 0;
   scrambledWord = '';
@@ -62,6 +51,7 @@ export class MixedLettersComponent implements OnInit {
   errorMessage = '';
   totalQuestions = 0;
   correctAnswersCount = 0;
+  categorySubscription: Subscription | undefined; // Track the subscription to clean up later
 
   constructor(
     private route: ActivatedRoute,
@@ -72,19 +62,49 @@ export class MixedLettersComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    // Reset game state each time the component is initialized
+    this.resetGameState();
+
     const categoryId = this.route.snapshot.paramMap.get('id') || '';
     if (categoryId) {
+      this.loadCategory(categoryId);
+    } else {
+      console.error('Invalid category ID');
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Unsubscribe to prevent memory leaks
+    if (this.categorySubscription) {
+      this.categorySubscription.unsubscribe();
+    }
+  }
+
+  resetGameState(): void {
+    this.currentWordIndex = 0;
+    this.scrambledWord = '';
+    this.userAnswer = '';
+    this.score = 0;
+    this.pointsPerWord = 0;
+    this.wordsUsed = [];
+    this.errorMessage = '';
+    this.totalQuestions = 0;
+    this.correctAnswersCount = 0;
+  }
+
+  async loadCategory(categoryId: string): Promise<void> {
+    try {
       this.currentCategory = await this.categoriesService.get(categoryId);
       if (this.currentCategory && this.currentCategory.words.length > 0) {
-        this.currentCategory.words = shuffleArray(this.currentCategory.words);
+        this.currentCategory.words = lodashShuffle(this.currentCategory.words);
         this.totalQuestions = this.currentCategory.words.length;
         this.pointsPerWord = Math.floor(100 / this.totalQuestions);
         this.nextWord();
       } else {
         console.error('Category or words not found for ID:', categoryId);
       }
-    } else {
-      console.error('Invalid category ID:', categoryId);
+    } catch (error) {
+      console.error('Error fetching category:', error);
     }
   }
 
@@ -116,8 +136,7 @@ export class MixedLettersComponent implements OnInit {
     }
 
     if (this.currentCategory) {
-      const correctAnswer =
-        this.userAnswer.toLowerCase() === this.currentCategory.words[this.currentWordIndex].origin.toLowerCase();
+      const correctAnswer = this.userAnswer.toLowerCase() === this.currentCategory.words[this.currentWordIndex].origin.toLowerCase();
 
       this.wordsUsed.push({
         origin: this.currentCategory.words[this.currentWordIndex].origin,
@@ -156,16 +175,10 @@ export class MixedLettersComponent implements OnInit {
     }
   }
 
-  async showSummary(): Promise<void> {
+  showSummary(): void {
     if (this.currentCategory) {
-      this.score =
-        this.correctAnswersCount === this.totalQuestions ? 100 : Math.floor(this.score);
-      this.gameStateService.setGameState(
-        this.score,
-        this.wordsUsed,
-        this.currentCategory.id,
-        'mixed-letters'
-      );
+      this.score = this.correctAnswersCount === this.totalQuestions ? 100 : Math.floor(this.score);
+      this.gameStateService.setGameState(this.score, this.wordsUsed, this.currentCategory.id, 'mixed-letters');
       this.router.navigate(['/summary']);
     }
   }

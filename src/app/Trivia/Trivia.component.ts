@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-trivia',
   templateUrl: './trivia.component.html',
-  styleUrls: ['./trivia.component.css'],
+  styleUrls: ['./Trivia.component.css'],
   standalone: true,
   imports: [CommonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
