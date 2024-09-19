@@ -8,14 +8,12 @@ import { SuccessDialogComponent } from '../success-dialog/success-dialog.compone
 import { FailureDialogComponent } from '../failure-dialog/failure-dialog.component';
 import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
 import { GameStateService } from '../services/game-state.service';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ProgressBarModule } from '../../shared/model/progress-bar';
-import { PointsComponent } from '../points/points.component';
-import { Subscription } from 'rxjs'; // Added for proper subscription management
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface WordEntry {
   origin: string;
@@ -35,9 +33,10 @@ interface WordEntry {
     MatDialogModule,
     MatProgressBarModule,
     MatButtonModule,
-    MatIconModule,
-    ProgressBarModule,
-    PointsComponent,
+    MatIconModule, // Icons
+    SuccessDialogComponent,
+    FailureDialogComponent,
+    ExitConfirmationDialogComponent,
   ],
 })
 export class MixedLettersComponent implements OnInit, OnDestroy {
@@ -51,7 +50,9 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
   errorMessage = '';
   totalQuestions = 0;
   correctAnswersCount = 0;
-  categorySubscription: Subscription | undefined; // Track the subscription to clean up later
+  categorySubscription: Subscription | undefined;
+  loading = true; // For loading progress bar
+  insufficientWords = false; // Check if the category has enough words
 
   constructor(
     private route: ActivatedRoute,
@@ -62,19 +63,17 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    // Reset game state each time the component is initialized
     this.resetGameState();
 
     const categoryId = this.route.snapshot.paramMap.get('id') || '';
     if (categoryId) {
-      this.loadCategory(categoryId);
+      await this.loadCategory(categoryId);
     } else {
       console.error('Invalid category ID');
     }
   }
 
   ngOnDestroy(): void {
-    // Unsubscribe to prevent memory leaks
     if (this.categorySubscription) {
       this.categorySubscription.unsubscribe();
     }
@@ -90,21 +89,32 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
     this.errorMessage = '';
     this.totalQuestions = 0;
     this.correctAnswersCount = 0;
+    this.loading = true;
+    this.insufficientWords = false;
   }
 
   async loadCategory(categoryId: string): Promise<void> {
     try {
       this.currentCategory = await this.categoriesService.get(categoryId);
-      if (this.currentCategory && this.currentCategory.words.length > 0) {
-        this.currentCategory.words = lodashShuffle(this.currentCategory.words);
+      console.log('Fetched category:', this.currentCategory); // Debug log
+
+      if (this.currentCategory && this.currentCategory.words.length >= 6) {
+        this.currentCategory.words = lodashShuffle(this.currentCategory.words).slice(0, 6); // Limit to 6 rounds
         this.totalQuestions = this.currentCategory.words.length;
         this.pointsPerWord = Math.floor(100 / this.totalQuestions);
+        this.loading = false;
         this.nextWord();
+      } else if (this.currentCategory && this.currentCategory.words.length < 6) {
+        console.warn('Category has fewer than 6 words. Showing insufficient words warning.');
+        this.insufficientWords = true;
+        this.loading = false;
       } else {
-        console.error('Category or words not found for ID:', categoryId);
+        console.error('Invalid category or no words found in the category.');
+        this.loading = false;
       }
     } catch (error) {
       console.error('Error fetching category:', error);
+      this.loading = false;
     }
   }
 
@@ -138,6 +148,7 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
     if (this.currentCategory) {
       const correctAnswer = this.userAnswer.toLowerCase() === this.currentCategory.words[this.currentWordIndex].origin.toLowerCase();
 
+      // Push the current word and answer to wordsUsed
       this.wordsUsed.push({
         origin: this.currentCategory.words[this.currentWordIndex].origin,
         target: this.currentCategory.words[this.currentWordIndex].target,
@@ -150,20 +161,15 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
         this.score += this.pointsPerWord;
       }
 
-      const dialogConfig = {
-        width: '280px',
-        height: '200px',
-        data: { score: this.score },
-      };
+      const dialogConfig = { width: '300px', data: { score: this.score } };
+      if (correctAnswer) {
+        this.dialog.open(SuccessDialogComponent, dialogConfig);
+      } else {
+        this.dialog.open(FailureDialogComponent, dialogConfig);
+      }
 
-      const dialogRef = correctAnswer
-        ? this.dialog.open(SuccessDialogComponent, dialogConfig)
-        : this.dialog.open(FailureDialogComponent, dialogConfig);
-
-      dialogRef.afterClosed().subscribe(() => {
-        this.currentWordIndex++;
-        this.checkIfFinished();
-      });
+      this.currentWordIndex++;
+      this.checkIfFinished();
     }
   }
 
