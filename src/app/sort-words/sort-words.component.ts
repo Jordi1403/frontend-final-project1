@@ -12,9 +12,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProgressBarModule } from '../../shared/model/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
-import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
 import { GameService } from '../services/game.service';
 import { GameResult } from '../../shared/model/game-result';
+import { ExitButtonComponent } from '../exit-button/exit-button.component';
 
 @Component({
   selector: 'app-sort-words',
@@ -27,6 +27,9 @@ import { GameResult } from '../../shared/model/game-result';
     MatProgressBarModule,
     MatIconModule,
     ProgressBarModule,
+    ExitButtonComponent, // Include the ExitButtonComponent
+    SuccessDialogComponent,
+    FailureDialogComponent,
   ],
 })
 export class SortWordsComponent implements OnInit {
@@ -170,15 +173,15 @@ export class SortWordsComponent implements OnInit {
     } else {
       this.score = Math.floor(this.score);
     }
-  
-    // Create a new GameResult object with the correct gameId
+
+    // Create a new GameResult object
     const gameResult = new GameResult(
       this.currentCategory?.id || '',
       'sort-words', // Use the actual game ID
       new Date(),
       this.score
     );
-  
+
     // Save the game result using GameService
     this.gameService.addGameResult(gameResult)
       .then(() => {
@@ -187,7 +190,7 @@ export class SortWordsComponent implements OnInit {
       .catch(error => {
         console.error('Failed to save game result:', error);
       });
-  
+
     this.gameStateService.setGameState(
       this.score,
       this.wordsUsed,
@@ -195,15 +198,5 @@ export class SortWordsComponent implements OnInit {
       'sort-words'
     );
     this.router.navigate(['/summary']);
-  }
-  exitGame(): void {
-    this.dialog
-      .open(ExitConfirmationDialogComponent)
-      .afterClosed()
-      .subscribe((result) => {
-        if (result === 'yes') {
-          this.router.navigate(['/choose-game']);
-        }
-      });
   }
 }
