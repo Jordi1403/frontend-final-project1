@@ -148,12 +148,21 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Check if the current word contains any Hebrew letters
+    const hebrewPattern = /[\u0590-\u05FF]/;
+    const currentWord = this.currentCategory?.words[this.currentWordIndex]?.origin || '';
+
+    if (hebrewPattern.test(currentWord)) {
+      console.error('The current word contains Hebrew letters.');
+      return;
+    }
+
     if (this.currentCategory) {
-      const correctAnswer = this.userAnswer.toLowerCase() === this.currentCategory.words[this.currentWordIndex].origin.toLowerCase();
+      const correctAnswer = this.userAnswer.toLowerCase() === currentWord.toLowerCase();
 
       // Push the current word and answer to wordsUsed
       this.wordsUsed.push({
-        origin: this.currentCategory.words[this.currentWordIndex].origin,
+        origin: currentWord,
         target: this.currentCategory.words[this.currentWordIndex].target,
         correct: correctAnswer,
         userAnswer: this.userAnswer,
@@ -164,7 +173,8 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
         this.score += this.pointsPerWord;
       }
 
-      const dialogConfig = { width: '300px', data: { score: this.score } };
+      const dialogConfig = { width: '300px' }; // Removed 'data' property
+
       if (correctAnswer) {
         this.dialog.open(SuccessDialogComponent, dialogConfig);
       } else {
