@@ -59,31 +59,35 @@ export class ChoseGameDialogComponent implements OnInit {
       console.error('Invalid or missing category ID:', this.selectedCategory);
       return;
     }
-  
+
     const gameName = this.gameProfile.name.toLowerCase().replace(/\s+/g, '-');
     let gameRoute = '';
-  
+
     // Mapping the game names to their routes
     switch (gameName) {
       case 'mixed-letters':
-      case 'mixed-words': 
+      case 'mixed-words':
         gameRoute = `/mixed-letters/${this.selectedCategory.id}`;
         break;
       case 'trivia':
         gameRoute = `/trivia/${this.selectedCategory.id}`;
         break;
       case 'sort-words':
-      case 'sort-word': 
+      case 'sort-word':
         gameRoute = `/sort-words/${this.selectedCategory.id}`;
         break;
-      case 'matching-words': 
+      case 'matching-words':
         gameRoute = `/matching-words/${this.selectedCategory.id}`;
+        break;
+      case 'translation-attack-time':
+        gameRoute = `/translation-attack-time/${this.selectedCategory.id}`;
         break;
       default:
         console.error('Unknown game:', gameName);
         return;
     }
-  
+
+    console.log(`Navigating to ${gameRoute} with category ID: ${this.selectedCategory.id}`);
     this.router.navigate([gameRoute]);  // Navigate to the game route
     this.dialogRef.close();  // Close the dialog
   }

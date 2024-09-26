@@ -21,7 +21,7 @@ export class SummaryComponent implements OnInit {
     correct: boolean;
     userAnswer: string;
   }[] = [];
-  categoryId: string = '';  // Updated to be a string
+  categoryId: string = '';  
   gameType: string = '';
 
   constructor(
@@ -30,12 +30,21 @@ export class SummaryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadGameState();
+  }
+
+  private loadGameState(): void {
     this.finalScore = this.gameStateService.getScore();
     this.wordsUsed = this.gameStateService.getWordsUsed();
-    this.categoryId = this.gameStateService.getCategoryId(); // Should return a string now
+    this.categoryId = this.gameStateService.getCategoryId();
     this.gameType = this.gameStateService.getGameType();
 
-    // Check if there are no words used (navigation issue or state problem)
+    // Debugging logs
+    console.log('Final Score:', this.finalScore);
+    console.log('Words Used:', this.wordsUsed);
+    console.log('Category ID:', this.categoryId);
+    console.log('Game Type:', this.gameType);
+
     if (this.wordsUsed.length === 0) {
       console.error('No words found, possibly a navigation issue.');
     }
@@ -43,7 +52,6 @@ export class SummaryComponent implements OnInit {
 
   playAgain(): void {
     if (this.categoryId && this.gameType) {
-      // Navigate back to the specific game type with the category ID
       this.router.navigate([`/${this.gameType}`, this.categoryId]);
     } else {
       console.error('Missing category ID or game type.');
@@ -51,7 +59,6 @@ export class SummaryComponent implements OnInit {
   }
 
   chooseAnotherGame(): void {
-    // Navigate to the game selection page
     this.router.navigate(['/chose-game']);
   }
 }
