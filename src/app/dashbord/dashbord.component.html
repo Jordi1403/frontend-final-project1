@@ -1,90 +1,147 @@
-<!-- התגים מתחת לסרגל העליון -->
-<div class="badge-container" *ngIf="badges.length > 0">
-    <div class="badge-item" *ngFor="let badge of badges">
-      <img src="assets/badge.png" alt="Badge" class="badge-image" />
-    </div>
-  </div>
-  
-  <div class="dashboard-container">
-    <!-- כרטיסיות קיימות -->
-    <div class="card">
-      <h3>Total Points</h3>
-      <p>{{ totalPoints }}</p>
-    </div>
-  
-    <div class="card">
-      <h3>Total Games</h3>
-      <p>{{ totalGames }}</p>
-    </div>
-  
-    <div class="card">
-      <h3>Highest Average Score Game</h3>
-      <p>{{ highestAvgScoreGame }}</p>
-    </div>
-  
-    <div class="card">
-      <h3>Lowest Average Score Game</h3>
-      <p>{{ lowestAvgScoreGame }}</p>
-    </div>
-  
-    <div class="card">
-      <h3>Perfect Score Games (%)</h3>
-      <p>{{ perfectScorePercentage }}%</p>
-    </div>
-  
-    <div class="card">
-      <h3>Most Played Category</h3>
-      <p>{{ mostPlayedCategory }}</p>
-    </div>
-  
-    <div class="card">
-      <h3>Learned Categories</h3>
-      <p>{{ learnedCategoriesCount }}</p>
-    </div>
-  
-    <div class="card">
-      <h3>Unlearned Categories</h3>
-      <p>{{ unlearnedCategoriesCount }}</p>
-    </div>
-  
-    <div class="card">
-      <h3>Learned Categories Percentage</h3>
-      <p>{{ learnedCategoriesPercentage }}%</p>
-    </div>
-  
-    <!-- אתגר חודשי עם איסוף פריטים -->
-    <div class="monthly-challenge-collectibles">
-      <h3>Monthly Challenge</h3>
-      <div class="collectibles">
-        <div
-          class="collectible"
-          *ngFor="let item of challengeSteps; let i = index"
-        >
-          <mat-icon
-            *ngIf="i < gamesThisMonth"
-            class="collected"
-            >star</mat-icon
-          >
-          <mat-icon
-            *ngIf="i >= gamesThisMonth"
-            class="not-collected"
-            >star_border</mat-icon
-          >
-        </div>
-      </div>
-      <p *ngIf="!monthlyChallengeCompleted">
-        Collect {{ gamesToCompleteChallenge }} more stars to complete the challenge!
-      </p>
-      <p *ngIf="monthlyChallengeCompleted">
-        <mat-icon class="celebrate-icon">emoji_events</mat-icon>
-        Congratulations! You've completed the monthly challenge!
-      </p>
-    </div>
-  
-    <!-- כרטיסייה לימים רצופים -->
-    <div class="card full-width">
-      <h3>Consecutive Game Days</h3>
-      <p>You have played for {{ consecutiveDays }} consecutive day(s)!</p>
-    </div>
-  </div>
-  
+<div class="page-container">
+  <mat-grid-list cols="3" rowHeight="200px" gutterSize="16px">
+    <!-- Total Points Card -->
+    <mat-grid-tile>
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>attach_money</mat-icon>
+          <mat-card-title>Total Points</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>{{ totalPoints }}</h2>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <!-- Total Games Card -->
+    <mat-grid-tile>
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>games</mat-icon>
+          <mat-card-title>Total Games Played</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>{{ totalGames }}</h2>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <!-- Highest Average Score Game Card -->
+    <mat-grid-tile>
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>trending_up</mat-icon>
+          <mat-card-title>Highest Avg. Score Game</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>{{ highestAvgScoreGame }}</h2>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <!-- Lowest Average Score Game Card -->
+    <mat-grid-tile>
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>trending_down</mat-icon>
+          <mat-card-title>Lowest Avg. Score Game</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>{{ lowestAvgScoreGame }}</h2>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <!-- Perfect Score Percentage Card -->
+    <mat-grid-tile>
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>star</mat-icon>
+          <mat-card-title>Perfect Scores</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>{{ perfectScorePercentage }}%</h2>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <!-- Most Played Category Card -->
+    <mat-grid-tile>
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>category</mat-icon>
+          <mat-card-title>Most Played Category</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>{{ mostPlayedCategory }}</h2>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <!-- Learned Categories Count Card -->
+    <mat-grid-tile>
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>check_circle</mat-icon>
+          <mat-card-title>Learned Categories</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>{{ learnedCategoriesCount }}</h2>
+          <mat-progress-bar
+            mode="determinate"
+            [value]="learnedCategoriesPercentage"
+          ></mat-progress-bar>
+          <p>{{ learnedCategoriesPercentage }}% Learned</p>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <!-- Games This Month Card -->
+    <mat-grid-tile>
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>calendar_today</mat-icon>
+          <mat-card-title>Games This Month</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>{{ gamesThisMonth }}</h2>
+          <p *ngIf="!monthlyChallengeCompleted">
+            {{ gamesToCompleteChallenge }} more games to complete the monthly challenge.
+          </p>
+          <p *ngIf="monthlyChallengeCompleted">
+            Monthly challenge completed! 🎉
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <!-- Consecutive Days Card -->
+    <mat-grid-tile>
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>update</mat-icon>
+          <mat-card-title>Consecutive Days</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>{{ consecutiveDays }}</h2>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+
+    <!-- Badges Card -->
+    <mat-grid-tile>
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>emoji_events</mat-icon>
+          <mat-card-title>Badges Earned</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngFor="let badge of badges">
+            <mat-icon>emoji_events</mat-icon> {{ badge }}
+          </div>
+          <p *ngIf="badges.length === 0">No badges earned yet.</p>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>

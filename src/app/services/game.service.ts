@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, getDocs, query, where, deleteDoc, doc, addDoc } from '@angular/fire/firestore';
+import { Firestore, collection, getDocs, query, where, deleteDoc, doc, addDoc, CollectionReference } from '@angular/fire/firestore';
 import { GameResult } from '../../shared/model/game-result';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Timestamp } from 'firebase/firestore';
+import { collectionData } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -10,49 +14,58 @@ export class GameService {
 
   constructor(private firestore: Firestore) {}
 
+  /**
+   * מוסיף תוצאה של משחק ל-Firestore.
+   * @param gameResult התוצאה של המשחק להוספה.
+   */
   async addGameResult(gameResult: GameResult): Promise<void> {
     try {
       const gameResultsCollection = collection(this.firestore, this.collectionName);
       await addDoc(gameResultsCollection, {
         categoryId: gameResult.categoryId,
         gameId: gameResult.gameId,
-        date: gameResult.date,
+        date: gameResult.date instanceof Date ? gameResult.date : new Date(gameResult.date),
         points: gameResult.points,
       });
+      console.log('Game result added successfully');
     } catch (error) {
       console.error('Error adding game result: ', error);
     }
   }
 
-  async list(): Promise<GameResult[]> {
-    try {
-      const gameResultsCollection = collection(this.firestore, this.collectionName);
-      const querySnapshot = await getDocs(gameResultsCollection);
-      return querySnapshot.docs.map((doc) => {
-        const data = doc.data();
-        return new GameResult(
-          data['categoryId'],
-          data['gameId'],
-          data['date'].toDate(),  // Firestore stores dates as Timestamps, convert to Date
-          data['points']
-        );
-      });
-    } catch (error) {
-      console.error('Error fetching game results: ', error);
-      return [];
-    }
+  /**
+   * מחזיר Observable של תוצאות משחקים מ-Firestore בזמן אמת.
+   * @returns Observable של מערך GameResult.
+   */
+  list(): Observable<GameResult[]> {
+    const gameResultsCollection: CollectionReference = collection(this.firestore, this.collectionName);
+    return collectionData(gameResultsCollection, { idField: 'id' }).pipe(
+      map((data: any[]) => {
+        console.log('Fetched data from Firestore:', data); // Debugging
+        return data.map((doc) => {
+          return new GameResult(
+            doc.categoryId,
+            doc.gameId,
+            doc.date instanceof Timestamp ? doc.date.toDate() : new Date(doc.date),
+            doc.points
+          );
+        });
+      })
+    );
   }
 
-  // Add the deleteGameResultByGameId method here
+  /**
+   * מוחק תוצאות משחק לפי gameId.
+   * @param gameId ה-ID של המשחק למחיקה.
+   */
   async deleteGameResultByGameId(gameId: string): Promise<void> {
     try {
       const gameResultsCollection = collection(this.firestore, this.collectionName);
       const q = query(gameResultsCollection, where('gameId', '==', gameId));
       const querySnapshot = await getDocs(q);
-      querySnapshot.forEach(async (docSnap) => {
-        await deleteDoc(docSnap.ref);
-        console.log(`Game result with gameId ${gameId} deleted successfully`);
-      });
+      const deletePromises = querySnapshot.docs.map((docSnap) => deleteDoc(docSnap.ref));
+      await Promise.all(deletePromises);
+      console.log(`Game result(s) with gameId ${gameId} deleted successfully`);
     } catch (error) {
       console.error('Error deleting game result: ', error);
     }
