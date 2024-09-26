@@ -6,7 +6,6 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { shuffle as lodashShuffle } from 'lodash';
 import { SuccessDialogComponent } from '../success-dialog/success-dialog.component';
 import { FailureDialogComponent } from '../failure-dialog/failure-dialog.component';
-import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
 import { GameStateService } from '../services/game-state.service';
 import { Subscription } from 'rxjs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -14,8 +13,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { GameService } from '../services/game.service'; // ייבוא של GameService
-import { GameResult } from '../../shared/model/game-result'; // ייבוא של GameResult
+import { GameService } from '../services/game.service';
+import { GameResult } from '../../shared/model/game-result';
+import { ExitButtonComponent } from '../exit-button/exit-button.component'; // Import ExitButtonComponent
 
 interface WordEntry {
   origin: string;
@@ -38,7 +38,7 @@ interface WordEntry {
     MatIconModule, // Icons
     SuccessDialogComponent,
     FailureDialogComponent,
-    ExitConfirmationDialogComponent,
+    ExitButtonComponent, // Add ExitButtonComponent here
   ],
 })
 export class MixedLettersComponent implements OnInit, OnDestroy {
@@ -62,7 +62,7 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
     private router: Router,
     private dialog: MatDialog,
     private gameStateService: GameStateService,
-    private gameService: GameService // הוספת GameService
+    private gameService: GameService // Inject GameService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -99,7 +99,7 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
   async loadCategory(categoryId: string): Promise<void> {
     try {
       this.currentCategory = await this.categoriesService.get(categoryId);
-      console.log('Fetched category:', this.currentCategory); // Debug log
+      console.log('Fetched category:', this.currentCategory);
 
       if (this.currentCategory && this.currentCategory.words.length >= 6) {
         this.currentCategory.words = lodashShuffle(this.currentCategory.words).slice(0, 6); // Limit to 6 rounds
@@ -148,12 +148,21 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Check if the current word contains any Hebrew letters
+    const hebrewPattern = /[\u0590-\u05FF]/;
+    const currentWord = this.currentCategory?.words[this.currentWordIndex]?.origin || '';
+
+    if (hebrewPattern.test(currentWord)) {
+      console.error('The current word contains Hebrew letters.');
+      return;
+    }
+
     if (this.currentCategory) {
-      const correctAnswer = this.userAnswer.toLowerCase() === this.currentCategory.words[this.currentWordIndex].origin.toLowerCase();
+      const correctAnswer = this.userAnswer.toLowerCase() === currentWord.toLowerCase();
 
       // Push the current word and answer to wordsUsed
       this.wordsUsed.push({
-        origin: this.currentCategory.words[this.currentWordIndex].origin,
+        origin: currentWord,
         target: this.currentCategory.words[this.currentWordIndex].target,
         correct: correctAnswer,
         userAnswer: this.userAnswer,
@@ -164,7 +173,8 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
         this.score += this.pointsPerWord;
       }
 
-      const dialogConfig = { width: '300px', data: { score: this.score } };
+      const dialogConfig = { width: '300px' }; // Removed 'data' property
+
       if (correctAnswer) {
         this.dialog.open(SuccessDialogComponent, dialogConfig);
       } else {
@@ -188,10 +198,10 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
     if (this.currentCategory) {
       this.score = this.correctAnswersCount === this.totalQuestions ? 100 : Math.floor(this.score);
 
-      // הוספת יצירת ושמירת GameResult
+      // Create and save GameResult
       const gameResult = new GameResult(
         this.currentCategory.id,
-        'mixed-words', // ה-`url` של המשחק ב-GameinfoService
+        'mixed-words', // Game ID for mixed-words
         new Date(),
         this.score
       );
@@ -204,7 +214,7 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
           console.error('Failed to save game result:', error);
         });
 
-      // עדכון מצב המשחק
+      // Update game state and navigate to summary
       this.gameStateService.setGameState(this.score, this.wordsUsed, this.currentCategory.id, 'mixed-words');
       this.router.navigate(['/summary']);
     }
@@ -213,16 +223,5 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
   resetInput(): void {
     this.userAnswer = '';
     this.errorMessage = '';
-  }
-
-  exitGame(): void {
-    this.dialog
-      .open(ExitConfirmationDialogComponent)
-      .afterClosed()
-      .subscribe((result) => {
-        if (result === 'yes') {
-          this.router.navigate(['/chose-game']);
-        }
-      });
   }
 }

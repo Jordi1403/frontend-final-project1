@@ -13,8 +13,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProgressBarModule } from '../../shared/model/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
-import { GameService } from '../services/game.service';
-import { GameResult } from '../../shared/model/game-result';
+import { ExitButtonComponent } from "../exit-button/exit-button.component";
 
 @Component({
   selector: 'app-sort-words',
@@ -27,10 +26,10 @@ import { GameResult } from '../../shared/model/game-result';
     MatProgressBarModule,
     MatIconModule,
     ProgressBarModule,
-  ],
+    ExitButtonComponent
+],
 })
 export class SortWordsComponent implements OnInit {
-  errorMessage: string | null = null;
   currentCategory?: Category;
   wordsToSort: { origin: string; target: string; fromCurrentCategory: boolean }[] = [];
   currentWordIndex = 0;
@@ -38,7 +37,7 @@ export class SortWordsComponent implements OnInit {
   currentCategoryName: string = '';
   gameInitialized = false;
   correctAnswers = 0;
-  totalQuestions = 6; // 6 rounds of guessing
+  totalQuestions = 6;  // 6 rounds of guessing
   pointsPerWord = 0;
   wordsUsed: {
     origin: string;
@@ -47,11 +46,10 @@ export class SortWordsComponent implements OnInit {
     userAnswer: string;
   }[] = [];
   score = 0;
-  loading = true; // Added to track loading state
+  errorMessage: string | null = null;  // To store error message
 
   constructor(
     private categoriesService: CategoriesService,
-    private gameService: GameService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router,
@@ -59,19 +57,13 @@ export class SortWordsComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    try {
-      await this.initializeGame();
-    } catch (error) {
-      this.errorMessage = 'Failed to initialize the game. Please try again.';
-      this.loading = false; // Ensure loading is stopped in case of an error
-    }
+    await this.initializeGame();
   }
 
   async initializeGame(): Promise<void> {
     const categoryId = this.route.snapshot.paramMap.get('id');
     if (!categoryId) {
-      this.errorMessage = 'No category ID provided.';
-      this.loading = false; // Hide progress bar if no category ID is provided
+      console.error('No category ID provided.');
       return;
     }
 
@@ -79,7 +71,6 @@ export class SortWordsComponent implements OnInit {
     this.currentCategory = await this.categoriesService.get(categoryId);
     if (!this.currentCategory) {
       this.errorMessage = 'No category found or invalid category ID.';
-      this.loading = false; // Hide progress bar if the category is invalid
       return;
     }
 
@@ -87,12 +78,20 @@ export class SortWordsComponent implements OnInit {
     const allCategories: Category[] = await this.categoriesService.list();
     this.currentCategoryName = this.currentCategory.name;
 
+    // Check if the current category has enough words (at least 3)
+    if (this.currentCategory.words.length < 3) {
+      this.errorMessage = 'Not enough words in the selected category. Please choose another category.';
+      return;
+    }
+
     // Get 3 random words from the current category
     const currentCategoryWords = this.getRandomWords(this.currentCategory.words, 3)
       .map(word => ({ ...word, fromCurrentCategory: true }));
 
     // Get 3 random words from other categories (not the current one)
     const otherCategories = allCategories.filter(cat => cat.id !== this.currentCategory?.id);
+    
+    // Instead of flatMap, use reduce to flatten the array
     const randomWordsFromOtherCategories = shuffle(
       otherCategories.reduce((acc, category) => {
         const words = this.getRandomWords(category.words, 1);
@@ -100,12 +99,17 @@ export class SortWordsComponent implements OnInit {
       }, [] as { origin: string; target: string }[])
     ).slice(0, 3).map(word => ({ ...word, fromCurrentCategory: false }));
 
+    // Check if there are enough words from other categories (at least 3)
+    if (randomWordsFromOtherCategories.length < 3) {
+      this.errorMessage = 'Not enough words in other categories. Please try again later.';
+      return;
+    }
+
     // Shuffle the words and combine them into one array
     this.wordsToSort = shuffle([...currentCategoryWords, ...randomWordsFromOtherCategories]);
 
     this.pointsPerWord = Math.floor(100 / this.totalQuestions);
     this.gameInitialized = true;
-    this.loading = false; // Hide progress bar once the game is initialized
     this.nextWord();
   }
 
@@ -170,24 +174,7 @@ export class SortWordsComponent implements OnInit {
     } else {
       this.score = Math.floor(this.score);
     }
-  
-    // Create a new GameResult object with the correct gameId
-    const gameResult = new GameResult(
-      this.currentCategory?.id || '',
-      'sort-words', // Use the actual game ID
-      new Date(),
-      this.score
-    );
-  
-    // Save the game result using GameService
-    this.gameService.addGameResult(gameResult)
-      .then(() => {
-        console.log('Game result saved successfully.');
-      })
-      .catch(error => {
-        console.error('Failed to save game result:', error);
-      });
-  
+
     this.gameStateService.setGameState(
       this.score,
       this.wordsUsed,
@@ -196,6 +183,7 @@ export class SortWordsComponent implements OnInit {
     );
     this.router.navigate(['/summary']);
   }
+
   exitGame(): void {
     this.dialog
       .open(ExitConfirmationDialogComponent)

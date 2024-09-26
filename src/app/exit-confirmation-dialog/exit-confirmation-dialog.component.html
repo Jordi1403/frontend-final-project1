@@ -1,10 +1,6 @@
-<h1 mat-dialog-title class="dialog-title">Exit Game</h1>
-
-<div mat-dialog-content class="dialog-content">
-  <p>Are you sure you want to exit the game?</p>
-</div>
-
-<div mat-dialog-actions class="dialog-actions">
-  <button mat-raised-button color="warn" (click)="confirmExit()">Yes</button>
-  <button mat-raised-button color="primary" (click)="cancel()">No</button>
-</div>
+<h2 mat-dialog-title>Exit Game</h2>
+<mat-dialog-content>Are you sure you want to exit?</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button color="primary" (click)="confirmExit()">Yes</button>
+  <button mat-button color="warn" (click)="cancel()">No</button>
+</mat-dialog-actions>
