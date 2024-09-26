@@ -64,7 +64,7 @@ export class TriviaComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((result) => {
         if (result === 'yes') {
-          this.router.navigate(['/choose-game']);
+          this.router.navigate(['/chose-game']);
         }
       });
   }

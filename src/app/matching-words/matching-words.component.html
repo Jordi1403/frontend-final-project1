@@ -45,8 +45,20 @@
       </button>
     </div>
 
-    <!-- Progress Bar for Game Rounds -->
-    <app-progress-bar [current]="currentWordIndex" [total]="totalQuestions"></app-progress-bar>
+    <!-- Progress Bar with Words Answered Info -->
+    <div class="progress-bar-container">
+      <!-- Display number of answered words on the left -->
+      <div class="progress-number progress-left">{{ currentWordIndex + 1 }}</div>
+
+      <!-- Material Progress Bar for Game Rounds -->
+      <mat-progress-bar 
+        mode="determinate" 
+        [value]="((currentWordIndex + 1) / totalQuestions) * 100"
+      ></mat-progress-bar>
+
+      <!-- Display total number of words on the right -->
+      <div class="progress-number progress-right">{{ totalQuestions }}</div>
+    </div>
   </div>
 
   <!-- Fallback for no category found -->

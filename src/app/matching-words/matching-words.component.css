@@ -9,12 +9,14 @@
   text-align: center;
 }
 
+/* Exit button container */
 .exit-button {
   position: absolute;
   top: 10px;
   left: 10px;
 }
 
+/* Score display container */
 .score-display {
   position: absolute;
   top: 10px;
@@ -25,28 +27,17 @@
   color: #ff9800;
 }
 
+/* Custom styling for the score icon */
 .score-display mat-icon {
   margin-right: 5px;
 }
 
+/* Custom styling for the score text */
 .score-display span {
   font-size: 1.2rem;
 }
 
-/* Header style for the category name */
-h1 {
-  font-size: 2rem;
-  color: #3f51b5;
-  margin-bottom: 20px;
-}
-
-h2 {
-  font-size: 1.5rem;
-  color: #3f51b5;
-  margin-bottom: 10px;
-}
-
-/* Styling for the word being displayed */
+/* Styling for the current word being displayed */
 .current-word {
   font-size: 2.5rem;
   font-weight: bold;
@@ -54,7 +45,7 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* Styling for the input field */
+/* Input field styling */
 .answer-input {
   font-size: 1.5rem;
   padding: 10px;
@@ -80,15 +71,36 @@ button[mat-raised-button].mat-warn {
   color: #fff;
 }
 
-/* Progress bar customization */
-::ng-deep .mat-progress-bar-fill::after {
-  background-color: #3f51b5; /* Custom color for the progress bar */
+/* Flexbox container for the progress bar and word count */
+.progress-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
-/* Style for the translation text */
-.translation-display {
-  font-size: 1.5rem;
-  color: #000;
-  margin-top: 20px;
+/* Styling for the progress numbers on the left and right */
+.progress-number {
+  font-size: 1rem;
   font-weight: bold;
+}
+
+.progress-left {
+  text-align: left;
+}
+
+.progress-right {
+  text-align: right;
+}
+
+/* Material progress bar customization */
+mat-progress-bar {
+  flex-grow: 1; /* Make the progress bar fill available space between numbers */
+  margin: 0 10px; /* Space between the progress bar and the numbers */
+  height: 10px; /* Adjust height of the progress bar */
+}
+
+/* Custom color for the progress bar */
+::ng-deep .mat-progress-bar-fill::after {
+  background-color: #3f51b5;
 }

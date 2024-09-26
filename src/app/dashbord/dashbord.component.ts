@@ -1,27 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService } from '../services/game.service';
-import { GameinfoService } from '../services/gameinfo.service';
 import { CategoriesService } from '../services/categories.service';
 import { GameResult } from '../../shared/model/game-result';
-import { GameProfile } from '../../shared/model/GameProfile';
 import { Category } from '../../shared/model/category';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIconModule } from '@angular/material/icon';               // If using mat-icon
+import { MatIconModule } from '@angular/material/icon'; // If using mat-icon
 import { MatProgressBarModule } from '@angular/material/progress-bar'; // If using mat-progress-bar
 
 @Component({
   selector: 'app-dashbord',
   standalone: true,
-  imports: [CommonModule, MatGridListModule,MatCardModule, MatIconModule,MatProgressBarModule],
+  imports: [CommonModule, MatGridListModule, MatCardModule, MatIconModule, MatProgressBarModule],
   templateUrl: './dashbord.component.html',
   styleUrls: ['./dashbord.component.css'],
 })
 export class DashbordComponent implements OnInit {
   totalPoints: number = 0;
   totalGames: number = 0;
-  highestAvgScoreGame: string = '';
+  highestAvgScoreGame: string = ''; // This will now show the most played game
   lowestAvgScoreGame: string = '';
   perfectScorePercentage: number = 0;
   mostPlayedCategory: string = '';
@@ -32,41 +30,51 @@ export class DashbordComponent implements OnInit {
   gamesToCompleteChallenge: number = 0;
   monthlyChallengeCompleted: boolean = false;
   consecutiveDays: number = 0;
-  monthlyChallengeGoal: number = 20; // מספר המשחקים הנדרש לאתגר החודשי
+  monthlyChallengeGoal: number = 20; // Number of games required for the monthly challenge
   challengeSteps: number[] = [];
-  totalCategories: number = 0; // נעדכן לאחר קבלת הקטגוריות
-  badges: string[] = []; // מערך לשמירת התגים שהושגו
-  currentMonthYear: string = ''; // כדי לעקוב אחר החודש והשנה הנוכחיים
-  allCategories: Category[] = []; // רשימת כל הקטגוריות
-  categoryMap: { [key: string]: string } = {}; // מפה של ID הקטגוריה לשמה
+  totalCategories: number = 0; // Will be updated after fetching the categories
+  badges: string[] = []; // Array to store earned badges
+  currentMonthYear: string = ''; // To track the current month and year
+  allCategories: Category[] = []; // List of all categories
+  categoryMap: { [key: string]: string } = {}; // Map from category ID to name
+
+  // Add your gameMap here
+  gameMap: { [key: string]: string } = {
+    'some-game-id': 'Some Game Name',
+    'mixed-words': 'Mixed Words',
+    // Add more gameId mappings here
+  };
 
   constructor(
     private gameService: GameService,
-    private categoriesService: CategoriesService // שימוש בשירות שלך
+    private categoriesService: CategoriesService
   ) {}
 
   async ngOnInit(): Promise<void> {
     try {
       const gameResults: GameResult[] = await this.gameService.list();
+      console.log('Game Results:', gameResults); // Logging for debugging
 
-      // קבלת הקטגוריות באמצעות CategoriesService שלך
+      // Fetch categories using CategoriesService
       this.allCategories = await this.categoriesService.list();
+      console.log('Categories:', this.allCategories); // Logging for debugging
+
       this.totalCategories = this.allCategories.length;
 
-      // יצירת מפה של ID הקטגוריה לשמה
+      // Create a map of categoryId to categoryName
       this.categoryMap = {};
       this.allCategories.forEach(category => {
-        this.categoryMap[category.id] = category.name; // התאמה לשמות השדות שלך
+        this.categoryMap[category.id] = category.name;
       });
 
-      // קביעת החודש והשנה הנוכחיים
+      // Set current month and year
       const now = new Date();
       this.currentMonthYear = `${now.getMonth() + 1}-${now.getFullYear()}`;
 
-      // טעינת התגים (ביישום אמיתי, יש לטעון מהפרופיל של המשתמש בבסיס הנתונים)
+      // Load badges (simulated via localStorage)
       this.loadBadges();
 
-      // חישוב המדדים
+      // Calculate metrics
       this.calculateGameMetrics(gameResults);
       this.calculateMonthlyChallenge(gameResults);
       this.calculateConsecutiveDays(gameResults);
@@ -86,10 +94,14 @@ export class DashbordComponent implements OnInit {
     const gamesGroupedByType = this.groupBy(gameResults, 'gameId');
     const categoryCountMap: { [categoryId: string]: number } = {};
     let perfectGamesCount = 0;
+    let mostPlayedGameId = ''; // Variable to store the most played game ID
+    let mostPlayedGameCount = 0; // Variable to track how many times the game was played
 
     for (const [gameId, games] of Object.entries(gamesGroupedByType)) {
       const avgScore = games.reduce((sum, game) => sum + game.points, 0) / games.length;
+      console.log(`Game ID: ${gameId}, Average Score: ${avgScore}`); // Logging for debugging
 
+      // Calculate highest and lowest average score
       if (avgScore > highestAvgScore) {
         highestAvgScore = avgScore;
         highestAvgScoreGameId = gameId;
@@ -100,34 +112,41 @@ export class DashbordComponent implements OnInit {
         lowestAvgScoreGameId = gameId;
       }
 
+      // Track perfect games
       games.forEach(game => {
         if (game.points === 100) {
           perfectGamesCount++;
         }
 
+        // Track category count
         if (categoryCountMap[game.categoryId]) {
           categoryCountMap[game.categoryId]++;
         } else {
           categoryCountMap[game.categoryId] = 1;
         }
       });
+
+      // Track the most played game
+      if (games.length > mostPlayedGameCount) {
+        mostPlayedGameCount = games.length;
+        mostPlayedGameId = gameId;
+      }
     }
 
-    // משתמשים ב-ID של המשחק כי אין לנו את השמות
-    this.highestAvgScoreGame = highestAvgScoreGameId || 'N/A';
-    this.lowestAvgScoreGame = lowestAvgScoreGameId || 'N/A';
+    // Map gameId to game name using gameMap
+    this.highestAvgScoreGame = this.gameMap[mostPlayedGameId] || mostPlayedGameId || 'N/A'; // Use mostPlayedGameId here
+    this.lowestAvgScoreGame = this.gameMap[lowestAvgScoreGameId] || lowestAvgScoreGameId || 'N/A';
 
+    // Calculate the percentage of perfect scores
     this.perfectScorePercentage = this.totalGames > 0 ? Math.round((perfectGamesCount / this.totalGames) * 100) : 0;
 
-    // משתמשים בשם הקטגוריה מהמפה שיצרנו
+    // Get the most played category
     const mostPlayedCategoryId = Object.keys(categoryCountMap).reduce((a, b) =>
-      categoryCountMap[a] > categoryCountMap[b] ? a : b,
-      ''
+      categoryCountMap[a] > categoryCountMap[b] ? a : b, ''
     );
     this.mostPlayedCategory = this.categoryMap[mostPlayedCategoryId] || 'N/A';
 
     this.learnedCategoriesCount = Object.keys(categoryCountMap).length;
-
     this.unlearnedCategoriesCount = this.totalCategories - this.learnedCategoriesCount;
 
     this.learnedCategoriesPercentage =
@@ -144,26 +163,26 @@ export class DashbordComponent implements OnInit {
     });
 
     this.gamesThisMonth = gamesThisMonth.length;
+    console.log('Games this month:', this.gamesThisMonth); // Logging for debugging
 
     if (this.gamesThisMonth >= this.monthlyChallengeGoal) {
       this.monthlyChallengeCompleted = true;
 
-      // בדיקה אם התג לחודש הנוכחי כבר נוסף
+      // Check if badge for the current month is already added
       if (!this.badges.includes(this.currentMonthYear)) {
         this.badges.push(this.currentMonthYear);
-        this.saveBadges(); // שמירת התגים (ביישום אמיתי, יש לשמור בבסיס הנתונים)
+        this.saveBadges(); // Save badges (in a real app, save to the database)
       }
     } else {
       this.gamesToCompleteChallenge = this.monthlyChallengeGoal - this.gamesThisMonth;
     }
 
-    // יצירת מערך הצעדים לאתגר
+    // Create challenge steps array
     this.challengeSteps = Array.from({ length: this.monthlyChallengeGoal }, (_, i) => i + 1);
   }
 
   calculateConsecutiveDays(gameResults: GameResult[]): void {
     const sortedGames = gameResults.sort((a, b) => b.date.getTime() - a.date.getTime());
-
     let consecutiveDays = 0;
     let currentDate = new Date();
 
@@ -185,6 +204,7 @@ export class DashbordComponent implements OnInit {
     }
 
     this.consecutiveDays = consecutiveDays;
+    console.log('Consecutive Days:', this.consecutiveDays); // Logging for debugging
   }
 
   groupBy(array: GameResult[], key: keyof GameResult): { [key: string]: GameResult[] } {
@@ -196,8 +216,7 @@ export class DashbordComponent implements OnInit {
   }
 
   loadBadges(): void {
-    // ביישום אמיתי, יש לטעון את התגים מהפרופיל של המשתמש בבסיס הנתונים
-    // כאן, אנחנו מדמים זאת באמצעות localStorage
+    // In a real app, load badges from the user's profile in the database
     const badges = localStorage.getItem('badges');
     if (badges) {
       this.badges = JSON.parse(badges);
@@ -205,8 +224,7 @@ export class DashbordComponent implements OnInit {
   }
 
   saveBadges(): void {
-    // ביישום אמיתי, יש לשמור את התגים בפרופיל של המשתמש בבסיס הנתונים
-    // כאן, אנחנו מדמים זאת באמצעות localStorage
+    // In a real app, save badges to the user's profile in the database
     localStorage.setItem('badges', JSON.stringify(this.badges));
   }
 }

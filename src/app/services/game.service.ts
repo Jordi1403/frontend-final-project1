@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, getDocs } from '@angular/fire/firestore';
+import { Firestore, collection, getDocs, query, where, deleteDoc, doc, addDoc } from '@angular/fire/firestore';
 import { GameResult } from '../../shared/model/game-result';
-import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +40,21 @@ export class GameService {
     } catch (error) {
       console.error('Error fetching game results: ', error);
       return [];
+    }
+  }
+
+  // Add the deleteGameResultByGameId method here
+  async deleteGameResultByGameId(gameId: string): Promise<void> {
+    try {
+      const gameResultsCollection = collection(this.firestore, this.collectionName);
+      const q = query(gameResultsCollection, where('gameId', '==', gameId));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (docSnap) => {
+        await deleteDoc(docSnap.ref);
+        console.log(`Game result with gameId ${gameId} deleted successfully`);
+      });
+    } catch (error) {
+      console.error('Error deleting game result: ', error);
     }
   }
 }
