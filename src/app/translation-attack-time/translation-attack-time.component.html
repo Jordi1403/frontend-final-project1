@@ -1,0 +1,56 @@
+<div class="page-container">
+
+    <div class="game-container" *ngIf="!gameOver && words && words.length > 0">
+        <app-exit-button (exit)="exitGame()"></app-exit-button>
+        <h2>תרגום נגד הזמן</h2>
+        <p>זמן נותר: {{ timeLeft }} שניות</p>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="(timeLeft / totalTime) * 100"
+        ></mat-progress-bar>
+      
+        <div class="word-container">
+          <p>תרגם את המילה הבאה לאנגלית:</p>
+          <h3>{{ words[currentWordIndex].target }}</h3>
+          <mat-form-field appearance="fill">
+            <mat-label>התרגום שלך</mat-label>
+            <input
+              matInput
+              [(ngModel)]="userAnswer"
+              (keyup.enter)="submitAnswer()"
+              autocomplete="off"
+            />
+          </mat-form-field>
+      
+          <div class="button-group">
+            <button mat-raised-button color="primary" (click)="submitAnswer()">
+              שלח
+            </button>
+            <button mat-raised-button color="warn" (click)="resetGame()">
+              איפוס
+            </button>
+          </div>
+        </div>
+      
+        <!-- Progress Bar with Words Answered Info -->
+        <div class="progress-bar-container">
+          <!-- Display number of answered words on the left -->
+          <div class="progress-number progress-left">{{ currentWordIndex }}</div>
+  
+          <!-- Material Progress Bar for Game Rounds -->
+          <mat-progress-bar 
+            mode="determinate" 
+            [value]="(currentWordIndex / words.length) * 100"
+          ></mat-progress-bar>
+  
+          <!-- Display total number of words on the right -->
+          <div class="progress-number progress-right">{{ words.length }}</div>
+        </div>
+    </div>
+    
+    <!-- הודעת טעינה -->
+    <div *ngIf="!gameOver && (!words || words.length === 0)">
+      <p>טוען מילים...</p>
+    </div>
+  </div>
+  

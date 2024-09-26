@@ -79,6 +79,9 @@ export class ChoseGameDialogComponent implements OnInit {
       case 'matching-words': 
         gameRoute = `/matching-words/${this.selectedCategory.id}`;
         break;
+      case 'translation-attack-time':
+        gameRoute = `/translation-attack-time/${this.selectedCategory.id}`;
+        break;
       default:
         console.error('Unknown game:', gameName);
         return;
@@ -87,6 +90,7 @@ export class ChoseGameDialogComponent implements OnInit {
     this.router.navigate([gameRoute]);  // Navigate to the game route
     this.dialogRef.close();  // Close the dialog
   }
+
 
   closeDialog(): void {
     this.dialogRef.close();  // Close the dialog without navigating

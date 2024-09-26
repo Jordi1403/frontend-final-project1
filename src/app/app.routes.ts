@@ -10,6 +10,7 @@ import { SortWordsComponent } from './sort-words/sort-words.component';
 import { GameCardComponent } from './game-card/game-card.component';
 import { SummaryComponent } from './summary/summary.component';
 import { MatchingWordsComponent } from './matching-words/matching-words.component';
+import { TranslationAttackTimeComponent } from './translation-attack-time/translation-attack-time.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashbord', pathMatch: 'full' },
@@ -26,4 +27,9 @@ export const routes: Routes = [
   { path: 'categories-list', component: CategoriesListComponent },
   { path: 'summary', component: SummaryComponent },
   { path: 'matching-words/:id', component: MatchingWordsComponent },
+  {
+    path: 'translation-attack-time/:id',
+    component: TranslationAttackTimeComponent,
+  },
+  
 ];

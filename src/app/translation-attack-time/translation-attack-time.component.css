@@ -1,0 +1,40 @@
+.page-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .game-container {
+    max-width: 800px;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .progress-bar-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .progress-number {
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 50px;
+    text-align: center;
+  }
+  
+  .progress-left {
+    margin-right: 10px;
+  }
+  
+  .progress-right {
+    margin-left: 10px;
+  }
+  
+  mat-progress-bar {
+    flex: 1;
+    height: 20px;
+  }
+  
