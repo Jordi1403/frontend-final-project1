@@ -25,12 +25,6 @@ export class GameinfoService {
       'Find and match pairs of related words',
       'matching-words'
     ),
-    new GameProfile(
-      5,
-      'Translation Attack Time',
-      'Translate Hebrew words to English within a time limit.',
-      'translation-attack-time'
-    ),
   ];
 
   list(): GameProfile[] {

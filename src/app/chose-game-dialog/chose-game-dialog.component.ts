@@ -92,6 +92,7 @@ export class ChoseGameDialogComponent implements OnInit {
     this.dialogRef.close();  // Close the dialog
   }
 
+
   closeDialog(): void {
     this.dialogRef.close();  // Close the dialog without navigating
   }
