@@ -33,11 +33,21 @@
       <p>Game over! You've sorted all the words.</p>
     </div>
 
-    <!-- Progress Bar showing how many words are sorted -->
-    <app-progress-bar
-      [current]="currentWordIndex"
-      [total]="wordsToSort.length"
-    ></app-progress-bar>
+    <!-- Progress Bar with Words Answered Info -->
+    <div class="progress-bar-container">
+      <!-- Display number of answered words on the left -->
+      <div class="progress-number progress-left">{{ currentWordIndex }}</div>
+
+      <!-- Material Progress Bar for Game Rounds -->
+      <mat-progress-bar 
+        mode="determinate" 
+        [value]="(currentWordIndex / wordsToSort.length) * 100"
+      ></mat-progress-bar>
+
+      <!-- Display total number of words on the right -->
+      <div class="progress-number progress-right">{{ wordsToSort.length }}</div>
+    </div>
+
   </div>
 
   <!-- Display loading message before game initializes -->

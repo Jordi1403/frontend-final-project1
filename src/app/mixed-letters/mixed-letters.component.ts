@@ -33,9 +33,9 @@ interface WordEntry {
     CommonModule,
     FormsModule,
     MatDialogModule,
-    MatProgressBarModule,
+    MatProgressBarModule, // Angular Material Progress Bar for game and loading
     MatButtonModule,
-    MatIconModule, // Icons
+    MatIconModule, // Icons for display
     SuccessDialogComponent,
     FailureDialogComponent,
     ExitButtonComponent, // Add ExitButtonComponent here
@@ -148,14 +148,7 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Check if the current word contains any Hebrew letters
-    const hebrewPattern = /[\u0590-\u05FF]/;
     const currentWord = this.currentCategory?.words[this.currentWordIndex]?.origin || '';
-
-    if (hebrewPattern.test(currentWord)) {
-      console.error('The current word contains Hebrew letters.');
-      return;
-    }
 
     if (this.currentCategory) {
       const correctAnswer = this.userAnswer.toLowerCase() === currentWord.toLowerCase();
@@ -173,7 +166,7 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
         this.score += this.pointsPerWord;
       }
 
-      const dialogConfig = { width: '300px' }; // Removed 'data' property
+      const dialogConfig = { width: '300px' };
 
       if (correctAnswer) {
         this.dialog.open(SuccessDialogComponent, dialogConfig);

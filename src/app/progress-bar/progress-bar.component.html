@@ -1,10 +1,13 @@
 <div class="progress-bar-container">
+  <!-- Left side displaying the current number -->
   <div class="progress-number progress-left">{{ current }}</div>
 
+  <!-- Middle progress bar with percentage -->
   <div class="progress">
     <div class="progress-fill" [style.width.%]="progress"></div>
     <div class="progress-text">{{ progress | number : "1.0-0" }}%</div>
   </div>
 
+  <!-- Right side displaying the total number -->
   <div class="progress-number progress-right">{{ total }}</div>
 </div>

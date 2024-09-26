@@ -10,7 +10,6 @@
     <!-- Exit Button -->
     <app-exit-button class="exit-button"></app-exit-button>
 
-
     <!-- Score Display -->
     <div class="score-display">
       <mat-icon>paid</mat-icon>
@@ -61,23 +60,28 @@
       </div>
     </div>
 
-    <!-- Progress Bar for Game Rounds -->
-    <mat-progress-bar 
-      mode="determinate" 
-      [value]="(currentWordIndex / totalQuestions) * 100"
-    ></mat-progress-bar>
+    <!-- Progress Bar with Words Answered Info -->
+    <div class="progress-bar-container">
+      <!-- Display number of answered words on the left -->
+      <div class="progress-number progress-left">{{ currentWordIndex }}</div>
 
-    <!-- Display number of words answered and total words -->
-    <div class="word-progress-info">
-      <p>{{ currentWordIndex }} of {{ totalQuestions }} words answered</p>
+      <!-- Material Progress Bar for Game Rounds -->
+      <mat-progress-bar 
+        mode="determinate" 
+        [value]="(currentWordIndex / totalQuestions) * 100"
+      ></mat-progress-bar>
+
+      <!-- Display total number of words on the right -->
+      <div class="progress-number progress-right">{{ totalQuestions }}</div>
     </div>
+
   </div>
 
   <!-- If no category or insufficient words -->
   <ng-template #noCategory>
     <div class="no-category">
       <p>This category does not have enough words. Please add more words or choose a different category.</p>
-    <app-exit-button class="exit-button"></app-exit-button>
+      <app-exit-button class="exit-button"></app-exit-button>
     </div>
   </ng-template>
 </div>

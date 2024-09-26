@@ -7,12 +7,13 @@ import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ProgressBarModule } from '../../shared/model/progress-bar';
+
 import { FormsModule } from '@angular/forms';
 import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
 import { GameStateService } from '../services/game-state.service';
 import { GameService } from '../services/game.service';
 import { GameResult } from '../../shared/model/game-result';
+import { ProgressBarModule } from '../../shared/model/progress-bar';
 
 @Component({
   selector: 'app-matching-words',
@@ -23,7 +24,7 @@ import { GameResult } from '../../shared/model/game-result';
     CommonModule,
     MatIconModule,
     MatProgressBarModule,
-    ProgressBarModule,
+    ProgressBarModule,  // Import ProgressBarModule
     FormsModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -128,17 +129,13 @@ export class MatchingWordsComponent implements OnInit, OnDestroy {
   }
 
   endGame(): void {
-    // ... חישוב הניקוד וכו'
-  
-    // יצירת GameResult עם ה-`gameId` הנכון
     const gameResult = new GameResult(
       this.currentCategory?.id || '',
-      'matching-words', // ה-`url` של המשחק
+      'matching-words', // Game identifier
       new Date(),
       this.score
     );
   
-    // שמירת התוצאה
     this.gameService.addGameResult(gameResult)
       .then(() => {
         console.log('Game result saved successfully.');

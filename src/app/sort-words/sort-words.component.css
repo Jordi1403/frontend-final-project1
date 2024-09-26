@@ -3,7 +3,7 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f5f5f5; 
+  background-color: #f5f5f5;
   border-radius: 8px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -18,11 +18,11 @@
 .score-display {
   position: absolute;
   top: 10px;
-  right: 10px; 
+  right: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ff9800; 
+  color: #ff9800;
 }
 
 .score-display mat-icon {
@@ -33,39 +33,60 @@
   font-size: 1.2rem;
 }
 
-
 .category-name {
   font-size: 1.5rem;
-  color: #3f51b5; 
+  color: #3f51b5;
   margin-bottom: 10px;
 }
-
 
 .current-word {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #000; 
+  color: #000;
   margin-bottom: 20px;
 }
-
 
 button[mat-raised-button] {
   margin: 0 5px;
 }
 
-
 button[mat-raised-button].mat-primary {
-  background-color: #4caf50; 
+  background-color: #4caf50;
   color: #fff;
 }
-
 
 button[mat-raised-button].mat-warn {
-  background-color: #f44336; 
+  background-color: #f44336;
   color: #fff;
 }
 
+.progress-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px; /* Adjust margin as needed */
+}
 
+.progress-number {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.progress-left {
+  text-align: left;
+}
+
+.progress-right {
+  text-align: right;
+}
+
+mat-progress-bar {
+  flex-grow: 1;
+  margin: 0 10px; /* Space between numbers and progress bar */
+  height: 10px; /* Adjust height of progress bar */
+}
+
+/* Color customization for progress bar */
 ::ng-deep .mat-progress-bar-fill::after {
-  background-color: #3f51b5; 
+  background-color: #3f51b5; /* Progress bar color */
 }
