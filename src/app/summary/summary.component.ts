@@ -47,14 +47,14 @@ export class SummaryComponent implements OnInit {
     if (this.wordsUsed.length === 0) {
       console.error('No words found, possibly a navigation issue. Redirecting to game selection.');
       this.router.navigate(['/chose-game']);
-      this.gameStateService.clearState(); // Clear state if no words
+      this.gameStateService.clearState(); 
     }
   }
 
   playAgain(): void {
     if (this.categoryId && this.gameType) {
-      this.router.navigate([`/${this.gameType}`, this.categoryId]); // Navigate to the same game type
-      this.gameStateService.clearState(); // Clear previous game state after navigating
+      this.router.navigate([`/${this.gameType}`, this.categoryId]); 
+      this.gameStateService.clearState(); 
     } else {
       console.error('Missing category ID or game type.');
     }
@@ -62,6 +62,6 @@ export class SummaryComponent implements OnInit {
 
   chooseAnotherGame(): void {
     this.router.navigate(['/chose-game']);
-    this.gameStateService.clearState(); // Clear state when choosing another game
+    this.gameStateService.clearState(); 
   }
 }

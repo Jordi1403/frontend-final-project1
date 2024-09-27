@@ -1,16 +1,14 @@
 <div class="mixed-letters-container">
-  <!-- Loading Progress Bar -->
   <div *ngIf="loading">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     <p>Loading game data, please wait...</p>
   </div>
 
-  <!-- If the category exists and loading is complete -->
-  <div *ngIf="!loading && currentCategory && !insufficientWords; else noCategory">
-    <!-- Exit Button -->
+  <div
+    *ngIf="!loading && currentCategory && !insufficientWords; else noCategory"
+  >
     <app-exit-button class="exit-button"></app-exit-button>
 
-    <!-- Score Display -->
     <div class="score-display">
       <mat-icon>paid</mat-icon>
       <span>Score: {{ score }}</span>
@@ -29,59 +27,49 @@
         {{ currentCategory.words[currentWordIndex].target }}
       </p>
 
-      <!-- Display error message if present -->
       <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
 
-      <!-- Input field for the user's answer -->
-      <input 
-        [(ngModel)]="userAnswer" 
-        placeholder="Enter your answer" 
+      <input
+        [(ngModel)]="userAnswer"
+        placeholder="Enter your answer"
         class="answer-input"
-        (keyup)="clearErrorMessage()" 
+        (keyup)="clearErrorMessage()"
       />
 
-      <!-- Submit and Reset Buttons -->
       <div class="action-buttons">
-        <button 
-          mat-raised-button 
-          color="primary" 
+        <button
+          mat-raised-button
+          color="primary"
           (click)="submitAnswer()"
           [disabled]="!userAnswer.trim()"
         >
           Submit
         </button>
 
-        <button 
-          mat-raised-button 
-          color="warn" 
-          (click)="resetInput()"
-        >
+        <button mat-raised-button color="warn" (click)="resetInput()">
           Reset
         </button>
       </div>
     </div>
 
-    <!-- Progress Bar with Words Answered Info -->
     <div class="progress-bar-container">
-      <!-- Display number of answered words on the left -->
       <div class="progress-number progress-left">{{ currentWordIndex }}</div>
 
-      <!-- Material Progress Bar for Game Rounds -->
-      <mat-progress-bar 
-        mode="determinate" 
+      <mat-progress-bar
+        mode="determinate"
         [value]="(currentWordIndex / totalQuestions) * 100"
       ></mat-progress-bar>
 
-      <!-- Display total number of words on the right -->
       <div class="progress-number progress-right">{{ totalQuestions }}</div>
     </div>
-
   </div>
 
-  <!-- If no category or insufficient words -->
   <ng-template #noCategory>
     <div class="no-category">
-      <p>This category does not have enough words. Please add more words or choose a different category.</p>
+      <p>
+        This category does not have enough words. Please add more words or
+        choose a different category.
+      </p>
       <app-exit-button class="exit-button"></app-exit-button>
     </div>
   </ng-template>

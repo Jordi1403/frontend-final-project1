@@ -29,7 +29,7 @@ export class GameinfoService {
       5,
       'Translation Attack Time',
       'Translate Hebrew words to English within a time limit.',
-      'translation-attack-time' // Add this line for the new game
+      'translation-attack-time' 
     ),
   ];
 

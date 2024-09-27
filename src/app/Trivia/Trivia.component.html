@@ -1,5 +1,4 @@
 <div class="trivia-container">
-  <!-- Exit Button -->
   <div class="exit-button">
     <button mat-icon-button (click)="exitGame()">
       <mat-icon>exit_to_app</mat-icon>
@@ -8,25 +7,23 @@
 
   <h1>Trivia Game</h1>
 
-  <!-- Loading State -->
   <div *ngIf="loading">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     <p>Loading category, please wait...</p>
   </div>
 
-  <!-- Error State -->
   <div *ngIf="errorMessage">
     <p>{{ errorMessage }}</p>
   </div>
 
-  <!-- Category Information -->
   <div *ngIf="!loading && currentCategory; else noCategory">
     <h2>{{ currentCategory.name }}</h2>
     <p>Number of words in this category: {{ currentCategory.words.length }}</p>
-    <p>Last updated: {{ currentCategory.lastUpdateDate | date: 'longDate' }}</p>
+    <p>
+      Last updated: {{ currentCategory.lastUpdateDate | date : "longDate" }}
+    </p>
   </div>
 
-  <!-- Fallback for no category found -->
   <ng-template #noCategory>
     <p>No category found or invalid category ID.</p>
   </ng-template>

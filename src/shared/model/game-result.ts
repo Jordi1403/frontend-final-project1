@@ -1,4 +1,4 @@
-// game-result.ts
+
 export class GameResult {
   constructor(
     public categoryId: string,

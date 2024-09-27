@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GameService } from '../services/game.service';
 import { GameResult } from '../../shared/model/game-result';
-import { ExitButtonComponent } from '../exit-button/exit-button.component'; // Import ExitButtonComponent
+import { ExitButtonComponent } from '../exit-button/exit-button.component';
 
 interface WordEntry {
   origin: string;
@@ -48,12 +48,12 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
   score = 0;
   pointsPerWord = 0;
   wordsUsed: WordEntry[] = [];
-  errorMessage = ''; // Initialize error message
+  errorMessage = '';
   totalQuestions = 0;
   correctAnswersCount = 0;
   categorySubscription: Subscription | undefined;
-  loading = true; // For loading progress bar
-  insufficientWords = false; // Check if the category has enough words
+  loading = true;
+  insufficientWords = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -61,7 +61,7 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
     private router: Router,
     private dialog: MatDialog,
     private gameStateService: GameStateService,
-    private gameService: GameService // Inject GameService
+    private gameService: GameService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -88,7 +88,7 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
     this.score = 0;
     this.pointsPerWord = 0;
     this.wordsUsed = [];
-    this.errorMessage = ''; // Reset error message
+    this.errorMessage = '';
     this.totalQuestions = 0;
     this.correctAnswersCount = 0;
     this.loading = true;
@@ -101,13 +101,20 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
       console.log('Fetched category:', this.currentCategory);
 
       if (this.currentCategory && this.currentCategory.words.length >= 6) {
-        this.currentCategory.words = lodashShuffle(this.currentCategory.words).slice(0, 6); // Limit to 6 rounds
+        this.currentCategory.words = lodashShuffle(
+          this.currentCategory.words
+        ).slice(0, 6);
         this.totalQuestions = this.currentCategory.words.length;
         this.pointsPerWord = Math.floor(100 / this.totalQuestions);
         this.loading = false;
         this.nextWord();
-      } else if (this.currentCategory && this.currentCategory.words.length < 6) {
-        console.warn('Category has fewer than 6 words. Showing insufficient words warning.');
+      } else if (
+        this.currentCategory &&
+        this.currentCategory.words.length < 6
+      ) {
+        console.warn(
+          'Category has fewer than 6 words. Showing insufficient words warning.'
+        );
         this.insufficientWords = true;
         this.loading = false;
       } else {
@@ -121,7 +128,10 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
   }
 
   nextWord(): void {
-    if (this.currentCategory && this.currentWordIndex < this.currentCategory.words.length) {
+    if (
+      this.currentCategory &&
+      this.currentWordIndex < this.currentCategory.words.length
+    ) {
       const word = this.currentCategory.words[this.currentWordIndex].origin;
       let scrambledWord = this.shuffleWord(word);
 
@@ -131,7 +141,7 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
 
       this.scrambledWord = scrambledWord;
       this.userAnswer = '';
-      this.errorMessage = ''; // Reset error message
+      this.errorMessage = '';
     } else {
       this.showSummary();
     }
@@ -142,24 +152,23 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
   }
 
   submitAnswer(): void {
-    // Check if the user has entered an answer
     if (!this.userAnswer.trim()) {
-      this.errorMessage = 'Please enter an answer before submitting.'; // Set error message
-      return; // Exit early if no answer
+      this.errorMessage = 'Please enter an answer before submitting.';
+      return;
     }
 
-    // Check if the user input contains Hebrew characters
     if (/[\u0590-\u05FF]/.test(this.userAnswer)) {
-      this.errorMessage = 'Please enter the translation in English only.'; // Set error message
-      return; // Exit early if the input is in Hebrew
+      this.errorMessage = 'Please enter the translation in English only.';
+      return;
     }
 
-    const currentWord = this.currentCategory?.words[this.currentWordIndex]?.origin || '';
+    const currentWord =
+      this.currentCategory?.words[this.currentWordIndex]?.origin || '';
 
     if (this.currentCategory) {
-      const correctAnswer = this.userAnswer.toLowerCase() === currentWord.toLowerCase();
+      const correctAnswer =
+        this.userAnswer.toLowerCase() === currentWord.toLowerCase();
 
-      // Push the current word and answer to wordsUsed
       this.wordsUsed.push({
         origin: currentWord,
         target: this.currentCategory.words[this.currentWordIndex].target,
@@ -195,36 +204,43 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
 
   showSummary(): void {
     if (this.currentCategory) {
-      this.score = this.correctAnswersCount === this.totalQuestions ? 100 : Math.floor(this.score);
+      this.score =
+        this.correctAnswersCount === this.totalQuestions
+          ? 100
+          : Math.floor(this.score);
 
-      // Create and save GameResult
       const gameResult = new GameResult(
         this.currentCategory.id,
-        'mixed-words', // Game ID for mixed-words
+        'mixed-words',
         new Date(),
         this.score
       );
 
-      this.gameService.addGameResult(gameResult)
+      this.gameService
+        .addGameResult(gameResult)
         .then(() => {
           console.log('Game result saved successfully.');
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Failed to save game result:', error);
         });
 
-      // Update game state and navigate to summary
-      this.gameStateService.setGameState(this.score, this.wordsUsed, this.currentCategory.id, 'mixed-words');
+      this.gameStateService.setGameState(
+        this.score,
+        this.wordsUsed,
+        this.currentCategory.id,
+        'mixed-words'
+      );
       this.router.navigate(['/summary']);
     }
   }
 
   resetInput(): void {
     this.userAnswer = '';
-    this.errorMessage = ''; // Reset error message
+    this.errorMessage = '';
   }
 
   clearErrorMessage(): void {
-    this.errorMessage = ''; // Clear error message
+    this.errorMessage = '';
   }
 }

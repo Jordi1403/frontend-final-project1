@@ -41,24 +41,24 @@ export class TranslationAttackTimeComponent implements OnInit, OnDestroy {
   userAnswer: string = '';
   score: number = 0;
   timerSubscription: Subscription | undefined;
-  timeLeft: number = 60; // Total game time in seconds
+  timeLeft: number = 60;
   gameOver: boolean = false;
   progressValue: number = 0;
   wordsUsed: {
-    origin: string; // English word
-    target: string; // Hebrew word
+    origin: string;
+    target: string;
     correct: boolean;
     userAnswer: string;
   }[] = [];
-  loading: boolean = true; // Initialize loading property
-  errorMessage: string | null = null; // Initialize errorMessage property
+  loading: boolean = true;
+  errorMessage: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private categoriesService: CategoriesService,
     private router: Router,
     private dialog: MatDialog,
-    private gameStateService: GameStateService // Inject the GameStateService
+    private gameStateService: GameStateService
   ) {}
 
   ngOnInit(): void {
@@ -72,7 +72,7 @@ export class TranslationAttackTimeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.stopTimer(); // Ensure timer is stopped on destroy
+    this.stopTimer();
   }
 
   loadCategory(): void {
@@ -81,10 +81,10 @@ export class TranslationAttackTimeComponent implements OnInit, OnDestroy {
       .then((category: Category | undefined) => {
         if (category && category.words && category.words.length > 0) {
           this.category = category;
-          this.words = [...category.words]; // Clone words array
+          this.words = [...category.words];
           this.shuffleWords();
-          this.startTimer(); // Start the timer when the category is loaded
-          this.loading = false; // Set loading to false once category is loaded
+          this.startTimer();
+          this.loading = false;
         } else {
           console.error('Category has no words or is invalid:', category);
           this.router.navigate(['/']);
@@ -104,13 +104,13 @@ export class TranslationAttackTimeComponent implements OnInit, OnDestroy {
   }
 
   startTimer(): void {
-    this.timeLeft = 60; // Reset the timer at the start of the game
+    this.timeLeft = 60;
     this.timerSubscription = interval(1000)
       .pipe(takeWhile(() => this.timeLeft > 0 && !this.gameOver))
       .subscribe(() => {
         this.timeLeft--;
         if (this.timeLeft === 0) {
-          this.endGame(); // End the game when time is up
+          this.endGame();
         }
       });
   }
@@ -118,28 +118,26 @@ export class TranslationAttackTimeComponent implements OnInit, OnDestroy {
   stopTimer(): void {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
-      this.timerSubscription = undefined; // Clear subscription
+      this.timerSubscription = undefined;
     }
   }
 
   submitAnswer(): void {
-    // Check if the user has entered an answer
     if (!this.userAnswer.trim()) {
-      this.errorMessage = 'Please enter your translation.'; // Set error message
-      return; // Exit early if no answer
+      this.errorMessage = 'Please enter your translation.';
+      return;
     }
 
-    // Check if the user input contains Hebrew characters
     if (/[\u0590-\u05FF]/.test(this.userAnswer)) {
-      this.errorMessage = 'Please enter the translation in English only.'; // Set error message
-      return; // Exit early if the input is in Hebrew
+      this.errorMessage = 'Please enter the translation in English only.';
+      return;
     }
 
     const currentWord = this.words[this.currentWordIndex];
     const isCorrect =
-      this.userAnswer.trim().toLowerCase() === currentWord.origin.trim().toLowerCase(); // Check user's answer against the English word
+      this.userAnswer.trim().toLowerCase() ===
+      currentWord.origin.trim().toLowerCase();
 
-    // Save word result
     this.wordsUsed.push({
       origin: currentWord.origin,
       target: currentWord.target,
@@ -147,7 +145,6 @@ export class TranslationAttackTimeComponent implements OnInit, OnDestroy {
       userAnswer: this.userAnswer,
     });
 
-    // Show appropriate dialog for the answer result
     if (isCorrect) {
       this.score++;
       this.dialog.open(SuccessDialogComponent, {
@@ -155,7 +152,9 @@ export class TranslationAttackTimeComponent implements OnInit, OnDestroy {
       });
     } else {
       this.dialog.open(FailureDialogComponent, {
-        data: { message: 'Wrong answer! The correct answer is: ' + currentWord.origin },
+        data: {
+          message: 'Wrong answer! The correct answer is: ' + currentWord.origin,
+        },
       });
     }
 
@@ -166,39 +165,36 @@ export class TranslationAttackTimeComponent implements OnInit, OnDestroy {
       this.endGame();
     }
 
-    // Clear the error message if the answer is valid
     this.errorMessage = null;
   }
 
   endGame(): void {
-    this.gameOver = true; // Set game over state
-    this.stopTimer(); // Stop the timer
+    this.gameOver = true;
+    this.stopTimer();
 
-    // Calculate the score as a percentage
     const totalWords = this.words.length;
-    const correctAnswers = this.wordsUsed.filter(word => word.correct).length;
-    this.score = totalWords > 0 ? Math.round((correctAnswers / totalWords) * 100) : 0;
+    const correctAnswers = this.wordsUsed.filter((word) => word.correct).length;
+    this.score =
+      totalWords > 0 ? Math.round((correctAnswers / totalWords) * 100) : 0;
 
-    // Set game state before navigating to summary
     this.gameStateService.setGameState(
       this.score,
       this.wordsUsed,
-      this.categoryId, // Include categoryId for state
+      this.categoryId,
       'translation-attack-time'
     );
 
-    // Navigate to summary
     this.router.navigate(['/summary']);
   }
 
   playAgain(): void {
-    this.resetGame(); // Reset the game state
-    this.loadCategory(); // Reload the category
+    this.resetGame();
+    this.loadCategory();
   }
 
   chooseAnotherGame(): void {
-    this.router.navigate(['/chose-game']); // Navigate to choose game screen
-    this.gameStateService.clearState(); // Clear previous game state
+    this.router.navigate(['/chose-game']);
+    this.gameStateService.clearState();
   }
 
   onExitClick(): void {
@@ -207,7 +203,7 @@ export class TranslationAttackTimeComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((result) => {
         if (result === 'yes') {
-          this.router.navigate(['/chose-game']); // Navigate to the choose game screen
+          this.router.navigate(['/chose-game']);
         }
       });
   }
@@ -216,14 +212,13 @@ export class TranslationAttackTimeComponent implements OnInit, OnDestroy {
     this.currentWordIndex = 0;
     this.userAnswer = '';
     this.score = 0;
-    this.wordsUsed = []; // Clear previously used words
-    this.shuffleWords(); // Shuffle words again if needed
-    this.stopTimer(); // Stop any running timers
-    this.startTimer(); // Start a new timer
-    this.errorMessage = null; // Clear any existing error message
+    this.wordsUsed = [];
+    this.shuffleWords();
+    this.stopTimer();
+    this.startTimer();
+    this.errorMessage = null;
   }
 
-  // Method to clear the error message when user starts typing
   clearErrorMessage(): void {
     this.errorMessage = null;
   }

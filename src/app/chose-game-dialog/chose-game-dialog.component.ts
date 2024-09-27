@@ -21,28 +21,27 @@ import { MatButtonModule } from '@angular/material/button';
     FormsModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatButtonModule
-  ]
+    MatButtonModule,
+  ],
 })
 export class ChoseGameDialogComponent implements OnInit {
   categories: Category[] = [];
   selectedCategory?: Category;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public gameProfile: { name: string },  // Injecting the selected game
-    private dialogRef: MatDialogRef<ChoseGameDialogComponent>,       // Dialog reference for closing
-    private router: Router,                                          // Router for navigation
-    private categoriesService: CategoriesService                     // CategoriesService to fetch categories
+    @Inject(MAT_DIALOG_DATA) public gameProfile: { name: string },
+    private dialogRef: MatDialogRef<ChoseGameDialogComponent>,
+    private router: Router,
+    private categoriesService: CategoriesService
   ) {}
 
   async ngOnInit(): Promise<void> {
-    // Fetch the categories asynchronously
     try {
       this.categories = await this.categoriesService.list();
       if (this.categories.length === 0) {
         console.error('No categories found');
       } else {
-        console.log('Categories fetched:', this.categories); // Debugging log
+        console.log('Categories fetched:', this.categories);
       }
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -51,7 +50,7 @@ export class ChoseGameDialogComponent implements OnInit {
 
   onCategorySelect(category: Category): void {
     this.selectedCategory = category;
-    console.log('Selected category:', this.selectedCategory);  // Debugging log
+    console.log('Selected category:', this.selectedCategory);
   }
 
   closeAndNavigate(): void {
@@ -63,7 +62,6 @@ export class ChoseGameDialogComponent implements OnInit {
     const gameName = this.gameProfile.name.toLowerCase().replace(/\s+/g, '-');
     let gameRoute = '';
 
-    // Mapping the game names to their routes
     switch (gameName) {
       case 'mixed-letters':
       case 'mixed-words':
@@ -87,13 +85,14 @@ export class ChoseGameDialogComponent implements OnInit {
         return;
     }
 
-    console.log(`Navigating to ${gameRoute} with category ID: ${this.selectedCategory.id}`);
-    this.router.navigate([gameRoute]);  // Navigate to the game route
-    this.dialogRef.close();  // Close the dialog
+    console.log(
+      `Navigating to ${gameRoute} with category ID: ${this.selectedCategory.id}`
+    );
+    this.router.navigate([gameRoute]);
+    this.dialogRef.close();
   }
 
-
   closeDialog(): void {
-    this.dialogRef.close();  // Close the dialog without navigating
+    this.dialogRef.close();
   }
 }

@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  text-align: center; /* Ensure all text inside the dialog is centered */
+  text-align: center; 
 }
 
 .success-dialog-content {

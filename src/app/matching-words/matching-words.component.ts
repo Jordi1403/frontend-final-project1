@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../../shared/model/category';
 import { CategoriesService } from '../services/categories.service';
@@ -24,8 +30,8 @@ import { ProgressBarModule } from '../../shared/model/progress-bar';
     CommonModule,
     MatIconModule,
     MatProgressBarModule,
-    ProgressBarModule,  // Import ProgressBarModule
-    FormsModule
+    ProgressBarModule,
+    FormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -34,14 +40,14 @@ export class MatchingWordsComponent implements OnInit, OnDestroy {
   currentCategory?: Category;
   wordsToMatch: { origin: string; target: string }[] = [];
   currentWordIndex = 0;
-  currentWordOrigin = '';  // Word to be displayed to user (origin)
-  currentWordTarget = '';  // Correct translation (target)
-  userAnswer = '';  // Stores user's input
-  showTranslation = false;  // Controls when to show translation
+  currentWordOrigin = '';
+  currentWordTarget = '';
+  userAnswer = '';
+  showTranslation = false;
   totalQuestions = 6;
   pointsPerWord = 0;
   score = 0;
-  loading = true;  // Loading state
+  loading = true;
   private routeSub?: Subscription;
 
   constructor(
@@ -51,16 +57,18 @@ export class MatchingWordsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private gameStateService: GameStateService,
-    private cdr: ChangeDetectorRef  // To trigger change detection
+    private cdr: ChangeDetectorRef // To trigger change detection
   ) {}
 
   async ngOnInit(): Promise<void> {
     try {
       await this.initializeGame();
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       this.errorMessage = 'Failed to initialize the game. Please try again.';
       this.loading = false;
-      this.cdr.detectChanges();  // Trigger UI update
+      this.cdr.detectChanges();
     }
   }
 
@@ -82,12 +90,15 @@ export class MatchingWordsComponent implements OnInit, OnDestroy {
         return;
       }
 
-      // Select words from the current category
-      this.wordsToMatch = this.currentCategory.words.slice(0, this.totalQuestions);  // Limit the number of words
+      this.wordsToMatch = this.currentCategory.words.slice(
+        0,
+        this.totalQuestions
+      );
       this.pointsPerWord = Math.floor(100 / this.totalQuestions);
-      this.loading = false;  // Stop loading state
+      this.loading = false;
       this.cdr.detectChanges();
-      this.nextWord();  // Show the first word
+      this.nextWord();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       this.errorMessage = 'Error loading category. Please try again.';
       this.loading = false;
@@ -98,13 +109,13 @@ export class MatchingWordsComponent implements OnInit, OnDestroy {
   nextWord(): void {
     if (this.currentWordIndex < this.wordsToMatch.length) {
       const wordPair = this.wordsToMatch[this.currentWordIndex];
-      this.currentWordOrigin = wordPair.origin;  // Show the origin word
-      this.currentWordTarget = wordPair.target;  // Store the correct translation
-      this.userAnswer = '';  // Reset the input field
-      this.showTranslation = false;  // Don't show the translation yet
-      this.cdr.detectChanges();  // Update the UI
+      this.currentWordOrigin = wordPair.origin;
+      this.currentWordTarget = wordPair.target;
+      this.userAnswer = '';
+      this.showTranslation = false;
+      this.cdr.detectChanges();
     } else {
-      this.endGame();  // End the game when all words are done
+      this.endGame();
     }
   }
 
@@ -115,8 +126,8 @@ export class MatchingWordsComponent implements OnInit, OnDestroy {
       this.score += this.pointsPerWord;
     }
 
-    this.showTranslation = true;  // Show the correct translation after answer is submitted
-    this.cdr.detectChanges();  // Update the UI
+    this.showTranslation = true; // Show the correct translation after answer is submitted
+    this.cdr.detectChanges(); // Update the UI
   }
 
   nextQuestion(): void {
@@ -124,7 +135,7 @@ export class MatchingWordsComponent implements OnInit, OnDestroy {
     if (this.currentWordIndex >= this.totalQuestions) {
       this.endGame();
     } else {
-      this.nextWord();  // Show the next word
+      this.nextWord(); // Show the next word
     }
   }
 
@@ -135,23 +146,30 @@ export class MatchingWordsComponent implements OnInit, OnDestroy {
       new Date(),
       this.score
     );
-  
-    this.gameService.addGameResult(gameResult)
+
+    this.gameService
+      .addGameResult(gameResult)
       .then(() => {
         console.log('Game result saved successfully.');
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Failed to save game result:', error);
       });
-      
-    this.gameStateService.setGameState(this.score, [], this.currentCategory?.id || '', 'matching-words');
+
+    this.gameStateService.setGameState(
+      this.score,
+      [],
+      this.currentCategory?.id || '',
+      'matching-words'
+    );
     this.router.navigate(['/summary']);
   }
 
   exitGame(): void {
-    this.dialog.open(ExitConfirmationDialogComponent)
+    this.dialog
+      .open(ExitConfirmationDialogComponent)
       .afterClosed()
-      .subscribe(result => {
+      .subscribe((result) => {
         if (result === 'yes') {
           this.router.navigate(['/chose-game']);
         }

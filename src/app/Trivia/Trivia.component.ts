@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../../shared/model/category';
 import { CategoriesService } from '../services/categories.service';
@@ -19,8 +25,8 @@ import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exi
 })
 export class TriviaComponent implements OnInit, OnDestroy {
   currentCategory?: Category;
-  loading = true;  // Loading state
-  errorMessage: string | null = null;  // Error message state
+  loading = true; 
+  errorMessage: string | null = null; 
   private routeSub?: Subscription;
 
   constructor(
@@ -28,7 +34,7 @@ export class TriviaComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private router: Router,
-    private cdr: ChangeDetectorRef  // Inject ChangeDetectorRef
+    private cdr: ChangeDetectorRef 
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -43,13 +49,13 @@ export class TriviaComponent implements OnInit, OnDestroy {
         } catch (error) {
           this.errorMessage = 'Failed to load category data. Please try again.';
         } finally {
-          this.loading = false;  // Stop loading after fetching the category
-          this.cdr.detectChanges();  // Ensure the view is updated
+          this.loading = false; 
+          this.cdr.detectChanges(); 
         }
       } else {
         this.errorMessage = 'Invalid category ID provided.';
         this.loading = false;
-        this.cdr.detectChanges();  // Ensure the view is updated
+        this.cdr.detectChanges();
       }
     });
   }

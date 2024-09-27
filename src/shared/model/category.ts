@@ -6,7 +6,7 @@ export class Category {
     public name: string,
     public origin: string,
     public target: string,
-    public words: TranslatedWord[] = [],   // Initialize the words array with an empty array by default
-    public lastUpdateDate: Date = new Date()  // Initialize lastUpdateDate to the current date by default
+    public words: TranslatedWord[] = [],   
+    public lastUpdateDate: Date = new Date()  
   ) {}
 }

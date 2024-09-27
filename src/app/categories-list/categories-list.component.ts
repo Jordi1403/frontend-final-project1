@@ -21,7 +21,7 @@ import { DeleteCategoryDialogComponent } from '../delete-category-dialog/delete-
   ],
   templateUrl: './categories-list.component.html',
   styleUrls: ['./categories-list.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,  // OnPush Change Detection
+  changeDetection: ChangeDetectionStrategy.OnPush,  
 })
 export class CategoriesListComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'numOfWords', 'lastUpdateDate', 'actions'];
@@ -32,22 +32,22 @@ export class CategoriesListComponent implements OnInit {
   constructor(
     private categoriesService: CategoriesService,
     private dialogService: MatDialog,
-    private cdr: ChangeDetectorRef  // Inject ChangeDetectorRef
+    private cdr: ChangeDetectorRef  
   ) {}
 
   async ngOnInit(): Promise<void> {
     try {
       console.log('Fetching categories...');
       this.dataSource = await this.categoriesService.list();
-      console.log('Fetched categories:', this.dataSource);  // Log the fetched categories
+      console.log('Fetched categories:', this.dataSource);  
 
-      this.cdr.detectChanges();  // Trigger change detection manually if needed
+      this.cdr.detectChanges();  
     } catch (error) {
       this.errorMessage = 'Error fetching categories. Please try again later.';
       console.error('Error fetching categories:', error);
     } finally {
       this.isLoading = false;
-      this.cdr.detectChanges();  // Ensure change detection after loading
+      this.cdr.detectChanges();  
     }
   }
 
@@ -59,7 +59,7 @@ export class CategoriesListComponent implements OnInit {
         try {
           await this.categoriesService.delete(id);
           this.dataSource = this.dataSource.filter((category) => category.id !== id);
-          this.cdr.detectChanges();  // Update the view after deletion
+          this.cdr.detectChanges();  
         } catch (error) {
           this.errorMessage = 'Error deleting category. Please try again later.';
           console.error('Error deleting category:', error);

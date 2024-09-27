@@ -13,7 +13,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProgressBarModule } from '../../shared/model/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { ExitConfirmationDialogComponent } from '../exit-confirmation-dialog/exit-confirmation-dialog.component';
-import { ExitButtonComponent } from "../exit-button/exit-button.component";
+import { ExitButtonComponent } from '../exit-button/exit-button.component';
 
 @Component({
   selector: 'app-sort-words',
@@ -26,18 +26,22 @@ import { ExitButtonComponent } from "../exit-button/exit-button.component";
     MatProgressBarModule,
     MatIconModule,
     ProgressBarModule,
-    ExitButtonComponent
-],
+    ExitButtonComponent,
+  ],
 })
 export class SortWordsComponent implements OnInit {
   currentCategory?: Category;
-  wordsToSort: { origin: string; target: string; fromCurrentCategory: boolean }[] = [];
+  wordsToSort: {
+    origin: string;
+    target: string;
+    fromCurrentCategory: boolean;
+  }[] = [];
   currentWordIndex = 0;
   currentWord: string = '';
   currentCategoryName: string = '';
   gameInitialized = false;
   correctAnswers = 0;
-  totalQuestions = 6;  // 6 rounds of guessing
+  totalQuestions = 6;
   pointsPerWord = 0;
   wordsUsed: {
     origin: string;
@@ -46,7 +50,7 @@ export class SortWordsComponent implements OnInit {
     userAnswer: string;
   }[] = [];
   score = 0;
-  errorMessage: string | null = null;  // To store error message
+  errorMessage: string | null = null;
 
   constructor(
     private categoriesService: CategoriesService,
@@ -67,46 +71,49 @@ export class SortWordsComponent implements OnInit {
       return;
     }
 
-    // Fetch the current category selected by the user
     this.currentCategory = await this.categoriesService.get(categoryId);
     if (!this.currentCategory) {
       this.errorMessage = 'No category found or invalid category ID.';
       return;
     }
 
-    // Fetch all categories
     const allCategories: Category[] = await this.categoriesService.list();
     this.currentCategoryName = this.currentCategory.name;
 
-    // Check if the current category has enough words (at least 3)
     if (this.currentCategory.words.length < 3) {
-      this.errorMessage = 'Not enough words in the selected category. Please choose another category.';
+      this.errorMessage =
+        'Not enough words in the selected category. Please choose another category.';
       return;
     }
 
-    // Get 3 random words from the current category
-    const currentCategoryWords = this.getRandomWords(this.currentCategory.words, 3)
-      .map(word => ({ ...word, fromCurrentCategory: true }));
+    const currentCategoryWords = this.getRandomWords(
+      this.currentCategory.words,
+      3
+    ).map((word) => ({ ...word, fromCurrentCategory: true }));
 
-    // Get 3 random words from other categories (not the current one)
-    const otherCategories = allCategories.filter(cat => cat.id !== this.currentCategory?.id);
-    
-    // Instead of flatMap, use reduce to flatten the array
+    const otherCategories = allCategories.filter(
+      (cat) => cat.id !== this.currentCategory?.id
+    );
+
     const randomWordsFromOtherCategories = shuffle(
       otherCategories.reduce((acc, category) => {
         const words = this.getRandomWords(category.words, 1);
         return [...acc, ...words];
       }, [] as { origin: string; target: string }[])
-    ).slice(0, 3).map(word => ({ ...word, fromCurrentCategory: false }));
+    )
+      .slice(0, 3)
+      .map((word) => ({ ...word, fromCurrentCategory: false }));
 
-    // Check if there are enough words from other categories (at least 3)
     if (randomWordsFromOtherCategories.length < 3) {
-      this.errorMessage = 'Not enough words in other categories. Please try again later.';
+      this.errorMessage =
+        'Not enough words in other categories. Please try again later.';
       return;
     }
 
-    // Shuffle the words and combine them into one array
-    this.wordsToSort = shuffle([...currentCategoryWords, ...randomWordsFromOtherCategories]);
+    this.wordsToSort = shuffle([
+      ...currentCategoryWords,
+      ...randomWordsFromOtherCategories,
+    ]);
 
     this.pointsPerWord = Math.floor(100 / this.totalQuestions);
     this.gameInitialized = true;
@@ -122,7 +129,7 @@ export class SortWordsComponent implements OnInit {
 
   nextWord(): void {
     if (this.currentWordIndex < this.wordsToSort.length) {
-      this.currentWord = this.wordsToSort[this.currentWordIndex]?.origin || ''; // Safe check
+      this.currentWord = this.wordsToSort[this.currentWordIndex]?.origin || '';
     } else {
       this.endGame();
     }
@@ -130,9 +137,10 @@ export class SortWordsComponent implements OnInit {
 
   checkAnswer(isYes: boolean): void {
     if (this.wordsToSort[this.currentWordIndex]) {
-      // Check if the current word belongs to the selected category
-      const wordBelongsToCategory = this.wordsToSort[this.currentWordIndex].fromCurrentCategory;
-      const isCorrect = (isYes && wordBelongsToCategory) || (!isYes && !wordBelongsToCategory);
+      const wordBelongsToCategory =
+        this.wordsToSort[this.currentWordIndex].fromCurrentCategory;
+      const isCorrect =
+        (isYes && wordBelongsToCategory) || (!isYes && !wordBelongsToCategory);
 
       const dialogConfig = {
         width: '250px',

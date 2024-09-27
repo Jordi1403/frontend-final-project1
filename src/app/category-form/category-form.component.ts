@@ -16,18 +16,18 @@ import { TranslatedWord } from '../../shared/model/translated-word';
   selector: 'app-category-form',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
-    MatFormFieldModule, 
-    MatInputModule, 
-    MatButtonModule, 
+    CommonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
     MatIconModule,
-    MatTableModule
+    MatTableModule,
   ],
   templateUrl: './category-form.component.html',
   styleUrls: ['./category-form.component.css'],
 })
-export class CategoryFormComponent implements OnInit { 
+export class CategoryFormComponent implements OnInit {
   currentCategory = new Category('', '', Language.English, Language.Hebrew);
   displayedColumns: string[] = ['Origin', 'Target', 'Actions'];
 
@@ -50,7 +50,6 @@ export class CategoryFormComponent implements OnInit {
   }
 
   addWord(): void {
-    // Add a new word pair (empty by default) to the list
     this.currentCategory.words.push(new TranslatedWord('', ''));
   }
 
@@ -69,7 +68,7 @@ export class CategoryFormComponent implements OnInit {
       } else {
         await this.categoriesService.add(this.currentCategory);
       }
-      // Redirect the user to the /categories route after saving the category
+
       this.router.navigate(['/categories']);
     } catch (error) {
       console.error('Error saving category:', error);

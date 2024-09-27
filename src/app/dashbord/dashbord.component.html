@@ -1,6 +1,5 @@
 <div class="page-container">
   <mat-grid-list cols="3" rowHeight="200px" gutterSize="16px">
-    <!-- Total Points Card -->
     <mat-grid-tile>
       <mat-card>
         <mat-card-header>
@@ -13,7 +12,6 @@
       </mat-card>
     </mat-grid-tile>
 
-    <!-- Total Games Card -->
     <mat-grid-tile>
       <mat-card>
         <mat-card-header>
@@ -26,7 +24,6 @@
       </mat-card>
     </mat-grid-tile>
 
-    <!-- Highest Average Score Game Card -->
     <mat-grid-tile>
       <mat-card>
         <mat-card-header>
@@ -39,7 +36,6 @@
       </mat-card>
     </mat-grid-tile>
 
-    <!-- Lowest Average Score Game Card -->
     <mat-grid-tile>
       <mat-card>
         <mat-card-header>
@@ -52,7 +48,6 @@
       </mat-card>
     </mat-grid-tile>
 
-    <!-- Perfect Score Percentage Card -->
     <mat-grid-tile>
       <mat-card>
         <mat-card-header>
@@ -65,7 +60,6 @@
       </mat-card>
     </mat-grid-tile>
 
-    <!-- Most Played Category Card -->
     <mat-grid-tile>
       <mat-card>
         <mat-card-header>
@@ -78,7 +72,6 @@
       </mat-card>
     </mat-grid-tile>
 
-    <!-- Learned Categories Count Card -->
     <mat-grid-tile>
       <mat-card>
         <mat-card-header>
@@ -96,7 +89,6 @@
       </mat-card>
     </mat-grid-tile>
 
-    <!-- Games This Month Card -->
     <mat-grid-tile>
       <mat-card>
         <mat-card-header>
@@ -106,7 +98,8 @@
         <mat-card-content>
           <h2>{{ gamesThisMonth }}</h2>
           <p *ngIf="!monthlyChallengeCompleted">
-            {{ gamesToCompleteChallenge }} more games to complete the monthly challenge.
+            {{ gamesToCompleteChallenge }} more games to complete the monthly
+            challenge.
           </p>
           <p *ngIf="monthlyChallengeCompleted">
             Monthly challenge completed! 🎉
@@ -115,7 +108,6 @@
       </mat-card>
     </mat-grid-tile>
 
-    <!-- Consecutive Days Card -->
     <mat-grid-tile>
       <mat-card>
         <mat-card-header>
@@ -128,7 +120,6 @@
       </mat-card>
     </mat-grid-tile>
 
-    <!-- Badges Card -->
     <mat-grid-tile>
       <mat-card>
         <mat-card-header>

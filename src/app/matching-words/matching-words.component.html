@@ -1,5 +1,4 @@
 <div class="matching-words-container">
-  <!-- Exit Button -->
   <div class="exit-button">
     <button mat-icon-button (click)="exitGame()">
       <mat-icon>exit_to_app</mat-icon>
@@ -8,36 +7,33 @@
 
   <h1>Matching Words Game</h1>
 
-  <!-- Loading State -->
   <div *ngIf="loading">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     <p>Loading category, please wait...</p>
   </div>
 
-  <!-- Error State -->
   <div *ngIf="errorMessage">
     <p>{{ errorMessage }}</p>
   </div>
 
-  <!-- Game content once loading is complete -->
   <div *ngIf="!loading && currentCategory">
     <h2>{{ currentCategory.name }}</h2>
     <p>Number of words in this category: {{ currentCategory.words.length }}</p>
 
-    <!-- Show the origin word for user to match -->
     <div *ngIf="currentWordOrigin">
       <p class="current-word">{{ currentWordOrigin }}</p>
     </div>
 
-    <!-- Input for user to match the target word -->
-    <input [(ngModel)]="userAnswer" placeholder="Enter the matching translation" class="answer-input" />
+    <input
+      [(ngModel)]="userAnswer"
+      placeholder="Enter the matching translation"
+      class="answer-input"
+    />
 
-    <!-- Submit button -->
     <button mat-raised-button color="primary" (click)="checkAnswer()">
       Submit
     </button>
 
-    <!-- Show the correct translation after user submits an answer -->
     <div *ngIf="showTranslation">
       <p>Correct Translation: {{ currentWordTarget }}</p>
       <button mat-raised-button color="accent" (click)="nextQuestion()">
@@ -45,23 +41,20 @@
       </button>
     </div>
 
-    <!-- Progress Bar with Words Answered Info -->
     <div class="progress-bar-container">
-      <!-- Display number of answered words on the left -->
-      <div class="progress-number progress-left">{{ currentWordIndex + 1 }}</div>
+      <div class="progress-number progress-left">
+        {{ currentWordIndex + 1 }}
+      </div>
 
-      <!-- Material Progress Bar for Game Rounds -->
-      <mat-progress-bar 
-        mode="determinate" 
+      <mat-progress-bar
+        mode="determinate"
         [value]="((currentWordIndex + 1) / totalQuestions) * 100"
       ></mat-progress-bar>
 
-      <!-- Display total number of words on the right -->
       <div class="progress-number progress-right">{{ totalQuestions }}</div>
     </div>
   </div>
 
-  <!-- Fallback for no category found -->
   <ng-template #noCategory>
     <p>No category found or invalid category ID.</p>
   </ng-template>

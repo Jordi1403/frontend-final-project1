@@ -27,7 +27,7 @@ export class ChoseGameComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.allGames = this.gameService.list();  // Ensure the service returns the games
+    this.allGames = this.gameService.list();  
     console.log(this.allGames);
   }
 
@@ -39,7 +39,7 @@ export class ChoseGameComponent implements OnInit {
   openDialog(): void {
     if (this.selectedGame) {
       this.dialogService.open(ChoseGameDialogComponent, {
-        data: this.selectedGame,  // Pass the selected game to the dialog
+        data: this.selectedGame,  
       });
     }
   }

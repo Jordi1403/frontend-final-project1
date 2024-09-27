@@ -1,59 +1,70 @@
 <div class="page-container">
-    <div class="game-container" *ngIf="!gameOver && !loading">
-      <h2>Translation Against Time</h2>
-      <p>Time Left: {{ timeLeft }} seconds</p>
-      <mat-progress-bar mode="determinate" [value]="(timeLeft / 60) * 100"></mat-progress-bar>
-  
-      <app-exit-button class="exit-button" (click)="onExitClick()"></app-exit-button> <!-- Exit button -->
-  
-      <div class="word-container">
-        <p>Translate the following word:</p>
-        <h3 *ngIf="words[currentWordIndex]">{{ words[currentWordIndex].target }}</h3> <!-- Display the Hebrew word -->
-  
-        <mat-form-field appearance="fill">
-          <mat-label>Your Translation</mat-label>
-          <input
-            matInput
-            [(ngModel)]="userAnswer"
-            (keyup)="clearErrorMessage()" 
-            (keyup.enter)="submitAnswer()"
-            autocomplete="off"
-          />
-        </mat-form-field>
-  
-        <div class="button-group">
-          <button mat-raised-button color="primary" (click)="submitAnswer()">
-            Submit
-          </button>
-          <button mat-raised-button color="warn" (click)="resetGame()">
-            Reset
-          </button>
-        </div>
-  
-        <!-- Display error message if any -->
-        <p *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</p>
+  <div class="game-container" *ngIf="!gameOver && !loading">
+    <h2>Translation Against Time</h2>
+    <p>Time Left: {{ timeLeft }} seconds</p>
+    <mat-progress-bar
+      mode="determinate"
+      [value]="(timeLeft / 60) * 100"
+    ></mat-progress-bar>
+
+    <app-exit-button
+      class="exit-button"
+      (click)="onExitClick()"
+    ></app-exit-button>
+
+    <div class="word-container">
+      <p>Translate the following word:</p>
+      <h3 *ngIf="words[currentWordIndex]">
+        {{ words[currentWordIndex].target }}
+      </h3>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Your Translation</mat-label>
+        <input
+          matInput
+          [(ngModel)]="userAnswer"
+          (keyup)="clearErrorMessage()"
+          (keyup.enter)="submitAnswer()"
+          autocomplete="off"
+        />
+      </mat-form-field>
+
+      <div class="button-group">
+        <button mat-raised-button color="primary" (click)="submitAnswer()">
+          Submit
+        </button>
+        <button mat-raised-button color="warn" (click)="resetGame()">
+          Reset
+        </button>
       </div>
-  
-      <mat-progress-bar mode="determinate" [value]="progressValue"></mat-progress-bar>
-      <p>Progress: {{ currentWordIndex + 1 }}/{{ words.length }}</p>
+
+      <p *ngIf="errorMessage" style="color: red">{{ errorMessage }}</p>
     </div>
-  
-    <!-- Loading State -->
-    <div *ngIf="loading">
-      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-      <p>Loading category, please wait...</p>
-    </div>
-  
-    <!-- Error State -->
-    <div *ngIf="errorMessage">
-      <p>{{ errorMessage }}</p>
-    </div>
-  
-    <!-- Game Over State -->
-    <div *ngIf="gameOver">
-      <h2>Game Over</h2>
-      <p>Your final score is: {{ score }}</p>
-      <button mat-raised-button color="primary" (click)="playAgain()">Play Again</button>
-      <button mat-raised-button color="accent" (click)="chooseAnotherGame()">Choose Another Game</button>
-    </div>
+
+    <mat-progress-bar
+      mode="determinate"
+      [value]="progressValue"
+    ></mat-progress-bar>
+    <p>Progress: {{ currentWordIndex + 1 }}/{{ words.length }}</p>
+  </div>
+
+  <div *ngIf="loading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p>Loading category, please wait...</p>
+  </div>
+
+  <div *ngIf="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div *ngIf="gameOver">
+    <h2>Game Over</h2>
+    <p>Your final score is: {{ score }}</p>
+    <button mat-raised-button color="primary" (click)="playAgain()">
+      Play Again
+    </button>
+    <button mat-raised-button color="accent" (click)="chooseAnotherGame()">
+      Choose Another Game
+    </button>
+  </div>
 </div>

@@ -15,7 +15,7 @@ export class GameService {
   constructor(private firestore: Firestore) {}
 
   /**
-   * מוסיף תוצאה של משחק ל-Firestore.
+   
    * @param gameResult התוצאה של המשחק להוספה.
    */
   async addGameResult(gameResult: GameResult): Promise<void> {
@@ -56,7 +56,7 @@ export class GameService {
 
   /**
    * מוחק תוצאות משחק לפי gameId.
-   * @param gameId ה-ID של המשחק למחיקה.
+   * @param gameId 
    */
   async deleteGameResultByGameId(gameId: string): Promise<void> {
     try {

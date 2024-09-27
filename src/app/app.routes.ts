@@ -27,5 +27,5 @@ export const routes: Routes = [
   { path: 'categories-list', component: CategoriesListComponent },
   { path: 'summary', component: SummaryComponent },
   { path: 'matching-words/:id', component: MatchingWordsComponent },
-  { path: 'translation-attack-time/:id', component: TranslationAttackTimeComponent }, // Removed leading slash
+  { path: 'translation-attack-time/:id', component: TranslationAttackTimeComponent }, 
 ];

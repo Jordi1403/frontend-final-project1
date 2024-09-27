@@ -14,7 +14,6 @@ export class GameStateService {
     userAnswer: string;
   }[] = [];
 
-  // Method to set the game state
   setGameState(
     score: number,
     words: {
@@ -32,22 +31,18 @@ export class GameStateService {
     this.gameType = gameType;
   }
 
-  // Method to get the current score
   getScore(): number {
     return this.score;
   }
 
-  // Method to get the current category ID
   getCategoryId(): string {
     return this.categoryId;
   }
 
-  // Method to get the current game type
   getGameType(): string {
     return this.gameType;
   }
 
-  // Method to get the words used in the game
   getWordsUsed(): {
     origin: string;
     target: string;
@@ -57,7 +52,6 @@ export class GameStateService {
     return this.wordsUsed;
   }
 
-  // Method to clear the game state
   clearState(): void {
     this.score = 0;
     this.wordsUsed = [];

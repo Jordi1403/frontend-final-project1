@@ -41,7 +41,7 @@ mat-card-content h2 {
 mat-card-content p {
   margin: 0;
   font-size: 1rem;
-  color: #666; /* Slightly lighter gray for content text */
+  color: #666;
 }
 
 mat-progress-bar {

@@ -55,8 +55,8 @@ mat-select {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  background-color: #f9f9f9; /* Light gray background for category info */
-  color: #333333; /* Darker gray for category info text */
+  background-color: #f9f9f9; 
+  color: #333333; 
 }
 
 mat-dialog-actions {
