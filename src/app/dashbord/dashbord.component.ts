@@ -263,7 +263,7 @@ export class DashbordComponent implements OnInit, OnDestroy {
       .sort((a, b) => b.getTime() - a.getTime());
 
     let consecutiveDays = 0;
-    let currentDate = new Date();
+    const currentDate = new Date();
 
     while (true) {
       const startOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
