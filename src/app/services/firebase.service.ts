@@ -1,7 +1,7 @@
 // Import the functions you need from the Firebase SDK
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';  // If you are using Firestore
+import { getFirestore, Firestore } from 'firebase/firestore';  // Import Firestore type
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -20,8 +20,17 @@ const app = initializeApp(firebaseConfig);
   providedIn: 'root'
 })
 export class FirebaseService {
+  firestore: Firestore; // Declare Firestore instance
+
   constructor() {
-    // Optionally, initialize Firestore
-    const firestore = getFirestore(app);
+    // Initialize Firestore
+    this.firestore = getFirestore(app);
   }
+
+  // You can add additional methods here to interact with Firestore
+  // For example:
+  // async addDocument(collectionName: string, data: any): Promise<void> {
+  //   const docRef = await addDoc(collection(this.firestore, collectionName), data);
+  //   console.log("Document written with ID: ", docRef.id);
+  // }
 }

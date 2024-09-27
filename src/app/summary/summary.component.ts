@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { GameStateService } from '../services/game-state.service';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { GameStateService } from '../services/game-state.service';
 
 @Component({
   selector: 'app-summary',
@@ -39,20 +39,22 @@ export class SummaryComponent implements OnInit {
     this.categoryId = this.gameStateService.getCategoryId();
     this.gameType = this.gameStateService.getGameType();
 
-    // Debugging logs
     console.log('Final Score:', this.finalScore);
     console.log('Words Used:', this.wordsUsed);
     console.log('Category ID:', this.categoryId);
     console.log('Game Type:', this.gameType);
 
     if (this.wordsUsed.length === 0) {
-      console.error('No words found, possibly a navigation issue.');
+      console.error('No words found, possibly a navigation issue. Redirecting to game selection.');
+      this.router.navigate(['/chose-game']);
+      this.gameStateService.clearState(); // Clear state if no words
     }
   }
 
   playAgain(): void {
     if (this.categoryId && this.gameType) {
-      this.router.navigate([`/${this.gameType}`, this.categoryId]);
+      this.router.navigate([`/${this.gameType}`, this.categoryId]); // Navigate to the same game type
+      this.gameStateService.clearState(); // Clear previous game state after navigating
     } else {
       console.error('Missing category ID or game type.');
     }
@@ -60,5 +62,6 @@ export class SummaryComponent implements OnInit {
 
   chooseAnotherGame(): void {
     this.router.navigate(['/chose-game']);
+    this.gameStateService.clearState(); // Clear state when choosing another game
   }
 }

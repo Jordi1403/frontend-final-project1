@@ -37,6 +37,7 @@
         [(ngModel)]="userAnswer" 
         placeholder="Enter your answer" 
         class="answer-input"
+        (keyup)="clearErrorMessage()" 
       />
 
       <!-- Submit and Reset Buttons -->

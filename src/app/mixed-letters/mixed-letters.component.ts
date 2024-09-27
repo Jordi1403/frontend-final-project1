@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoriesService } from '../services/categories.service';
 import { Category } from '../../shared/model/category';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { shuffle as lodashShuffle } from 'lodash';
 import { SuccessDialogComponent } from '../success-dialog/success-dialog.component';
 import { FailureDialogComponent } from '../failure-dialog/failure-dialog.component';
@@ -32,13 +32,12 @@ interface WordEntry {
   imports: [
     CommonModule,
     FormsModule,
-    MatDialogModule,
-    MatProgressBarModule, // Angular Material Progress Bar for game and loading
+    MatProgressBarModule,
     MatButtonModule,
-    MatIconModule, // Icons for display
+    MatIconModule,
     SuccessDialogComponent,
     FailureDialogComponent,
-    ExitButtonComponent, // Add ExitButtonComponent here
+    ExitButtonComponent,
   ],
 })
 export class MixedLettersComponent implements OnInit, OnDestroy {
@@ -49,7 +48,7 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
   score = 0;
   pointsPerWord = 0;
   wordsUsed: WordEntry[] = [];
-  errorMessage = '';
+  errorMessage = ''; // Initialize error message
   totalQuestions = 0;
   correctAnswersCount = 0;
   categorySubscription: Subscription | undefined;
@@ -89,7 +88,7 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
     this.score = 0;
     this.pointsPerWord = 0;
     this.wordsUsed = [];
-    this.errorMessage = '';
+    this.errorMessage = ''; // Reset error message
     this.totalQuestions = 0;
     this.correctAnswersCount = 0;
     this.loading = true;
@@ -132,7 +131,7 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
 
       this.scrambledWord = scrambledWord;
       this.userAnswer = '';
-      this.errorMessage = '';
+      this.errorMessage = ''; // Reset error message
     } else {
       this.showSummary();
     }
@@ -143,9 +142,16 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
   }
 
   submitAnswer(): void {
+    // Check if the user has entered an answer
     if (!this.userAnswer.trim()) {
-      this.errorMessage = 'Please enter an answer before submitting.';
-      return;
+      this.errorMessage = 'Please enter an answer before submitting.'; // Set error message
+      return; // Exit early if no answer
+    }
+
+    // Check if the user input contains Hebrew characters
+    if (/[\u0590-\u05FF]/.test(this.userAnswer)) {
+      this.errorMessage = 'Please enter the translation in English only.'; // Set error message
+      return; // Exit early if the input is in Hebrew
     }
 
     const currentWord = this.currentCategory?.words[this.currentWordIndex]?.origin || '';
@@ -215,6 +221,10 @@ export class MixedLettersComponent implements OnInit, OnDestroy {
 
   resetInput(): void {
     this.userAnswer = '';
-    this.errorMessage = '';
+    this.errorMessage = ''; // Reset error message
+  }
+
+  clearErrorMessage(): void {
+    this.errorMessage = ''; // Clear error message
   }
 }
